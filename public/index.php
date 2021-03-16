@@ -28,10 +28,9 @@ require_once __DIR__ . "/../core/Application.php";
 /*
  * creating a new instance of the Application class
  */
-$app = New Application();
+$app = New Application(dirname(__DIR__));
 
-$app->router->get('/', function (){
-	return "Hello world";
-});
+$app->router->get('/', 'home');
+$app->router->get('/contact', 'contact/index');
 
 $app->run();
