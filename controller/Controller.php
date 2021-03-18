@@ -32,6 +32,7 @@ abstract class Controller
 	}
 
 	/**
+	 * change the used layout in the request
 	 * @param string $string
 	 */
 	protected function setLayout(string $string)
