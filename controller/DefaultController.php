@@ -19,6 +19,9 @@ require_once 'Controller.php';
 
 class DefaultController extends Controller
 {
+	/**
+	 * @return string
+	 */
 	function index(): string
 	{
 		$params = [
@@ -26,6 +29,7 @@ class DefaultController extends Controller
 			'title' => "home",
 			'test' => 'yohoo'
 		];
+
 		return $this->render('home', $params);
 	}
 }
