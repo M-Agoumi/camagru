@@ -44,8 +44,11 @@ include_once $app::$ROOT_DIR . "/controller/AuthController.php";
 $app->router->get('/', [DefaultController::class, 'index']);
 $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->post('/login', [AuthController::class, 'auth']);
-$app->router->get('/signup', [AuthController::class, 'register']);
-$app->router->post('/signup', [AuthController::class, 'signup']);
+$app->router->get('/signup', [AuthController::class, 'signup']);
+$app->router->post('/signup', [AuthController::class, 'verifyEmail']);
+$app->router->post('/register_step_2', [AuthController::class, 'register']);
+$app->router->get('/register_step_2', [AuthController::class, 'test']);
+$app->router->post('/registration', [AuthController::class, 'insertUser']);
 
 /**
  * run our application
