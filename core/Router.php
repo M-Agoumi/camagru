@@ -82,10 +82,7 @@ class Router
 		if ($callback === false)
 		{
 			$this->response->setStatusCode(404);
-			return $this->renderContent(<<<TAG
-<title>404 Not Found</title><h1>404</h1><h2>Ops.. Page Not Found</h2>
-TAG
-);
+			return $this->renderContent("<title>404 Not Found</title><h1>404</h1><h2>Ops.. Page Not Found</h2>");
 		}
 		if (is_string($callback))
 			return $this->renderView($callback);
@@ -93,7 +90,11 @@ TAG
 			Application::$APP->controller = new $callback[0]();
 			$callback[0] = Application::$APP->controller;
 		}
-		return call_user_func($callback, $this->request);
+
+		if (is_callable($callback))
+			return call_user_func($callback, $this->request);
+
+		return "Method [$callback[1]] is not found in [" . get_class($callback[0]) . ']';
 	}
 
 	/**
@@ -127,7 +128,7 @@ TAG
 
 	public function layoutContent()
 	{
-		$layout = Application::$APP->controller->layout;
+		$layout = Application::$APP->controller->layout ?? 'main';
 		ob_start();
 		include_once Application::$ROOT_DIR . "/views/layout/$layout.layout.php";
 		return ob_get_clean();
