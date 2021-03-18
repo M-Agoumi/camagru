@@ -56,6 +56,7 @@ class Request
 
 	/**
 	 * handle the data coming from a form
+	 * todo add more filters for more security
 	 * @return array
 	 */
 	public function getBody(): array
