@@ -41,9 +41,30 @@ class User extends Model
 		return $this->email;
 	}
 
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
+    }
+
 	public function register()
 	{
+	    // todo change this after creating a database instance
 		return 1;
 	}
 
+    /**
+     * @return array[]
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => [self::RULE_REQUIRED],
+            'username' => [self::RULE_REQUIRED, self::RULE_UNIQUE],
+            'email' => [self::RULE_UNIQUE, self::RULE_REQUIRED, self::RULE_EMAIL],
+            'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
+        ];
+    }
 }
