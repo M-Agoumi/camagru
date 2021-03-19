@@ -28,6 +28,8 @@ class Application
 	public ?Request $request = null;
 	public ?Response $response = null;
 	public ?Controller $controller = null;
+	protected array $MainLang = [];
+	protected array $fallbackLang = [];
 
 	/**
 	 * Application constructor.
@@ -41,6 +43,9 @@ class Application
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->router = New Router($this->request, $this->response);
+		// todo implement session save for language preference and add more languages to choose from
+		$this->MainLang = $this->setLang()[0];
+		$this->fallbackLang = $this->setLang()[1];
 	}
 
 	/**
@@ -67,4 +72,22 @@ class Application
 		$this->controller = $controller;
 	}
 
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function lang(string $key): string
+    {
+	    return $this->MainLang[$key] ?? $this->fallbackLang[$key] ?? $key;
+    }
+
+    private function setLang(): array
+    {
+        $lang = [];
+        $config = parse_ini_file(self::$ROOT_DIR . "/config/lang.conf");
+        // todo check session if the preferenced lang is stored use it otherwise take it from the config and set it to the session
+        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
+        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
+        return $lang;
+    }
 }
