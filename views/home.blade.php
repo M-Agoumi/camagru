@@ -1,5 +1,5 @@
 <title><?=$title?></title>
-<h1>Home <?= $test ?></h1>
+<h1><?=Application::$APP->lang('home')?> <?= $test ?></h1>
 <div class="masonry-container">
     <div class="panel">
         <div class="panel-wrapper">
