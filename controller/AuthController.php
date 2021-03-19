@@ -102,8 +102,10 @@ class AuthController extends Controller
 		$user = New User();
 		$user->loadData($request->getBody());
 
+		$user->setEmail('example@email.com');
 		if ($user->validate() && $user->register())
 			return "Success";
+
 		return $this->test($request, $user);
 	}
 
