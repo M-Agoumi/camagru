@@ -91,6 +91,7 @@ class AuthController extends Controller
 	{
 		if (!$user)
 			$user = New User();
+		// $user->email = 'example@email.com';
 		return $this->render('forms/register', [
 			'email' => 'example@email.com',
 			'user' => $user
