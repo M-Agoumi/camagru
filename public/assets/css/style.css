@@ -314,6 +314,15 @@ input[type=submit] {
 input[type=submit]:hover {
     background-color: #45a049;
 }
+
+.is-invalid {
+	border: 1px solid #F00 !important;
+}
+
+.invalid-feedback{
+	color: #F00;
+}
+
 .container {
     border-radius: 5px;
     background-color: #f2f2f2;
