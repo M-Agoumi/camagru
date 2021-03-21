@@ -1,0 +1,71 @@
+#!/usr/bin/env php
+<?php
+	if ($argc == 1) {
+		show_help();
+		exit();
+	}
+	$command = $argv[1];
+	$arguments = explode(':', $command);
+	$command = $arguments[0];
+	$arguments = $arguments[1];
+
+	//echo $command . " " . $arguments;
+
+	if ($command === 'make') {
+		$controllerName = getControllerName($argv[2] ?? '');
+		makeController($controllerName);
+	}
+
+	/**
+	 * funcionality functions
+	 * 
+	 */
+
+	/** make functions */
+	function makeController($controllerName) {
+		echo "making $controllerName"; //todo make it work :D
+	}
+
+
+
+
+	/**
+	 * Helper functions
+	 * 
+	 * those functions are helping the main functions up
+	 */
+
+	 /** Make helper functions */
+
+	function getControllerName($name) {
+		if (!$name){
+			echo "\x1b[32mMaking a Controller.. without a name? didn't think so ^_^\nYour Controller Name:\n\x1b[33m";
+			$name = readline();
+		}
+		$name = ucfirst($name);
+		if (!endsWith($name, 'Controller') && !endsWith($name, 'controller'))
+			$name .= "Controller";
+		$name = str_replace('controller', 'Controller', $name);
+		echo "\x1b[32m" . $name . PHP_EOL;
+		return $name;
+	}
+
+	function endsWith($haystack, $needle) {
+		$lenght = strlen($needle);
+		if (!$lenght)
+			return True;
+		return substr($haystack, -$lenght) === $needle;
+	}
+
+	 /**
+	  * the main menu function and it's helper
+	  */
+	function show_help() {
+		echo "This is a camagru console help pannel" . PHP_EOL;
+		echo "here is the list of the commands you can run so far" . PHP_EOL;
+		echo "make" . PHP_EOL . PHP_EOL;
+
+		echo "make:controller" . PHP_EOL;
+	}
+
+	echo "\n";
