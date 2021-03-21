@@ -19,6 +19,8 @@
 $config = parse_ini_file(__DIR__ ."/../.env");
 if (isset($config['env']) && $config['env'] === 'dev')
 	error_reporting(E_ALL ^ E_DEPRECATED);
+else
+	error_reporting(0);
 
 /**
  * require our app class the heart of our application
@@ -28,6 +30,7 @@ require_once __DIR__ . "/../core/Application.php";
 /**
  * creating a new instance of the Application class
  */
+
 $app = New Application(dirname(__DIR__));
 
 
