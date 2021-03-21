@@ -20,9 +20,9 @@ require_once "Model.php";
 class User extends Model
 {
 	public ?string $name = null;
-	protected ?string $username = null;
-	protected ?string $email = null;
-	protected ?string $password = null;
+	public ?string $username = null;
+	public ?string $email = null;
+	public ?string $password = null;
 
 
 	/**
