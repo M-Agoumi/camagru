@@ -89,6 +89,16 @@ abstract class Model
         $this->errors[$attribute][] = $message;
     }
 
+	public function hasError($attribute)
+	{
+		return $this->errors[$attribute] ?? false;
+	}
+
+	public function getFirstError($attribute): string
+	{
+		return $this->errors[$attribute][0] ?? '';
+	}
+
     /**
      * @return string[]
      */
