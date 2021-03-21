@@ -15,6 +15,7 @@
 require_once 'Router.php';
 require_once 'Request.php';
 require_once 'Response.php';
+require_once 'Database.php';
 require_once '../controller/Controller.php';
 
 /**
@@ -24,6 +25,8 @@ class Application
 {
 	public static string $ROOT_DIR;
 	public static Application $APP;
+	public static array $ENV;
+	public Database $db;
 	public ?Router $router = null;
 	public ?Request $request = null;
 	public ?Response $response = null;
@@ -40,9 +43,11 @@ class Application
 	{
 		self::$ROOT_DIR = $rootPath;
 		self::$APP = $this;
+		self::$ENV = $this->getDotEnv();
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->router = New Router($this->request, $this->response);
+		$this->db = New Database($this->getDatabaseConfig());
 		// todo implement session save for language preference and add more languages to choose from
 		$this->MainLang = $this->setLang()[0];
 		$this->fallbackLang = $this->setLang()[1];
@@ -71,6 +76,24 @@ class Application
 	{
 		$this->controller = $controller;
 	}
+
+	private function getDotEnv()
+	{
+		return file_exists(self::$ROOT_DIR . "/.env") ?
+				parse_ini_file(self::$ROOT_DIR . "/.env") : [];
+	}
+
+	public function getEnvValue($attr)
+	{
+		return SELF::$ENV[$attr] ?? null;
+	}
+
+	public function getDatabaseConfig()
+	{
+		return file_exists(self::$ROOT_DIR . "/config/db.conf") ?
+				parse_ini_file(self::$ROOT_DIR . "/config/db.conf") : [];
+	}
+
 
     /**
      * @param string $key
