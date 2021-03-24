@@ -1,5 +1,11 @@
 #!/usr/bin/env php
 <?php
+
+	if (PHP_SAPI !== 'cli') {
+    		echo 'bin/console must be run as a CLI application';
+    		exit(1);
+	}
+
 	if ($argc == 1) {
 		show_help();
 		exit();
