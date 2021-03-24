@@ -40,6 +40,8 @@ class AuthController extends Controller
 		// todo change this after creating database and db instance
 	}
 
+	// todo please fix this repeated code in this file it's so bad
+
 	/**
 	 * @return false|string|string[]
 	 */
@@ -76,7 +78,7 @@ class AuthController extends Controller
 		// todo retrieve the email and pass it as param
 		$email = 'example@email.com';
 		if ($verification) {
-			return $this->render('forms/register', ['email' => $email]);
+			return $this->render('forms/register', ['email' => $email, 'user' =>New User()]);
 		}
 
 		return $this->render('messages/register_email', [
@@ -104,7 +106,7 @@ class AuthController extends Controller
 		$user->loadData($request->getBody());
 
 		$user->setEmail('example@email.com');
-		if ($user->validate() && $user->register())
+		if ($user->validate() && $user->save())
 			return "Success";
 
 		return $this->test($request, $user);

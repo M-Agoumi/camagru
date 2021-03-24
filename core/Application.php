@@ -107,6 +107,7 @@ class Application
     private function setLang(): array
     {
         $lang = [];
+		// todo handle the case when one of those files is not presented (include fail)
         $config = parse_ini_file(self::$ROOT_DIR . "/config/lang.conf");
         // todo check session if the preferenced lang is stored use it otherwise take it from the config and set it to the session
         array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');

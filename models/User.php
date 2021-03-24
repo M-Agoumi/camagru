@@ -15,15 +15,25 @@
  * Class User
  */
 
-require_once "Model.php";
+require_once Application::$ROOT_DIR . "/core/DbModel.php";
 
-class User extends Model
+class User extends DbModel
 {
 	public ?string $name = null;
 	public ?string $username = null;
 	public ?string $email = null;
 	public ?string $password = null;
 
+
+	public function tableName(): string
+	{
+		return 'users';
+	}
+
+	public function attributes(): array
+	{
+		return ['name', 'username', 'email', 'password'];
+	}
 
 	/**
 	 * @return string|null
@@ -49,10 +59,10 @@ class User extends Model
         $this->email = $email;
     }
 
-	public function register()
+	public function save()
 	{
-	    // todo change this after creating a database instance
-		return 1;
+		$this->password = password_hash($this->password, PASSWORD_BCRYPT);
+	    return parent::save();
 	}
 
     /**

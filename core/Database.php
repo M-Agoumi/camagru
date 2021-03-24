@@ -21,13 +21,15 @@ class database
 		$dsn = $config['DB_DSN'] ?? 'mysql:host=localhost;port=3306;dbname=camagru';
 		$db_user = $config['DB_USER'] ?? '';
 		$db_password = $config['DB_PASSWORD'] ?? '';
+
 		try {
 			$this->pdo = New PDO($dsn, $db_user, $db_password);
+			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch(PDOException  $e){
-			// todo remove this and handle it quitly (code 500)
+
 			APPLICATION::$APP->response->setStatusCode(500);
 			if (Application::$APP::$ENV['env'] == 'dev')	
-				$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				 die ($e->getMessage()); // todo handle this one nicely (add a backtrack)
 			else
 				echo APPLICATION::$APP->router->renderView('error/__500', [
 					"title" => "500 Internal Server Error",
