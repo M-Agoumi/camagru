@@ -21,7 +21,7 @@ abstract class Controller
 
 	public string $layout = 'main';
 
-	/**
+	/** adding this method to avoid typing it in every method in our controllers
 	 * @param string $view
 	 * @param array $params
 	 * @return false|string|string[]
