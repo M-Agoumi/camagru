@@ -17,11 +17,11 @@ class Form
 {
 	public Field $field;
 
-    /**
+    /** echo the start of a form
      * @param string $action
      * @param string $method
      * @param string $class
-     * @return Form
+     * @return Form instance so we can access it's method to generate a form
      */
     public static function begin(string $action = '', string $method = '', string $class = ''): Form
     {
@@ -32,7 +32,7 @@ class Form
 	}
 
     /**
-     *
+     * echo the close tag of the form
      */
     public static function end()
 	{
@@ -40,6 +40,7 @@ class Form
 	}
 
     /**
+     * generate a new form field
      * @param Model $model
      * @param string $attribute
      * @param string $label
@@ -52,7 +53,7 @@ class Form
 		return $this->field;
 	}
 
-    /**
+    /** return a submit type input
      * @param string $value
      * @return string
      */
