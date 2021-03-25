@@ -1,0 +1,2 @@
++ implement reading routes either from anotations [@Route('get' => '/yourIRL')] or reading from routes.php file
++ implement caching for a faster reloading time and optimise performance
