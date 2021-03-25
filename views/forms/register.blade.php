@@ -1,9 +1,9 @@
 <?php
-	include_once Application::$ROOT_DIR . "/core/form/form.php";
+	include_once Application::$ROOT_DIR . "/core/Form/Form.php";
 ?>
 <h1>You almost there just fill those fields and welcome onboard</h1>
 <?php
- 	$form = Form::begin('registration', "POST", "login-form"); 
+ 	$form = Form::begin('registration', "POST", "login-form");
 		echo $form->field($user, 'name', 'Full Name', 'John Dracula')->required();
 		echo $form->field($user, 'email', 'Email')
 					->default('default@email.com')
@@ -11,7 +11,7 @@
 					->emailField();
 		echo $form->field($user, 'username')->required();
 		echo $form->field($user, 'password')->passwordField()->required();
-		echo $form->submite('Sign up');
+		echo $form->submit('Sign up');
 
 	Form::end();
 
