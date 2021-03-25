@@ -26,9 +26,6 @@ class database
 			$this->pdo = New PDO($dsn, $db_user, $db_password);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch(PDOException  $e){
-		    echo "<pre>";
-            var_dump($e);
-            echo "</pre>";
 			APPLICATION::$APP->response->setStatusCode(500);
 			if (Application::$APP::$ENV['env'] == 'dev')	
 				 die ($e->getMessage()); // todo handle this one nicely (add a backtrack)
@@ -41,7 +38,7 @@ class database
 	}
 
     /**
-     * apply migrataions file
+     * apply migrations file
      */
 	public function applyMigrations()
 	{
