@@ -45,4 +45,4 @@ include_once $app::$ROOT_DIR . "/controller/AuthController.php";
 /**
  * run our application
  */
-$app->db->applyMigrataions();
+$app->db->applyMigrations();

@@ -26,7 +26,9 @@ class database
 			$this->pdo = New PDO($dsn, $db_user, $db_password);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch(PDOException  $e){
-
+		    echo "<pre>";
+            var_dump($e);
+            echo "</pre>";
 			APPLICATION::$APP->response->setStatusCode(500);
 			if (Application::$APP::$ENV['env'] == 'dev')	
 				 die ($e->getMessage()); // todo handle this one nicely (add a backtrack)
@@ -38,7 +40,10 @@ class database
 		}
 	}
 
-	public function applyMigrataions()
+    /**
+     * apply migrataions file
+     */
+	public function applyMigrations()
 	{
 		$this->createMigrationsTable();
 		$appliedMigrations = $this->getAppliedMigrations();
@@ -64,6 +69,9 @@ class database
 			$this->log("All migrations are applied");
 	}
 
+    /**
+     * easy and simple : create migrations table if it doesn't exist
+     */
 	public function createMigrationsTable()
 	{
 		$this->pdo->exec("CREATE TABLE IF NOT EXISTS migrations(
@@ -73,8 +81,12 @@ class database
 		) ENGINE=INNODB");
 	}
 
-	public function getAppliedMigrations()
-	{
+    /**
+     * gets the list of already applied migrations
+     * @return array
+     */
+    public function getAppliedMigrations(): array
+    {
 		$statement = $this->pdo->prepare("SELECT migration FROM migrations");
 		$statement->execute();
 
@@ -90,6 +102,10 @@ class database
 		$statement->execute();
 	}
 
+    /**
+     * echo a log style the passed parameter
+     * @param $message
+     */
 	protected function log($message)
 	{
 		echo '[' . date('Y-m-d H:i:s') . '] - ' . $message . PHP_EOL;
