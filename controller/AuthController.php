@@ -20,7 +20,8 @@ include_once Application::$ROOT_DIR . '/models/User.php';
 
 class AuthController extends Controller
 {
-	/**
+	/** render login form view
+     * @route('get' => '/login')
 	 * @return false|string|string[]
 	 */
 	public function login()
@@ -30,7 +31,9 @@ class AuthController extends Controller
 		return $this->render('login');
 	}
 
-	/**
+	/** this the method responsible for handling the login attempts
+     * checks if everything cool let him in
+     * @route('post' => '/login')
 	 * @param Request $request
 	 */
 	public function auth(Request $request)
@@ -40,9 +43,11 @@ class AuthController extends Controller
 		// todo change this after creating database and db instance
 	}
 
+
 	// todo please fix this repeated code in this file it's so bad
 
-	/**
+	/** render the signup form
+     * @route('get' => '/signup')
 	 * @return false|string|string[]
 	 */
 	public function signup()
@@ -50,7 +55,9 @@ class AuthController extends Controller
 		return $this->render('register');
 	}
 
-	/**
+	/** todo save the email to the database or session and send verification code
+     * then render the view where the user can enter his verification code
+     * @route('post' => '/signup')
 	 * @param Request $request
 	 * @return false|string|string[]
 	 */
@@ -60,12 +67,13 @@ class AuthController extends Controller
 		$body = $request->getBody();
 		if (!empty($body['email']))
 			return $this->render('messages/register_email', ['email' => $body['email']]);
-		//todo save the email to the database or session
 
 		return $this->render('register');
 	}
 
-	/**
+	/** get the verification code sent to the user email if it's valid
+     * give him the form to complete his registration
+     * @route('post' => '/register_step_2')
 	 * @param Request $request
 	 * @return false|string|string[]
 	 */
@@ -87,9 +95,16 @@ class AuthController extends Controller
 		]);
 	}
 
-	// todo delete this method
-
-	public function test(Request $request, User $user = null)
+    /** just a temporary method to handle the get access to our registration form
+     * it should be accessible only after verifying your email with a single use token
+     * you can create an account right after you validate your email
+     * todo delete this method when you implement the above
+     * @route('get' => '/register_step_2')
+     * @param Request $request
+     * @param User|null $user
+     * @return false|string|string[]
+     */
+    public function test(Request $request, User $user = null)
 	{
 		if (!$user)
 			$user = New User();
@@ -100,7 +115,12 @@ class AuthController extends Controller
 		]);
 	}
 
-	public function insertUser(Request $request)
+    /** saving user to the database todo change return type from string to view
+     * @route('post' => '/registration')
+     * @param Request $request
+     * @return false|string|string[]
+     */
+    public function insertUser(Request $request)
 	{
 		$user = New User();
 		$user->loadData($request->getBody());
