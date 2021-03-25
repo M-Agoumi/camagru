@@ -148,4 +148,14 @@ class Router
 		include_once Application::$ROOT_DIR . "/views/$view.blade.php";
 		return ob_get_clean();
 	}
+
+    /**
+     * get the value of the key from the language used
+     * @param string $key
+     * @return string
+     */
+    public function lang(string $key): string
+    {
+        return Application::$APP->lang($key);
+    }
 }

@@ -19,8 +19,12 @@ abstract class DbModel extends Model
 
 	abstract public function attributes(): array;
 
-	public function save()
-	{
+    /**
+     * save method to insert data of a specific model to it's table
+     * @return bool
+     */
+    public function save(): bool
+    {
 		$tableName = $this->tableName();
 		$attributes = $this->attributes();
 		$params = array_map(fn($m) => ":$m", $attributes);
@@ -33,10 +37,16 @@ abstract class DbModel extends Model
 			$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
-		$statement->execute();
-		return true;
+		return $statement->execute();
 	}
-	
+
+    /**
+     * this method is just to keep the code clean
+     * instead of writing the whole prepare statement on the app instance
+     * call this method :)
+     * @param string $sql
+     * @return false|PDOStatement
+     */
 	public static function prepare(string $sql)
 	{
 		return Application::$APP->db->pdo->prepare($sql);

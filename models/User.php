@@ -59,7 +59,7 @@ class User extends DbModel
         $this->email = $email;
     }
 
-	public function save()
+	public function save(): bool
 	{
 		$this->password = password_hash($this->password, PASSWORD_BCRYPT);
 	    return parent::save();

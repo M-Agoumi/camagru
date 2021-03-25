@@ -23,11 +23,12 @@ abstract class Model
     public const RULE_MAX = 'max';
     public const RULE_UNIQUE = 'unique';
     /**
-     * @var array
+     * @var array to save errors to obtain later to show in the form
      */
     public array $errors = [];
 
     /**
+     * load data from the form to its model
      * @param array $data
      */
     public function loadData(array $data)
@@ -40,11 +41,15 @@ abstract class Model
 	}
 
     /**
+     * the rules should be respect by each child model
      * @return array
      */
     public abstract function rules(): array;
 
     /**
+     * validate the rules
+     * return true if no error found
+     * return false in case of any error found and save it to $this->errors
      * @return int
      */
     public function validate(): int
@@ -76,6 +81,7 @@ abstract class Model
 	}
 
     /**
+     * add error message to it's according field
      * @param string $attribute
      * @param string $rule
      * @param array $params
@@ -89,17 +95,28 @@ abstract class Model
         $this->errors[$attribute][] = $message;
     }
 
-	public function hasError($attribute)
-	{
+    /**
+     * check if an attribute has an error
+     * return it if true or false if not
+     * @param $attribute
+     * @return array|bool
+     */
+    public function hasError($attribute)
+    {
 		return $this->errors[$attribute] ?? false;
 	}
 
-	public function getFirstError($attribute): string
+    /**
+     * return the first error of the field
+     * @param $attribute
+     * @return string
+     */
+    public function getFirstError($attribute): string
 	{
 		return $this->errors[$attribute][0] ?? '';
 	}
 
-    /**
+    /** get the error message from the lang used
      * @return string[]
      */
     private function errorMessages(): array
@@ -113,6 +130,11 @@ abstract class Model
         ];
     }
 
+    /**
+     * get the value of the key from the language used
+     * @param string $key
+     * @return string
+     */
     public function lang(string $key): string
     {
         return Application::$APP->lang($key);

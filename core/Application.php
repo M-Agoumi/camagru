@@ -77,18 +77,30 @@ class Application
 		$this->controller = $controller;
 	}
 
-	private function getDotEnv()
+    /**
+     * get the setting in .env file
+     * @return array
+     */
+	private function getDotEnv() : array
 	{
 		return file_exists(self::$ROOT_DIR . "/.env") ?
 				parse_ini_file(self::$ROOT_DIR . "/.env") : [];
 	}
 
-	public function getEnvValue($attr)
+    /**
+     * @param $attr
+     * @return mixed|null env value if it exists
+     */
+    public function getEnvValue($attr)
 	{
 		return SELF::$ENV[$attr] ?? null;
 	}
 
-	public function getDatabaseConfig()
+    /**
+     * read database config file or return null
+     * @return array|false
+     */
+    public function getDatabaseConfig()
 	{
 		return file_exists(self::$ROOT_DIR . "/config/db.conf") ?
 				parse_ini_file(self::$ROOT_DIR . "/config/db.conf") : [];
@@ -104,6 +116,9 @@ class Application
 	    return $this->MainLang[$key] ?? $this->fallbackLang[$key] ?? $key;
     }
 
+    /** read language config file
+     * @return array
+     */
     private function setLang(): array
     {
         $lang = [];

@@ -43,8 +43,12 @@ class Field
 	}
 
 
-	public function __toString()
-	{
+    /** magic method to convert from object to string
+     * check php docs for in depth explanation
+     * @return string
+     */
+    public function __toString(): string
+    {
 		return sprintf('
 		<div class="row">
 			<div class="col-25">
@@ -71,36 +75,58 @@ class Field
 		);
 	}
 
-	public function passwordField()
-	{
+    /**
+     * set the field type to password
+     * @return $this
+     */
+	public function passwordField(): Field
+    {
 		$this->type = self::TYPE_PASSWORD;
 		
 		return $this;
 	}
 
-	public function emailField()
-	{
+    /**
+     * set the field type to email
+     * @return $this
+     */
+	public function emailField(): Field
+    {
 		$this->type = self::TYPE_EMAIL;
 
 		return $this;
 	}
 
-	public function disabled()
-	{
+    /**
+     * make the field disabled
+     * @return $this
+     */
+	public function disabled(): Field
+    {
 		$this->disabled = self::DISABLED;
 
 		return $this;
 	}
 
-	public function required()
-	{
+    /**
+     * make the field required
+     * @return $this
+     */
+	public function required(): Field
+    {
 		$this->required = self::REQUIRED;
 
 		return $this;
 	}
 
-	public function default(string $default)
-	{
+
+    /**
+     * give a default value to the field
+     * @param string $default
+     * @return $this
+     */
+	public function default(string $default): Field
+    {
 		if (!$this->model->{$this->attribute})
 			$this->model->{$this->attribute} = $default;
 
