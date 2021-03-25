@@ -17,28 +17,46 @@ class Form
 {
 	public Field $field;
 
-	// todo implements required and disabled methods
-	// todo $form->field('username')->required()->disabled();
-	public static function begin(string $action = '', string $method = '', string $class = '')
-	{
+    /**
+     * @param string $action
+     * @param string $method
+     * @param string $class
+     * @return Form
+     */
+    public static function begin(string $action = '', string $method = '', string $class = ''): Form
+    {
 		// if (!$action)
 		// 	$action = PHP_SELF // todo google this and change it later
 		echo sprintf('<form action="%s" method="%s" class="class %s">', $action, $method, $class);
 		return New Form();
 	}
 
-	public static function end()
+    /**
+     *
+     */
+    public static function end()
 	{
 		echo '</form>';
 	}
 
-	public function field(Model $model, string $attribute, string $label = '', string $placeholder = '')
-	{
+    /**
+     * @param Model $model
+     * @param string $attribute
+     * @param string $label
+     * @param string $placeholder
+     * @return Field
+     */
+    public function field(Model $model, string $attribute, string $label = '', string $placeholder = ''): Field
+    {
 		$this->field = New Field($model, $attribute, $label, $placeholder);
 		return $this->field;
 	}
 
-	public function submite(string $value): string
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function submit(string $value): string
 	{
 		return '<div class="row"><input type="submit" value="' . $value . '"></div>';
 	}
