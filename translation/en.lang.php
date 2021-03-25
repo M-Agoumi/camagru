@@ -26,6 +26,9 @@ return array(
     /** navbar */
 
     'home' => 'Home',
+    'news' => 'News',
+    'contact us' => 'Contact Us',
+    'about' => 'About',
     'login' => 'Login',
     'register' =>'Register',
 

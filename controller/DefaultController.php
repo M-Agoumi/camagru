@@ -19,7 +19,7 @@ require_once 'Controller.php';
 
 class DefaultController extends Controller
 {
-	/**
+	/** home view to be modified
 	 * @return string
 	 */
 	function index(): string

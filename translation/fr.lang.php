@@ -26,8 +26,8 @@ return array(
     /** navbar */
 
     'home' => 'Accueil',
-    'login' => 'Login',
-    'register' =>'Register',
+    'login' => 'Connexion',
+    'register' =>'S\'inscrire',
 
     /** error messages[form validation][models/Model.php] */
 
