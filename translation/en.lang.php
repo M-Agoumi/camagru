@@ -39,4 +39,5 @@ return array(
     'RULE_MIN' => 'Min length of this field is {min}',
     'RULE_MAX' => 'Max length of this field is {max}',
     'RULE_UNIQUE' => 'This field is used by someone else',
+    'RULE_WRONG' => 'Sorry, There is no matching credentials'
 );
