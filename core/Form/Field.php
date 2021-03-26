@@ -30,13 +30,12 @@ class Field
 	public string $required;
 	public string $default;
 
-	public function __construct(Model $model, string $attribute, string $label, string $holder)
+	public function __construct(Model $model, string $attribute, string $label)
 	{
 		$this->model = $model;
 		$this->attribute = $attribute;
 		$this->label = $label;
 		$this->type = self::TYPE_TEXT;
-		$this->holder = $holder;
 		$this->disabled = '';
 		$this->required = '';
 		$this->default = '';
@@ -132,4 +131,11 @@ class Field
 
 		return $this;
 	}
+
+    public function setHolder(string $string)
+    {
+        $this->holder = $string;
+
+        return $this;
+    }
 }

@@ -13,16 +13,19 @@
 
 /**
  * Class User
+ * @var $ROOT_DIR ~/Desktop/School/camagru
  */
 
 require_once Application::$ROOT_DIR . "/core/DbModel.php";
 
 class User extends DbModel
 {
+    public ?int $id = null;
 	public ?string $name = null;
 	public ?string $username = null;
 	public ?string $email = null;
 	public ?string $password = null;
+	public ?int $status = null;
 
 
 	public function tableName(): string

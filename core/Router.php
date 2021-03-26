@@ -106,7 +106,7 @@ class Router
 	 */
 	public function renderView(string $view, array $params = [])
 	{
-
+        /** todo pass params to the layout too */
 		$layout = $this->layoutContent();
 		$view = $this->renderOnlyView($view, $params);
 		return str_replace('{{ body }}', $view, $layout);

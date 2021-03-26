@@ -15,6 +15,9 @@ include_once Application::$ROOT_DIR . "/models/Model.php";
 
 abstract class DbModel extends Model
 {
+    public ?string $created_at = null;
+    public ?string $updated_at = null;
+
 	abstract public function tableName(): string;
 
 	abstract public function attributes(): array;
@@ -39,6 +42,22 @@ abstract class DbModel extends Model
 
 		return $statement->execute();
 	}
+
+    /**
+     * @param $key
+     * @param $value
+     * @return false|User
+     */
+    public function getOneBy($key, $value)
+    {
+        $tableName = $this->tableName();
+
+        $statement = self::prepare("SELECT * FROM $tableName WHERE $key = :value");
+        $statement->bindParam(":value", $value);
+        $statement->execute();
+
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
 
     /**
      * this method is just to keep the code clean

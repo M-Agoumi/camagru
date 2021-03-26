@@ -27,7 +27,7 @@ class Form
     {
 		// if (!$action)
 		// 	$action = PHP_SELF // todo google this and change it later
-		echo sprintf('<form action="%s" method="%s" class="class %s">', $action, $method, $class);
+		echo sprintf('<form action="%s" method="%s" class="form %s">', $action, $method, $class);
 		return New Form();
 	}
 
@@ -44,12 +44,11 @@ class Form
      * @param Model $model
      * @param string $attribute
      * @param string $label
-     * @param string $placeholder
      * @return Field
      */
-    public function field(Model $model, string $attribute, string $label = '', string $placeholder = ''): Field
+    public function field(Model $model, string $attribute, string $label = ''): Field
     {
-		$this->field = New Field($model, $attribute, $label, $placeholder);
+		$this->field = New Field($model, $attribute, $label);
 		return $this->field;
 	}
 

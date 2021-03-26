@@ -22,6 +22,7 @@ abstract class Model
     public const RULE_MIN = 'min';
     public const RULE_MAX = 'max';
     public const RULE_UNIQUE = 'unique';
+    public const RULE_WRONG = 'wrong';
     /**
      * @var array to save errors to obtain later to show in the form
      */
@@ -86,7 +87,7 @@ abstract class Model
      * @param string $rule
      * @param array $params
      */
-    private function addError(string $attribute, string $rule, array $params = [])
+    public function addError(string $attribute, string $rule, array $params = [])
     {
         $message = $this->errorMessages()[$rule] ?? '';
         foreach ($params as $key => $value) {
@@ -127,6 +128,7 @@ abstract class Model
             self::RULE_MIN => $this->lang('RULE_MIN'),
             self::RULE_MAX => $this->lang('RULE_MAX'),
             self::RULE_UNIQUE => $this->lang('RULE_UNIQUE'),
+            self::RULE_WRONG => $this->lang('RULE_WRONG'),
         ];
     }
 
