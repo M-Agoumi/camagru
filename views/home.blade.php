@@ -1,3 +1,9 @@
+<?php
+    /**
+     * @var $title
+     * @var $test
+     */
+?>
 <title><?=$title?></title>
 <h1><?=Application::$APP->lang('home')?> <?= $test ?></h1>
 <div class="masonry-container">

@@ -1,15 +1,17 @@
+<?php
+	/** @var $user User */
+	include_once Application::$ROOT_DIR . "/core/Form/Form.php";
+?>
 <h1>Sign In</h1>
-<!--<form method="post" class="form-login">
-    <div class="form-block">
-        <label for="username"><small>Username/Email/Phone:</small></label><br>
-        <input type="text" id="username" class="input" placeholder="example@mail.com">
-    </div>
-    <div class="form-block">
-        <label for="password"><small>Password:</small></label><br>
-        <input type="password" id="password" class="input" placeholder="*****">
-    </div>
-    <button type="submit">Sign in</button>
-</form>-->
+<?php
+ 	$form = Form::begin('/login', "POST", "login-form");
+		echo $form->field($user, 'username', 'Username OR Email', 'John Dracula')->required();
+		echo $form->field($user, 'password')->passwordField();
+        echo $form->submit('Sign up');
+
+    Form::end();
+?>
+<!--
 <form method="POST" class="login-form">
     <div class="row">
         <div class="col-25">
@@ -31,3 +33,4 @@
         <input type="submit" value="Sing in">
     </div>
 </form>
+-->
