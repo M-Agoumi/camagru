@@ -28,7 +28,7 @@ class AuthController extends Controller
 	{
 		$this->setLayout('auth');
 
-		return $this->render('login');
+		return $this->render('login', ['user' => New User()]);
 	}
 
 	/** this the method responsible for handling the login attempts
@@ -39,8 +39,21 @@ class AuthController extends Controller
 	public function auth(Request $request)
 	{
 		$body = $request->getBody();
-		var_dump($body);
-		// todo change this after creating database and db instance
+		$user = new User();
+        $record = $user->getOneBy('username', $body['username']);
+		if (!$record)
+		    $record = $user->getOneBy('email', $body['username']);
+        $user->loadData((array)$record);
+		if ($user)
+		    if (password_verify($body['password'], $user->password))
+		        return var_dump($user);
+		// todo save to session after creating it
+        unset($user);
+        $user = New User();
+        $user->username = $body['username'];
+        $user->addError('username' ,'');
+        $user->addError('password' ,$user::RULE_WRONG);
+        return $this->render('login', ['auth' => 1,'user' => $user]);
 	}
 
 
@@ -52,7 +65,7 @@ class AuthController extends Controller
 	 */
 	public function signup()
 	{
-		return $this->render('register');
+		return $this->render('register', ['user' => New User, 'title' => 'Sing up']);
 	}
 
 	/** todo save the email to the database or session and send verification code
