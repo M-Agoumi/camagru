@@ -52,7 +52,11 @@ $app->router->post('/signup', [AuthController::class, 'verifyEmail'])->name('aut
 $app->router->post('/register_step_2', [AuthController::class, 'register'])->name('auth.register');
 $app->router->get('/register_step_2', [AuthController::class, 'test'])->name('auth.test');
 $app->router->post('/registration', [AuthController::class, 'insertUser'])->name('auth.insertUser');
+$app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');
+$app->router->post('/logout', [AuthController::class, 'logout'])->name('app.logout');
+
 $app->router->get('/debugger', function (){return $_SESSION['email_code'];});
+
 
 /**
  * run our application
