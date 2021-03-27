@@ -9,9 +9,20 @@
             </div>
             <!-- todo change this and put it in css file -->
             <div style="float: right">
+				<?php if (Application::isGuest()):?>
                 <li><a href="<?=Application::path('auth.login')?>"><?= $this->lang('login');?></a></li>
                 <li><a href="<?=Application::path('auth.singup')?>"><?= $this->lang('register');?></a></li>
-            </div>
+            	<?php else: ?>
+				<li>
+					<a>
+						<form action="<?=Application::path('app.logout')?>" method="post">
+							<input type="hidden" name="token" value="123123">
+							<button><?= Application::$APP->user->username;?></button>
+						</form>
+					</a>
+				</li>
+				<?php endif; ?>
+			</div>
 		</ul>
 	</nav>
 </header>
