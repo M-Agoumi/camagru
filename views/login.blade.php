@@ -4,7 +4,7 @@
 ?>
 <h1>Sign In</h1>
 <?php
- 	$form = Form::begin('/login', "POST", "login-form");
+ 	$form = Form::begin(Application::path('auth.auth2'), "POST", "login-form");
 		echo $form->field($user, 'username', 'Username OR Email', 'John Dracula')->required();
 		echo $form->field($user, 'password')->passwordField();
         echo $form->submit('Sign up');
