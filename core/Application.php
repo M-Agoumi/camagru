@@ -16,6 +16,7 @@ require_once 'Router.php';
 require_once 'Request.php';
 require_once 'Response.php';
 require_once 'Database.php';
+require_once 'Session.php';
 require_once '../controller/Controller.php';
 
 /**
@@ -31,6 +32,7 @@ class Application
 	public ?Request $request = null;
 	public ?Response $response = null;
 	public ?Controller $controller = null;
+	public ?Session $session = null;
 	protected array $MainLang = [];
 	protected array $fallbackLang = [];
 
@@ -46,6 +48,7 @@ class Application
 		self::$ENV = $this->getDotEnv();
 		$this->request = New Request();
 		$this->response = New Response();
+		$this->session = New Session();
 		$this->router = New Router($this->request, $this->response);
 		$this->db = New Database($this->getDatabaseConfig());
 		// todo implement session save for language preference and add more languages to choose from
@@ -93,7 +96,7 @@ class Application
      */
     public function getEnvValue($attr)
 	{
-		return SELF::$ENV[$attr] ?? null;
+		return $this->ENV[$attr] ?? null;
 	}
 
     /**
@@ -128,5 +131,14 @@ class Application
         array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
         array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
         return $lang;
+    }
+	
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	public static function path(string $name): string
+    {
+    	return self::$APP->router->path($name);
     }
 }
