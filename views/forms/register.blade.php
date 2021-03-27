@@ -7,7 +7,7 @@
  	$form = Form::begin('registration', "POST", "login-form");
 		echo $form->field($user, 'name', 'Full Name')->setHolder('John Dracula')->required();
 		echo $form->field($user, 'email', 'Email')
-					->default('default@email.com')
+					->default($email) /** @var $email */
 					->disabled()
 					->emailField();
 		echo $form->field($user, 'username')->required();
