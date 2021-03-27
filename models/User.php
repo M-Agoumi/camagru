@@ -20,12 +20,16 @@ require_once Application::$ROOT_DIR . "/core/DbModel.php";
 
 class User extends DbModel
 {
+	const STATUS_INACTIVE = 0;
+	const STATUS_ACTIVE = 1;
+	const STATUS_DELETED = 2;
+	
     public ?int $id = null;
 	public ?string $name = null;
 	public ?string $username = null;
 	public ?string $email = null;
 	public ?string $password = null;
-	public ?int $status = null;
+	public ?int $status = self::STATUS_INACTIVE;
 
 
 	public function tableName(): string
@@ -35,7 +39,7 @@ class User extends DbModel
 
 	public function attributes(): array
 	{
-		return ['name', 'username', 'email', 'password'];
+		return ['name', 'username', 'email', 'password', 'status'];
 	}
 
 	/**
@@ -64,6 +68,7 @@ class User extends DbModel
 
 	public function save(): bool
 	{
+		$this->status = self::STATUS_INACTIVE;
 		$this->password = password_hash($this->password, PASSWORD_BCRYPT);
 	    return parent::save();
 	}
@@ -75,8 +80,10 @@ class User extends DbModel
     {
         return [
             'name' => [self::RULE_REQUIRED],
-            'username' => [self::RULE_REQUIRED, self::RULE_UNIQUE],
-            'email' => [self::RULE_UNIQUE, self::RULE_REQUIRED, self::RULE_EMAIL],
+            'username' => [self::RULE_REQUIRED, [
+            	self::RULE_UNIQUE, 'class' => self::class
+            ]],
+            'email' => [[self::RULE_UNIQUE, 'class' => self::class], self::RULE_REQUIRED, self::RULE_EMAIL],
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
         ];
     }

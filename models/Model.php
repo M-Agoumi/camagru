@@ -75,6 +75,15 @@ abstract class Model
                 // max? check the strlen()
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max'])
                     $this->addError($attribute, self::RULE_MAX, $rule);
+                if ($ruleName === self::RULE_UNIQUE) {
+                	/** @var $className DbModel */
+                	$className = $rule['class'];
+                	$uniqueAttr = $rule['attribute'] ?? $attribute;
+                	$tableName = $className::tableName();
+                	$record = $className::getOneBy($uniqueAttr, $value);
+                	if ($record)
+                		$this->addError($attribute, self::RULE_UNIQUE, ['field' => ucfirst($attribute)]);
+                }
             }
         }
 
