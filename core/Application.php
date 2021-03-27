@@ -18,21 +18,23 @@ require_once 'Response.php';
 require_once 'Database.php';
 require_once 'Session.php';
 require_once '../controller/Controller.php';
-
+require_once '../models/User.php';
 /**
- * Class Application
+ * Class Application don't forget to include your user class
  */
 class Application
 {
 	public static string $ROOT_DIR;
 	public static Application $APP;
 	public static array $ENV;
+	public string $userCLass;
 	public Database $db;
 	public ?Router $router = null;
 	public ?Request $request = null;
 	public ?Response $response = null;
 	public ?Controller $controller = null;
 	public ?Session $session = null;
+	public ?DbModel $user;
 	protected array $MainLang = [];
 	protected array $fallbackLang = [];
 
@@ -46,6 +48,7 @@ class Application
 		self::$ROOT_DIR = $rootPath;
 		self::$APP = $this;
 		self::$ENV = $this->getDotEnv();
+		$this->userCLass = self::getEnvValue('userClass');
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->session = New Session();
@@ -54,8 +57,29 @@ class Application
 		// todo implement session save for language preference and add more languages to choose from
 		$this->MainLang = $this->setLang()[0];
 		$this->fallbackLang = $this->setLang()[1];
+		$this->user = self::getUser();
+		
 	}
-
+	
+	private static function getUser()
+	{
+		/** @var  $this->userClass User */
+		$primaryValue = self::$APP->session->get('user');
+		if ($primaryValue) {
+			$primaryKey = self::$APP->userCLass::primaryKey();
+			return self::$APP->userCLass::findOne([$primaryKey =>  $primaryValue]);
+		}
+		return NULL;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public static function isGuest(): bool
+	{
+		return !self::$APP->user;
+	}
+	
 	/**
 	 * calling the resolver method to handle our request
 	 */
@@ -94,9 +118,9 @@ class Application
      * @param $attr
      * @return mixed|null env value if it exists
      */
-    public function getEnvValue($attr)
+    public static function getEnvValue($attr)
 	{
-		return $this->ENV[$attr] ?? null;
+		return self::$ENV[$attr] ?? null;
 	}
 
     /**
@@ -141,4 +165,23 @@ class Application
     {
     	return self::$APP->router->path($name);
     }
+	
+	public function login(DbModel $user)
+	{
+		$this->user = $user;
+		$primaryKey = $user->primaryKey();
+		$primaryValue = $user->{$primaryKey};
+		$this->session->set('user', $primaryValue);
+		$this->response->redirect('/');
+	}
+	
+	public static function logout()
+	{
+		$token = Application::$APP->request->getBody()['token'] ?? '';
+		if ($token == 123123) {
+			Application::$APP->user = NULL;
+			Application::$APP->session->remove('user');
+		}
+		Application::$APP->response->redirect('/');
+	}
 }
