@@ -1,2 +1,2 @@
-+ implement reading routes either from anotations [@Route('get' => '/yourIRL')] or reading from routes.php file
 + implement caching for a faster reloading time and optimise performance
++ a nice 500 internal server error page in case of anything wrong
