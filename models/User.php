@@ -16,7 +16,7 @@
  * @var $ROOT_DIR ~/Desktop/School/camagru
  */
 
-require_once Application::$ROOT_DIR . "/core/DbModel.php";
+require_once  "../core/DbModel.php";
 
 class User extends DbModel
 {
@@ -41,7 +41,15 @@ class User extends DbModel
 	{
 		return ['name', 'username', 'email', 'password', 'status'];
 	}
-
+	
+	/**
+	 * @return string
+	 */
+	public function primaryKey(): string
+	{
+		return 'id';
+	}
+	
 	/**
 	 * @return string|null
 	 */
@@ -87,4 +95,5 @@ class User extends DbModel
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
         ];
     }
+    
 }
