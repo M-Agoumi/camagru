@@ -11,10 +11,17 @@
     <?php include "__header.php" ?>
     <main class="page-body">
         <div class="container">
+			<?php if (Application::$APP->session->getFlash('success')): ?>
+				<div class="alert alert-success" id="flash_message">
+					<?=Application::$APP->session->getFlash('success')?>
+					<a href="#" onclick="dismissMessage()">x</a>
+				</div>
+			<?php endif; ?>
             {{ body }}
         </div>
     </main>
 </div>
     <?php include "__footer.php" ?>
+	<script src="/assets/js/script.js"></script>
 </body>
 </html>
