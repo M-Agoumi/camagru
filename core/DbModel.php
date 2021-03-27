@@ -56,7 +56,7 @@ abstract class DbModel extends Model
         $statement->bindParam(":value", $value);
         $statement->execute();
 
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        return $statement->fetchObject();
     }
 
     /**
