@@ -17,6 +17,7 @@
 
 include_once "Controller.php";
 include_once Application::$ROOT_DIR . '/models/User.php';
+include_once Application::$ROOT_DIR . '/models/LoginForm.php';
 
 class AuthController extends Controller
 {
@@ -26,6 +27,8 @@ class AuthController extends Controller
 	 */
 	public function login()
 	{
+		if (!Application::isGuest())
+			return Application::$APP->response->redirect('/');
 		$this->setLayout('auth');
 
 		return $this->render('login', ['user' => New User()]);
@@ -53,8 +56,21 @@ class AuthController extends Controller
         $user = New User();
         $user->username = $body['username'];
         $user->addError('username' ,'');
-        $user->addError('password' ,$user::RULE_WRONG);
+        $user->addError('password' , 'Username or password is wrong');
         return $this->render('login', ['auth' => 1,'user' => $user]);
+	}
+	
+	public function auth2(Request $request)
+	{
+		$loginForm = New LoginForm();
+		$loginForm->loadData($request->getBody());
+		
+		if ($loginForm->validate() && $loginForm->login()) {
+//			Application::$APP->session->setFlash('success', 'Your account has been created successfully');
+//			return Application::$APP->response->redirect('/');
+			echo "yes";
+		}
+		return $this->render('login', ['user' => $loginForm]);
 	}
 
 
@@ -152,4 +168,8 @@ class AuthController extends Controller
 		return $this->test($request, $user);
 	}
 
+	public function logout()
+	{
+		Application::logout();
+	}
 }
