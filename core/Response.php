@@ -23,4 +23,14 @@ class Response
 	{
 		http_response_code($code);
 	}
+	
+	/**
+	 * @param string $url
+	 * @return bool
+	 */
+	public function redirect(string $url): bool
+	{
+		header('Location: '. $url);
+		return false;
+	}
 }
