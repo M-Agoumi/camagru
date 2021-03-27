@@ -348,6 +348,39 @@ input[type=submit]:hover {
     clear: both;
 }
 
+.alert{
+    padding: 15px;
+    width: fit-content;
+    margin: auto;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    opacity: 1;
+    transition: opacity 1s;
+}
+.fade{
+    opacity: 0;
+}
+
+.alert a{
+    float: right;
+    font-weight: 700;
+    color: #FFF;
+    text-shadow: 0 1px 0 #fff;
+    text-decoration: none !important;
+    font-size: 18px !important;
+    line-height: 1.2;
+    position: relative;
+    top: -2px;
+    right: -21px;
+}
+
+.alert-success{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    padding-right: 35px;
+}
+
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
     .col-25, .col-75, input[type=submit] {
