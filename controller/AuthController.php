@@ -30,11 +30,12 @@ class AuthController extends Controller
 
 		return $this->render('login', ['user' => New User()]);
 	}
-
+	
 	/** this the method responsible for handling the login attempts
-     * checks if everything cool let him in
-     * @route('post' => '/login')
+	 * checks if everything cool let him in
+	 * @route('post' => '/login')
 	 * @param Request $request
+	 * @return false|string|string[]|void
 	 */
 	public function auth(Request $request)
 	{
@@ -78,10 +79,14 @@ class AuthController extends Controller
 	public function verifyEmail(Request $request)
 	{
 		$body = $request->getBody();
-		if (!empty($body['email']))
-			return $this->render('messages/register_email', ['email' => $body['email']]);
+		if (!empty($body['email'])) {
+			/** todo check if email is valid */
+			$_SESSION['user_email'] = $body['email'];
+			$_SESSION['email_code'] = rand(100000,999999);
+			return $this->render('messages/register_email');
+		}
 
-		return $this->render('register');
+		return Application::$APP->response->redirect('/signup');
 	}
 
 	/** get the verification code sent to the user email if it's valid
@@ -97,13 +102,13 @@ class AuthController extends Controller
 
 		// todo change the below condition to check with the database;
 		// todo retrieve the email and pass it as param
-		$email = 'example@email.com';
-		if ($verification) {
-			return $this->render('forms/register', ['email' => $email, 'user' =>New User()]);
+		$code = $_SESSION['email_code'] ?? 0;
+		if ($verification == $code && $code) {
+			return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' =>New User()]);
 		}
 
 		return $this->render('messages/register_email', [
-			'email' => $email,
+			'email' => $_SESSION['user_email'],
 			'error' => 'Wrong Verification Code'
 		]);
 	}
@@ -138,9 +143,11 @@ class AuthController extends Controller
 		$user = New User();
 		$user->loadData($request->getBody());
 
-		$user->setEmail('example@email.com');
-		if ($user->validate() && $user->save())
-			return "Success";
+		$user->setEmail($_SESSION['user_email']);
+		if ($user->validate() && $user->save()) {
+			Application::$APP->session->setFlash('success', 'Your account has been created successfully');
+			return Application::$APP->response->redirect('/');
+		}
 
 		return $this->test($request, $user);
 	}
