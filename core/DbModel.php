@@ -11,7 +11,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-include_once Application::$ROOT_DIR . "/models/Model.php";
+include_once  "../models/Model.php";
 
 abstract class DbModel extends Model
 {
@@ -21,6 +21,8 @@ abstract class DbModel extends Model
 	abstract public function tableName(): string;
 
 	abstract public function attributes(): array;
+	
+	abstract public function primaryKey(): string;
 
     /**
      * save method to insert data of a specific model to it's table
@@ -58,7 +60,20 @@ abstract class DbModel extends Model
 
         return $statement->fetchObject();
     }
-
+	
+	public static function findOne(array $where)
+	{
+		$tableName = static::tableName();
+		$attributes = array_keys($where);
+		$sql = implode("AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
+		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
+		foreach ($where as $key => $item) {
+			$stmt->bindValue(":$key", $item);
+		}
+		
+		$stmt->execute();
+		return $stmt->fetchObject(static::class);
+	}
     /**
      * this method is just to keep the code clean
      * instead of writing the whole prepare statement on the app instance
