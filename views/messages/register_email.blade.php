@@ -3,8 +3,8 @@
  * check if we came from our AuthController otherwise
  * show 403 forbidden or just redirect home
  */
-
-if (!isset($email))
+$email = $_SESSION['user_email'] ?? '';
+if (!$email)
 	header('location: /');
 ?>
 <h1>One More Step Before Joining Us</h1>
