@@ -20,6 +20,8 @@ class Router
 	public Request $request;
 	public ?Response $response = null;
 	protected array $routes = [];
+	protected array $paths = [];
+	protected string $tmp;
 
 	/**
 	 * Router constructor.
@@ -42,12 +44,14 @@ class Router
 	 * @param $callback
 	 * does not return anything
 	 */
-	public function get($path, $callback)
+	public function get($path, $callback): Router
 	{
 		if (!isset($this->routes['get'][$path]))
 			$this->routes['get'][$path] = $callback;
 		else
 			die("route $path is already used please update it");
+		$this->tmp = $path;
+		return $this;
 	}
 
 	/**
@@ -65,6 +69,28 @@ class Router
 			$this->routes['post'][$path] = $callback;
 		else
 			die("route $path is already used please update it");
+		$this->tmp = $path;
+		return $this;
+	}
+	
+	public function name(string $name)
+	{
+		if (!isset($this->paths[$name]))
+			$this->paths[$name] = $this->tmp;
+		else
+			die("the path name [$name] is already used");
+	}
+	
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	public function path(string $name): string
+	{
+		if ($this->paths[$name])
+			return $this->paths[$name];
+		/** todo throw and exception  */
+		die("there is no path with the name $name");
 	}
 
 	/**
