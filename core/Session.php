@@ -23,6 +23,28 @@ class Session
 	}
 	
 	/**
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function set(string $key, string $value)
+	{
+		$_SESSION[$key] = $value;
+	}
+	
+	/**
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get(string $key)
+	{
+		return $_SESSION[$key] ?? NULL;
+	}
+	
+	public function remove(string $key)
+	{
+		unset($_SESSION[$key]);
+	}
+	/**
 	 * @param $key     string success/warning/danger
 	 * @param $message string the content of the flash message
 	 */
