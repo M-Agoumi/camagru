@@ -65,16 +65,16 @@ abstract class Model
                 }
                 // required? then check for null
                 if ($ruleName === self::RULE_REQUIRED && !$value)
-                    $this->addError($attribute, self::RULE_REQUIRED);
+                    $this->addErrorForRules($attribute, self::RULE_REQUIRED);
                 // email? fine check if it's a valid email syntax
                 if ($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL))
-                    $this->addError($attribute, self::RULE_EMAIL);
+                    $this->addErrorForRules($attribute, self::RULE_EMAIL);
                 // min? check the strlen()
                 if ($ruleName === self::RULE_MIN && strlen($value) < $rule['min'])
-                    $this->addError($attribute, self::RULE_MIN, $rule);
+                    $this->addErrorForRules($attribute, self::RULE_MIN, $rule);
                 // max? check the strlen()
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max'])
-                    $this->addError($attribute, self::RULE_MAX, $rule);
+                    $this->addErrorForRules($attribute, self::RULE_MAX, $rule);
                 if ($ruleName === self::RULE_UNIQUE) {
                 	/** @var $className DbModel */
                 	$className = $rule['class'];
@@ -82,7 +82,7 @@ abstract class Model
                 	$tableName = $className::tableName();
                 	$record = $className::getOneBy($uniqueAttr, $value);
                 	if ($record)
-                		$this->addError($attribute, self::RULE_UNIQUE, ['field' => ucfirst($attribute)]);
+                		$this->addErrorForRules($attribute, self::RULE_UNIQUE, ['field' => ucfirst($attribute)]);
                 }
             }
         }
@@ -96,7 +96,7 @@ abstract class Model
      * @param string $rule
      * @param array $params
      */
-    public function addError(string $attribute, string $rule, array $params = [])
+    private function addErrorForRules(string $attribute, string $rule, array $params = [])
     {
         $message = $this->errorMessages()[$rule] ?? '';
         foreach ($params as $key => $value) {
@@ -104,6 +104,11 @@ abstract class Model
         }
         $this->errors[$attribute][] = $message;
     }
+	
+	public function addError(string $attribute, string $message)
+	{
+		$this->errors[$attribute][] = $message;
+	}
 
     /**
      * check if an attribute has an error
