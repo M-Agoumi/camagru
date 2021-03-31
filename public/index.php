@@ -36,6 +36,7 @@ $app = New Application(dirname(__DIR__));
 
 /**
  * include our controllers so we can send their methods
+ * @VAR $ROOT_DIR string ../
  */
 
 include_once $app::$ROOT_DIR . "/controller/DefaultController.php";
@@ -47,7 +48,7 @@ include_once $app::$ROOT_DIR . "/controller/AuthController.php";
 $app->router->get('/', [DefaultController::class, 'index'])->name('home.index');
 $app->router->get('/login', [AuthController::class, 'login'])->name("auth.login");
 $app->router->post('/login', [AuthController::class, 'auth'])->name('auth.auth');
-$app->router->get('/signup', [AuthController::class, 'signup'])->name('auth.singup');
+$app->router->get('/signup', [AuthController::class, 'signup'])->name('auth.signup');
 $app->router->post('/signup', [AuthController::class, 'verifyEmail'])->name('auth.verifyEmail');
 $app->router->post('/register_step_2', [AuthController::class, 'register'])->name('auth.register');
 $app->router->get('/register_step_2', [AuthController::class, 'test'])->name('auth.test');
