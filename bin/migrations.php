@@ -25,7 +25,18 @@ else
 /**
  * require our app class the heart of our application
  */
-require_once __DIR__ . "/../core/Application.php";
+/**
+ * require our autoloader
+ */
+
+$autoloadPath = __DIR__ . "/../__autoload.php";
+
+if (file_exists($autoloadPath))
+    require_once $autoloadPath;
+else
+    die("Failed to require the __autoloader: $autoloadPath\n");
+
+use core\Application;
 
 /**
  * creating a new instance of the Application class
@@ -33,13 +44,9 @@ require_once __DIR__ . "/../core/Application.php";
 
 $app = New Application(dirname(__DIR__));
 
-
 /**
- * include our controllers so we can send their methods
+ * require the routes of our application
  */
-
-include_once $app::$ROOT_DIR . "/controller/DefaultController.php";
-include_once $app::$ROOT_DIR . "/controller/AuthController.php";
 
 
 /**
