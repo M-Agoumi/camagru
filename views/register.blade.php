@@ -1,6 +1,6 @@
 <?php
+	use core\Form\Form;
 /** @var $user User */
-include_once Application::$ROOT_DIR . "/core/Form/Form.php";
 ?>
 <title><?=$title ?? ''?></title>
 <h1>Sign Up</h1>

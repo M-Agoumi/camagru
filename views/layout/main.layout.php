@@ -1,3 +1,4 @@
+<?php use core\Application;?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -11,6 +11,8 @@
 #                                                                              #
 # **************************************************************************** #
 
+use core\Application;
+
 class mg0001_creating_user_table
 {
 	public function up()

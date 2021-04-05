@@ -1,4 +1,5 @@
 <?php
+	use core\Application;
     /**
      * @var $title
      * @var $test

@@ -1,3 +1,8 @@
+<?php
+
+use core\Application;
+
+?>
 <header class="page-header">
 	<nav>
 		<ul>

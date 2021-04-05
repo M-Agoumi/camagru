@@ -1,6 +1,8 @@
 <?php
 	/** @var $user User */
-	include_once Application::$ROOT_DIR . "/core/Form/Form.php";
+	use core\Application;
+	use core\Form\Form;
+
 ?>
 <h1>Sign In</h1>
 <?php
