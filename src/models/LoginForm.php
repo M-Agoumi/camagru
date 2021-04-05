@@ -6,7 +6,9 @@
  * Time : 18:43
  */
 
-include_once "Model.php";
+namespace models;
+
+use core\Application;
 
 class LoginForm extends Model
 {

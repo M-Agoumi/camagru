@@ -6,6 +6,8 @@
  * Time : 15:00
  */
 
+namespace core;
+
 class Session
 {
 	/** string to make sure we dont override any other session variable */
