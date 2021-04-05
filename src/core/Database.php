@@ -46,7 +46,6 @@ class database
      */
 	public function applyMigrations()
 	{
-	    $this->createDatabase();
 		$this->createMigrationsTable();
 		$appliedMigrations = $this->getAppliedMigrations();
 
@@ -113,9 +112,5 @@ class database
 		echo '[' . date('Y-m-d H:i:s') . '] - ' . $message . PHP_EOL;
 	}
 
-    private function createDatabase()
-    {
-
-    }
 
 }
