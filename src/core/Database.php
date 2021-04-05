@@ -32,7 +32,7 @@ class database
 		} catch(PDOException  $e){
 			APPLICATION::$APP->response->setStatusCode(500);
 			if (Application::$APP::$ENV['env'] == 'dev')	
-				 die ($e->getMessage()); // todo handle this one nicely (add a backtrack)
+				 die ($e->getMessage() . PHP_EOL); // todo handle this one nicely (add a backtrack)
 			else
 				echo APPLICATION::$APP->router->renderView('error/__500', [
 					"title" => "500 Internal Server Error",
@@ -46,6 +46,7 @@ class database
      */
 	public function applyMigrations()
 	{
+	    $this->createDatabase();
 		$this->createMigrationsTable();
 		$appliedMigrations = $this->getAppliedMigrations();
 
@@ -111,5 +112,10 @@ class database
 	{
 		echo '[' . date('Y-m-d H:i:s') . '] - ' . $message . PHP_EOL;
 	}
+
+    private function createDatabase()
+    {
+
+    }
 
 }
