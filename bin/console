@@ -15,6 +15,9 @@
 	$command = array_shift($arguments);
 	$arguments = $arguments ?? null;
 
+	/** $console a predefine variable for other scripts to access if they are running tho console */
+    $console = 1;
+
 	/** command reading debugger */
 //	echo $command . PHP_EOL;
 //	var_dump($arguments);
@@ -55,8 +58,19 @@
                 }
             }
         } elseif ($arguments[0] == 'migrate') {
-	        echo "Applying Migrations";
-            include "migrations.php";
+	        if (isset($arguments[1]) && $arguments[1] == 'down'){
+	            $action = 1;
+	            if (isset($arguments[2]))
+	                $migrationsNumber = $arguments[2];
+	            else
+	                $migrationsNumber = 0;
+                echo "Reverting last ";
+                echo  !$migrationsNumber ? "all" : $migrationsNumber;
+                echo " migration(s)" . PHP_EOL;
+            } else {
+                echo "Applying Migrations" . PHP_EOL;
+            }
+	        include "migrations.php";
         } else {
 	        migrateHelper();
         }
@@ -142,8 +156,9 @@
     {
         echo "Here is the migrate Commands you can run:" . PHP_EOL;
 
-        echo "migrate:migrate:create:database \tto create the project database if it doesn't not exist --database fetched from config file" . PHP_EOL;
-        echo "migrate:migrate\t\t\t\tto apply migration from the migrations folder" . PHP_EOL;
+        echo "migrate:create:database \tto create the project database if it doesn't not exist --database fetched from config file" . PHP_EOL;
+        echo "migrate:migrate\t\t\tto apply migration from the migrations folder" . PHP_EOL;
+        echo "migrate:migrate:down:int\trevert last int migrations" . PHP_EOL;
         exit(1);
     }
 

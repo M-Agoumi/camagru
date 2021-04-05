@@ -112,5 +112,41 @@ class database
 		echo '[' . date('Y-m-d H:i:s') . '] - ' . $message . PHP_EOL;
 	}
 
+    public function downMigrations(int $migrationsNumber)
+    {
+        $this->createMigrationsTable();
+        $appliedMigrations = $this->getAppliedMigrations();
+
+        $appliedMigrations = array_reverse($appliedMigrations);
+        if ($migrationsNumber)
+            $toApplyMigrations = array_slice($appliedMigrations,0, $migrationsNumber);
+        else
+            $toApplyMigrations = $appliedMigrations;
+
+        foreach ($toApplyMigrations as $migration) {
+            if ($migration == '.' || $migration == '..')
+                continue ;
+            require_once Application::$ROOT_DIR. "/migrations//".$migration;
+            $className = pathinfo($migration, PATHINFO_FILENAME);
+            $instance = NEW $className();
+            $this->log("Reverting migration $migration");
+            $instance->down();
+            $this->log("Reverted migration $migration");
+            $newMigrations[] = $migration;
+        }
+        if (!empty($newMigrations))
+            $this->DeleteMigrations($newMigrations);
+        else
+            $this->log("All migrations are reverted");
+
+    }
+
+    private function DeleteMigrations(array $migrations)
+    {
+        $str = implode(', ', array_map(fn($m) => "('$m')", $migrations));
+        $statement = $this->pdo->prepare("DELETE FROM migrations WHERE (migration) IN ($str)");
+        $statement->execute();
+    }
+
 
 }

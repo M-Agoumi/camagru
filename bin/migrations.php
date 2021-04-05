@@ -11,17 +11,25 @@
 /*                                                                                                  */
 /* ************************************************************************************************ */
 
+
+/**
+ * check if the script is run directly and kill it
+ */
+
+if (!isset($console))
+    die("Please run bin/console migrate to run your command or get help" . PHP_EOL);
+
 /**
  * Getting global setting from the env file
  * enable error reporting if the env is dev
  */
 
 $config = parse_ini_file(__DIR__ ."/../.env");
-if (isset($config['env']) && $config['env'] === 'dev')
-	error_reporting(E_ALL ^ E_DEPRECATED);
-else
-	error_reporting(0);
-
+//if (isset($config['env']) && $config['env'] === 'dev')
+//	error_reporting(E_ALL ^ E_DEPRECATED);
+//else
+//	error_reporting(0);
+error_reporting(E_ERROR | E_PARSE);
 /**
  * require our app class the heart of our application
  */
@@ -52,4 +60,8 @@ $app = New Application(dirname(__DIR__));
 /**
  * run our application
  */
-$app->db->applyMigrations();
+if (isset($action) && $action) {
+    /** @var int $migrationsNumber */
+    $app->db->downMigrations($migrationsNumber);
+} else
+    $app->db->applyMigrations();
