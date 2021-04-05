@@ -12,15 +12,59 @@
 	}
 	$command = $argv[1];
 	$arguments = explode(':', $command);
-	$command = $arguments[0];
-	$arguments = $arguments[1];
+	$command = array_shift($arguments);
+	$arguments = $arguments ?? null;
 
-	//echo $command . " " . $arguments;
+	/** command reading debugger */
+//	echo $command . PHP_EOL;
+//	var_dump($arguments);
 
 	if ($command === 'make') {
 		$controllerName = getControllerName($argv[2] ?? '');
 		makeController($controllerName);
-	}
+	} else if ($command == 'migrate') {
+	    if (!$arguments)
+	        migrateHelper();
+	    else if ($arguments[0] == 'create') {
+	        if (isset($arguments[1]) && $arguments[1] == 'database') {
+	            echo "creating database..." . PHP_EOL;
+	            if (!$databaseConfig = getDatabaseConfig())
+	                die("Config File is not found" . PHP_EOL);
+	            if (!$database = getDatabaseName($databaseConfig['DB_DSN']))
+	                die("config file is miss written please check config/db.config.example\n");
+
+	            /** get connection config from config file */
+                $dsn = getDatabaseDSN($databaseConfig['DB_DSN']);
+                $user = $databaseConfig['DB_USER'] ?? NULL;
+                $pass = $databaseConfig['DB_PASSWORD'] ?? NULL;
+
+                /** try to connect to database and create the database */
+                try {
+                    $dbh = new PDO($dsn, $user , $pass);
+
+                    $dbh->exec("CREATE DATABASE `$database`;
+                        CREATE USER '$user'@'localhost' IDENTIFIED BY '$pass';
+                        GRANT ALL ON `$database`.* TO '$user'@'localhost';
+                        FLUSH PRIVILEGES;")
+                    or die(print_r($dbh->errorInfo(), true));
+                    echo "database $database created";
+                    unset($dbh);
+                }
+                catch (PDOException $e) {
+                    die("DB ERROR: " . $e->getMessage());
+                }
+            }
+        } elseif ($arguments[0] == 'migrate') {
+	        echo "Applying Migrations";
+            include "migrations.php";
+        } else {
+	        migrateHelper();
+        }
+    } else {
+	    echo "Command Not Found" . PHP_EOL;
+        show_help();
+        exit(1);
+    }
 
 	/**
 	 * funcionality functions
@@ -63,6 +107,46 @@
 		return substr($haystack, -$lenght) === $needle;
 	}
 
+	/** Migrate helper function */
+
+    function getDatabaseConfig() {
+        return file_exists( __DIR__ . "/../config/db.conf") ?
+            parse_ini_file( __DIR__ . "/../config/db.conf") : NULL;
+    }
+
+    function getDatabaseName(string $dsn): ?string
+    {
+        $config = explode(';', $dsn);
+        if (sizeof($config) != 3)
+            return NULL;
+        if (empty($config[2]))
+            return NULL;
+        $data = $config[2];
+        $data = explode('=', $data);
+        if (isset($data[1]) && !empty($data[1]))
+            return $data[1];
+        return NUll;
+    }
+
+    function getDatabaseDSN(string $config): ?string
+    {
+        $config = explode(';', $config);
+        if (sizeof($config) == 3)
+            array_pop($config);
+        else
+            return NULL;
+        return implode(';', $config);
+    }
+
+    function migrateHelper(): void
+    {
+        echo "Here is the migrate Commands you can run:" . PHP_EOL;
+
+        echo "migrate:migrate:create:database \tto create the project database if it doesn't not exist --database fetched from config file" . PHP_EOL;
+        echo "migrate:migrate\t\t\t\tto apply migration from the migrations folder" . PHP_EOL;
+        exit(1);
+    }
+
 	 /**
 	  * the main menu function and it's helper
 	  */
@@ -72,6 +156,10 @@
 		echo "make" . PHP_EOL . PHP_EOL;
 
 		echo "make:controller" . PHP_EOL;
+
+		echo PHP_EOL . "migrations" . PHP_EOL . PHP_EOL;
+
+		migrateHelper();
 	}
 
 	echo "\n";
