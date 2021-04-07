@@ -18,6 +18,7 @@ use core\Application;
                 <li><a href="<?=Application::path('auth.login')?>"><?= $this->lang('login');?></a></li>
                 <li><a href="<?=Application::path('auth.signup')?>"><?= $this->lang('register');?></a></li>
             	<?php else: ?>
+                <li><a href="<?=Application::path('user.profile')?>"><?= $this->lang('profile')?></a></li>
 				<li>
 					<a>
 						<form action="<?=Application::path('app.logout')?>" method="post">

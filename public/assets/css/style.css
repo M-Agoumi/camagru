@@ -26,6 +26,10 @@ body::-webkit-scrollbar {
     clear: both;
 }
 
+.center {
+    text-align: center;
+}
+
 .masonry-container {
     width: 80vw;
     position: relative;

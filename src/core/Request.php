@@ -73,4 +73,61 @@ class Request
 
 		return $body;
 	}
+
+    /**
+     * @return array|bool
+     */
+    public function magicPath()
+    {
+        $x = $this->getRoutes();
+        $path = $this->getMagicPath($this->getPath());
+//        $path = $path;
+        $ret = null;
+//        print_r($x);
+//        echo "<br>$path <br>";
+        foreach ($x as $key => $value) {
+            // print_r($value);
+            if (isset($value[$path])) {
+                $ret = $value[$path];
+                array_push($ret, $this->getPathVar());
+                break;
+            }
+        }
+//        echo "our return value: <br>";
+//        var_dump($ret);
+//        die();
+        return $ret ?? false;
+    }
+
+    public function getRoutes(): array
+    {
+        $routes = Application::$APP->router->routes['magic'] ?? [];
+        $newRoutes = [];
+//        echo 'old: <pre>';
+//        print_r($routes);
+//        echo '<br>';
+        foreach ($routes as $key => $value)
+        {
+            $key = preg_replace( '~\{.*\}~' , "", $key);
+            $key = substr_replace($key ,"", -1);
+            $newRoutes[] = array($key => $value);
+
+        }
+        return $newRoutes;
+    }
+
+    private function getMagicPath(string $path)
+    {
+        $position = strrpos($path, '/');
+        return substr($path, 0, $position);
+    }
+
+    private function getPathVar()
+    {
+        $path = $this->getPath();
+//        echo "path: $path<br>";
+        $position = strrpos($path, '/');
+//        echo "position: $position <br>";
+        return (substr($path, $position + 1));
+    }
 }

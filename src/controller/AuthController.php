@@ -25,7 +25,8 @@ use models\User;
 
 class AuthController extends Controller
 {
-	/** render login form view
+
+    /** render login form view
      * @route('get' => '/login')
 	 * @return false|string|string[]
 	 */
@@ -35,7 +36,7 @@ class AuthController extends Controller
 			return Application::$APP->response->redirect('/');
 		$this->setLayout('auth');
 
-		return $this->render('login', ['user' => New User()]);
+		return $this->render('login', ['user' => New User()], ['title' => 'Login']);
 	}
 	
 	/** this the method responsible for handling the login attempts
@@ -86,7 +87,7 @@ class AuthController extends Controller
 	 */
 	public function signup()
 	{
-		return $this->render('register', ['user' => New User, 'title' => 'Sing up']);
+		return $this->render('register', ['user' => New User], ['title' => 'Signup']);
 	}
 
 	/** todo save the email to the database or session and send verification code

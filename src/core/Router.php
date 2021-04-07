@@ -13,11 +13,14 @@
 
 namespace core;
 
+use controller\Controller;
+use core\Exception\NotFoundException;
+
 class Router
 {
 	public Request $request;
 	public ?Response $response = null;
-	protected array $routes = [];
+	public array $routes = [];
 	protected array $paths = [];
 	protected string $tmp;
 
@@ -34,14 +37,15 @@ class Router
 		$this->response = $response;
 	}
 
-	/**
-	 * Store a callback in an array with its associated
-	 * path (get method)
-	 *
-	 * @param $path
-	 * @param $callback
-	 * does not return anything
-	 */
+    /**
+     * Store a callback in an array with its associated
+     * path (get method)
+     *
+     * @param $path
+     * @param $callback
+     * does not return anything
+     * @return Router
+     */
 	public function get($path, $callback): Router
 	{
 		if (!isset($this->routes['get'][$path]))
@@ -52,17 +56,18 @@ class Router
 		return $this;
 	}
 
-	/**
-	 * Store a callback in an array with its associated
-	 * path (post method)
-	 *
-	 * @param $path
-	 * @param $callback
-	 *
-	 * does not return anything
-	 */
-	public function post($path, $callback)
-	{
+    /**
+     * Store a callback in an array with its associated
+     * path (post method)
+     *
+     * @param $path
+     * @param $callback
+     *
+     * does not return anything
+     * @return Router
+     */
+	public function post($path, $callback): Router
+    {
 		if (!isset($this->routes['post'][$path]))
 			$this->routes['post'][$path] = $callback;
 		else
@@ -70,7 +75,17 @@ class Router
 		$this->tmp = $path;
 		return $this;
 	}
-	
+
+	public function magic($path, $callback): Router
+    {
+        if (!isset($this->routes['magic'][$path]))
+            $this->routes['magic'][$path] = $callback;
+        else
+            die("route $path is already used please update it");
+        $this->tmp = $path;
+        return $this;
+    }
+
 	public function name(string $name)
 	{
 		if (!isset($this->paths[$name]))
@@ -91,95 +106,58 @@ class Router
 		die("there is no path with the name $name");
 	}
 
-	/**
-	 * the heart of our routes
-	 * check if there is a callback for the current path
-	 * and execute it depends on its type
-	 * otherwise return 404 error
-	 * @return false|mixed|string|string[]
-	 */
+    /**
+     * the heart of our routes
+     * check if there is a callback for the current path
+     * and execute it depends on its type
+     * otherwise return 404 error
+     * @return false|mixed|string|string[]
+     * @throws NotFoundException
+     */
 	public function resolve()
 	{
 		$path = $this->request->getPath();
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
+
 		if ($callback === false)
-		{
-			$this->response->setStatusCode(404);
-			return $this->renderContent("<title>404 Not Found</title><h1>404</h1><h2>Ops.. Page Not Found</h2>");
-		}
+		    $callback = $this->request->magicPath();
+//		var_dump($callback);
+//		echo "<br>";
+		if ($callback === false)
+		    throw New NotFoundException();
+
 		if (is_string($callback))
 			return $this->renderView($callback);
+
 		if (is_array($callback)) {
-			Application::$APP->controller = new $callback[0]();
-			$callback[0] = Application::$APP->controller;
+		    /** @var Controller $controller */
+            $controller = new $callback[0]();
+            Application::$APP->controller = $controller;
+            $controller->action = $callback[1];
+            foreach ($controller->getMiddlewares() as $middleware)
+            {
+                $middleware->execute();
+            }
+            $callback[0] = $controller;
+//            echo "<br><br>";
+//            var_dump($controller);
+//            echo "<br><br>";
+            if (sizeof($callback) === 3)
+            {
+                return $controller->{$callback[1]}($callback[2]);
+            }
 		}
 
+//		die('done');
 		if (is_callable($callback))
 			return call_user_func($callback, $this->request);
 
 		return "Method [$callback[1]] is not found in [" . get_class($callback[0]) . ']';
 	}
 
-	/**
-	 * mix the template with the asked $view
-	 *
-	 * @param $view string name of the view we want to compile with the template
-	 * @param array $params
-	 * @return false|string|string[]
-	 */
-	public function renderView(string $view, array $params = [])
-	{
-        /** todo pass params to the layout too */
-		$layout = $this->layoutContent();
-		$view = $this->renderOnlyView($view, $params);
-		return str_replace('{{ body }}', $view, $layout);
-	}
-
-	/**
-	 * @param string $content content to be rendered in the template
-	 * @return false|string|string[]
-	 */
-	public function renderContent(string $content)
-	{
-		$layout = $this->layoutContent();
-		return str_replace('{{ body }}', $content, $layout);
-	}
-
-	/**
-	 * @return false|string the template content
-	 */
-
-	public function layoutContent()
-	{
-		$layout = Application::$APP->controller->layout ?? 'main';
-		ob_start();
-		include_once Application::$ROOT_DIR . "/views/layout/$layout.layout.php";
-		return ob_get_clean();
-	}
-
-	/**
-	 * @param $view string the wanted view
-	 * @param array $params
-	 * @return string|null the view content
-	 */
-	protected function renderOnlyView(string $view, array $params): ?string
-	{
-		foreach ($params as $key => $param) {
-			$$key = $param;
-		}
-		ob_start();
-		include_once Application::$ROOT_DIR . "/views/$view.blade.php";
-		return ob_get_clean();
-	}
-
-    /**
-     * get the value of the key from the language used
-     * @param string $key
-     * @return string
-     */
-    public function lang(string $key): string
+    protected function renderView(string $callback)
     {
-        return Application::$APP->lang($key);
+        return Application::$APP->view->renderView($callback);
     }
 }

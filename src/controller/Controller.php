@@ -14,6 +14,7 @@
 namespace controller;
 
 use core\Application;
+use core\Middleware\BaseMiddleware;
 
 /**
  * Class Controller
@@ -24,18 +25,30 @@ abstract class Controller
 {
 
 	public string $layout = 'main';
+	public string $action = '';
+    /** @var BaseMiddleware[] */
+	protected array $middlewares = [];
 
-	/** adding this method to avoid typing it in every method in our controllers
-	 * @param string $view
-	 * @param array $params
-	 * @return false|string|string[]
-	 */
-	public static function render(string $view, array $params = [])
+    /** adding this method to avoid typing it in every method in our controllers
+     * @param string $view
+     * @param array $params
+     * @param array $layParams
+     * @return false|string|string[]
+     */
+	public function render(string $view, array $params = [], array $layParams = [])
 	{
-		return Application::$APP->router->renderView($view, $params);
+		return Application::$APP->view->renderView($view, $params, $layParams);
 	}
 
-	/**
+    /**
+     * @return BaseMiddleware[]
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    /**
 	 * change the used layout in the request
 	 * @param string $string
 	 */
@@ -43,4 +56,10 @@ abstract class Controller
 	{
 		$this->layout = $string;
 	}
+
+	public function registerMiddleware(BaseMiddleware $middleware)
+    {
+        $this->middlewares[] = $middleware;
+    }
+
 }

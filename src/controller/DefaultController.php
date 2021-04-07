@@ -13,23 +13,33 @@
 
 namespace controller;
 
+use core\Application;
+use core\Middleware\AuthMiddleware;
+use models\User;
+
 /**
  * Class DefaultController
  */
 
 class DefaultController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->registerMiddleware(New AuthMiddleware(['profile']));
+    }
 	/** home view to be modified
 	 * @return string
 	 */
-	function index(): string
+	public function index(): string
 	{
 		$params = [
 			'name' => "Magoumi",
-			'title' => "home",
+			'title' => "Home",
 			'test' => 'yohoo'
 		];
 
-		return $this->render('home', $params);
+		return $this->render('home', $params, ['title' => 'Home']);
 	}
+
 }

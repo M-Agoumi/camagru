@@ -32,6 +32,7 @@ class Application
 	public ?Controller $controller = null;
 	public ?Session $session = null;
 	public ?DbModel $user;
+	public ?View $view;
 	protected array $MainLang = [];
 	protected array $fallbackLang = [];
 
@@ -51,6 +52,7 @@ class Application
 		$this->session = New Session();
 		$this->router = New Router($this->request, $this->response);
 		$this->db = New Database($this->getDatabaseConfig());
+		$this->view = New View();
 		// todo implement session save for language preference and add more languages to choose from
 		$this->MainLang = $this->setLang()[0];
 		$this->fallbackLang = $this->setLang()[1];
@@ -81,7 +83,12 @@ class Application
 	 */
 	public function run()
 	{
-		echo $this->router->resolve();
+	    try {
+            echo $this->router->resolve();
+        }catch (\Exception $e) {
+	        $this->response->setStatusCode($e->getCode());
+	        echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
+        }
 	}
 
 	/**
@@ -112,7 +119,7 @@ class Application
 
     /**
      * @param $attr
-     * @return mixed|null env value if it exists
+     * @return string|null env value if it exists
      */
     public static function getEnvValue($attr)
 	{
