@@ -14,6 +14,8 @@
 namespace core;
 
 use controller\Controller;
+use core\Db\Database;
+use core\Db\DbModel;
 use models\User;
 
 /**

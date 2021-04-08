@@ -14,7 +14,7 @@
 namespace models;
 
 use core\Application;
-use core\DbModel;
+use core\Db\DbModel;
 
 /**
  * Class Model

@@ -17,7 +17,7 @@ namespace   models;
  * @var $ROOT_DIR ~/Desktop/School/camagru
  */
 
-use core\DbModel;
+use core\Db\DbModel;
 
 class User extends DbModel
 {

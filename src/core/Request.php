@@ -16,7 +16,6 @@ namespace core;
 /**
  * Class Request
  */
-
 class Request
 {
 	/**
@@ -26,9 +25,12 @@ class Request
 	{
 		$path = $_SERVER['REQUEST_URI'] ?? '/';
 		$position = strpos($path, '?');
+		if (substr($path, -1) === '/' && $path != '/')
+			$path = substr_replace($path ,"", -1);
+
 		if ($position === false)
 			return $path;
-
+		
 		return substr($path, 0, $position);
 	}
 
@@ -43,7 +45,7 @@ class Request
 	/**
 	 * @return bool
 	 */
-	public function isGet():bool
+	public function isGet(): bool
 	{
 		return $this->Method() === 'get';
 	}
@@ -51,7 +53,7 @@ class Request
 	/**
 	 * @return bool
 	 */
-	public function isPost():bool
+	public function isPost(): bool
 	{
 		return $this->Method() === 'post';
 	}
@@ -65,8 +67,8 @@ class Request
 	{
 		$body = [];
 		if ($this->Method() === 'get') foreach ($_GET as $key => $value) {
-				$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-			}
+			$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+		}
 		if ($this->Method() === 'post') foreach ($_POST as $key => $value) {
 			$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
 		}
@@ -74,60 +76,48 @@ class Request
 		return $body;
 	}
 
-    /**
-     * @return array|bool
-     */
-    public function magicPath()
-    {
-        $x = $this->getRoutes();
-        $path = $this->getMagicPath($this->getPath());
-//        $path = $path;
-        $ret = null;
-//        print_r($x);
-//        echo "<br>$path <br>";
-        foreach ($x as $key => $value) {
-            // print_r($value);
-            if (isset($value[$path])) {
-                $ret = $value[$path];
-                array_push($ret, $this->getPathVar());
-                break;
-            }
-        }
-//        echo "our return value: <br>";
-//        var_dump($ret);
-//        die();
-        return $ret ?? false;
-    }
+	/**
+	 * @return array|bool
+	 */
+	public function magicPath()
+	{
+		$x = $this->getRoutes();
+		$path = $this->getMagicPath($this->getPath());
+		$ret = null;
+		foreach ($x as $key => $value) {
+			// print_r($value);
+			if (isset($value[$path])) {
+				$ret = $value[$path];
+				array_push($ret, $this->getPathVar());
+				break;
+			}
+		}
+		return $ret ?? false;
+	}
 
-    public function getRoutes(): array
-    {
-        $routes = Application::$APP->router->routes['magic'] ?? [];
-        $newRoutes = [];
-//        echo 'old: <pre>';
-//        print_r($routes);
-//        echo '<br>';
-        foreach ($routes as $key => $value)
-        {
-            $key = preg_replace( '~\{.*\}~' , "", $key);
-            $key = substr_replace($key ,"", -1);
-            $newRoutes[] = array($key => $value);
+	public function getRoutes(): array
+	{
+		$routes = Application::$APP->router->routes['magic'] ?? [];
+		$newRoutes = [];
+		foreach ($routes as $key => $value) {
+			$key = preg_replace('~\{.*\}~', "", $key);
+			$key = substr_replace($key, "", -1);
+			$newRoutes[] = array($key => $value);
 
-        }
-        return $newRoutes;
-    }
+		}
+		return $newRoutes;
+	}
 
-    private function getMagicPath(string $path)
-    {
-        $position = strrpos($path, '/');
-        return substr($path, 0, $position);
-    }
+	private function getMagicPath(string $path)
+	{
+		$position = strrpos($path, '/');
+		return substr($path, 0, $position);
+	}
 
-    private function getPathVar()
-    {
-        $path = $this->getPath();
-//        echo "path: $path<br>";
-        $position = strrpos($path, '/');
-//        echo "position: $position <br>";
-        return (substr($path, $position + 1));
-    }
+	private function getPathVar()
+	{
+		$path = $this->getPath();
+		$position = strrpos($path, '/');
+		return (substr($path, $position + 1));
+	}
 }

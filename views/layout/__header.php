@@ -11,6 +11,7 @@ use core\Application;
                 <li><a href="#"><?= $this->lang('news');?></a></li>
                 <li><a href="#"><?= $this->lang('contact us  ');?></a></li>
                 <li><a href="#"><?= $this->lang('about');?></a></li>
+                <li><a href="<?=Application::path('camera.index')?>"><?= $this->lang('Camera');?></a></li>
             </div>
             <!-- todo change this and put it in css file -->
             <div style="float: right">

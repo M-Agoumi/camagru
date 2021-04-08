@@ -1,7 +1,9 @@
 <?php
 
 use controller\AuthController;
+use controller\CameraController;
 use controller\DefaultController;
+use controller\UserController;
 use core\Application;
 
 
@@ -25,11 +27,15 @@ $app->router->post('/registration', [AuthController::class, 'insertUser'])->name
 $app->router->post('/logout', [AuthController::class, 'logout'])->name('app.logout');
 
 /** User Controller routes */
-$app->router->magic('/user/{username}', [\controller\UserController::class, 'index']);
-$app->router->get('/profile', [\controller\UserController::class, 'myProfile'])->name('user.profile');
-$app->router->get('/profile/', [\controller\UserController::class, 'myProfile']);
-$app->router->get('/me', [\controller\UserController::class, 'myProfile']);
-$app->router->get('/user/me', [\controller\UserController::class, 'myProfile']);
+$app->router->magic('/user/{username}', [UserController::class, 'index']);
+$app->router->get('/profile', [UserController::class, 'myProfile'])->name('user.profile');
+$app->router->get('/profile/', [UserController::class, 'myProfile']);
+$app->router->get('/me', [UserController::class, 'myProfile']);
+$app->router->get('/user/me', [UserController::class, 'myProfile']);
+/** todo edit user page */
+
+/** Camera Controller routes */
+$app->router->get('/camera', [CameraController::class, 'index'])->name('camera.index');
 
 /** debug routes */
 $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');

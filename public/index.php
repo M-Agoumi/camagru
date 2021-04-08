@@ -16,7 +16,7 @@
  * enable error reporting if the env is dev
  */
 
-$config = parse_ini_file(__DIR__ ."/../.env");
+$config = parse_ini_file(__DIR__ . "/../.env");
 if (isset($config['env']) && $config['env'] === 'dev')
 	error_reporting(E_ALL ^ E_DEPRECATED);
 else
@@ -34,7 +34,7 @@ use core\Application;
  * creating a new instance of the Application class
  */
 
-$app = New Application(dirname(__DIR__));
+$app = new Application(dirname(__DIR__));
 
 /**
  * require the routes of our application

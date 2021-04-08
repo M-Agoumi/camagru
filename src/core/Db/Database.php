@@ -11,7 +11,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-namespace core;
+namespace core\Db;
 use \PDO as PDO;
 use \PDOException;
 
