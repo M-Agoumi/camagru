@@ -13,6 +13,7 @@
 
 namespace core\Db;
 
+use core\Application;
 use models\Model;
 use \PDOStatement;
 
