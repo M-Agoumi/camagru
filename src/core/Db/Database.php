@@ -12,10 +12,11 @@
 # **************************************************************************** #
 
 namespace core\Db;
+use core\Application;
 use \PDO as PDO;
 use \PDOException;
 
-class database
+class Database
 {
 	
 	public PDO $pdo;
@@ -34,7 +35,7 @@ class database
 			if (Application::$APP::$ENV['env'] == 'dev')	
 				 die ($e->getMessage() . PHP_EOL); // todo handle this one nicely (add a backtrack)
 			else
-				echo APPLICATION::$APP->router->renderView('error/__500', [
+				echo APPLICATION::$APP->view->renderView('error/__500', [ // todo this is not working
 					"title" => "500 Internal Server Error",
 					"errorCode" => "00001c"
 				]);
