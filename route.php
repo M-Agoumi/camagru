@@ -3,6 +3,7 @@
 use controller\AuthController;
 use controller\CameraController;
 use controller\DefaultController;
+use controller\PostController;
 use controller\UserController;
 use core\Application;
 
@@ -36,6 +37,9 @@ $app->router->get('/user/me', [UserController::class, 'myProfile']);
 
 /** Camera Controller routes */
 $app->router->get('/camera', [CameraController::class, 'index'])->name('camera.index');
+$app->router->post('/camera', [CameraController::class, 'save'])->name('camera.save');
+$app->router->post('/camera/share', [CameraController::class, 'share'])->name('camera.share');
+$app->router->magic('/post/{slug}', [PostController::class, 'show']);
 
 /** debug routes */
 $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');
