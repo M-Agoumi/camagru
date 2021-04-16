@@ -18,6 +18,7 @@ use models\Model;
 class Form
 {
 	public Field $field;
+	public TextArea $textArea;
 
     /** echo the start of a form
      * @param string $action
@@ -54,6 +55,12 @@ class Form
 		return $this->field;
 	}
 
+	public function text(Model $model, string $attribute)
+	{
+		$this->textArea = New TextArea($model, $attribute);
+		return $this->textArea;
+	}
+
     /** return a submit type input
      * @param string $value
      * @return string
@@ -62,4 +69,5 @@ class Form
 	{
 		return '<div class="row"><input type="submit" value="' . $value . '"></div>';
 	}
+
 }
