@@ -16,6 +16,7 @@ namespace core;
 use controller\Controller;
 use core\Db\Database;
 use core\Db\DbModel;
+use Exception;
 use models\User;
 
 /**
@@ -31,7 +32,7 @@ class Application
 	public ?Router $router = null;
 	public ?Request $request = null;
 	public ?Response $response = null;
-	public ?Controller $controller = null;
+	public $controller = null;
 	public ?Session $session = null;
 	public ?DbModel $user;
 	public ?View $view;
@@ -87,9 +88,12 @@ class Application
 	{
 	    try {
             echo $this->router->resolve();
-        }catch (\Exception $e) {
+        }catch (Exception $e) {
 	        $this->response->setStatusCode($e->getCode());
-	        echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
+	        if ($this->getDotEnv()['env'] != 'dev')
+	            echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
+	        else
+	        	echo $this->view->renderView('error/__error', ['e' => $e], ['title' => $e->getCode()]);
         }
 	}
 
