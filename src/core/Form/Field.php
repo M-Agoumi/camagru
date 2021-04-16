@@ -21,6 +21,7 @@ class Field
 	public const TYPE_TEXT = 'text';
 	public const TYPE_EMAIL = 'email';
 	public const TYPE_PASSWORD = 'password';
+	public const TYPE_HIDDEN = 'hidden';
 	public const DISABLED = 'disabled="disabled"';
 	public const REQUIRED = 'required="required"';
 	
@@ -51,30 +52,54 @@ class Field
      */
     public function __toString(): string
     {
-		return sprintf('
-		<div class="row">
-			<div class="col-25">
-				<label for="%s">%s</label>
-			</div>
-			<div class="col-75">
-				<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
-				<div class="invalid-feedback">
-					%s
+    	if ($this->type != self::TYPE_HIDDENT) {
+		    return sprintf('
+			<div class="row">
+				<div class="col-25">
+					<label for="%s">%s</label>
+				</div>
+				<div class="col-75">
+					<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+					<div class="invalid-feedback">
+						%s
+					</div>
 				</div>
 			</div>
-		</div>
-		', $this->attribute
-		, !empty($this->label) ? $this->label : ucfirst($this->attribute)
-		, $this->type
-		, $this->model->hasError($this->attribute) ? 'is-invalid' : ''
-		, $this->attribute
-		, $this->attribute
-		, $this->model->{$this->attribute}
-		, !empty($this->holder) ? $this->holder : $this->attribute
-		, $this->disabled
-		, $this->required
-		, $this->model->getFirstError($this->attribute)
-		);
+			', $this->attribute
+			    , !empty($this->label) ? $this->label : ucfirst($this->attribute)
+			    , $this->type
+			    , $this->model->hasError($this->attribute) ? 'is-invalid' : ''
+			    , $this->attribute
+			    , $this->attribute
+			    , $this->model->{$this->attribute}
+			    , !empty($this->holder) ? $this->holder : $this->attribute
+			    , $this->disabled
+			    , $this->required
+			    , $this->model->getFirstError($this->attribute)
+		    );
+	    }
+    	return sprintf('
+			<div class="row">
+				<div class="col-25">
+				</div>
+				<div class="col-75">
+					<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+					<div class="invalid-feedback">
+						%s
+					</div>
+				</div>
+			</div>
+			'
+		    , $this->type
+		    , $this->model->hasError($this->attribute) ? 'is-invalid' : ''
+		    , $this->attribute
+		    , $this->attribute
+		    , $this->model->{$this->attribute}
+		    , !empty($this->holder) ? $this->holder : $this->attribute
+		    , $this->disabled
+		    , $this->required
+		    , $this->model->getFirstError($this->attribute)
+	    );
 	}
 
     /**
@@ -145,4 +170,11 @@ class Field
 
         return $this;
     }
+
+	public function hiddentField(): Field
+	{
+		$this->type = self::TYPE_HIDDEN;
+
+		return $this;
+	}
 }
