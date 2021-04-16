@@ -19,10 +19,12 @@ namespace core;
 class Response
 {
 	/**
-	 * @param int $code the server response code
+	 * @param mixed $code the server response code
 	 */
-	public function setStatusCode(int $code)
+	public function setStatusCode($code)
 	{
+		if (is_string($code))
+			$code = (int)$code;
 		http_response_code($code);
 	}
 	
