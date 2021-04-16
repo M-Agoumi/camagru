@@ -36,6 +36,7 @@ abstract class DbModel extends Model
     {
 		$tableName = $this->tableName();
 		$attributes = $this->attributes();
+		array_push($attributes, 'created_at', 'updated_at');
 		$params = array_map(fn($m) => ":$m", $attributes);
 		$statement = self::prepare(
 			"INSERT INTO $tableName (". implode(", ", $attributes) . ") value (
@@ -43,7 +44,12 @@ abstract class DbModel extends Model
 		);
 
 		foreach ($attributes as $attribute) {
-			$statement->bindValue(":$attribute", $this->{$attribute});
+			if ($attribute == 'created_at' && !$this->{$attribute})
+				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
+			elseif ($attributes == 'updated_at' && $this->created_at)
+				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
+			else
+				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
 		return $statement->execute();
