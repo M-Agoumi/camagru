@@ -12,6 +12,12 @@
 /* ************************************************************************************************ */
 
 /**
+ * let make our code professional by declaring strict Type
+ */
+
+//declare(strict_types=1);
+
+/**
  * Getting global setting from the env file
  * enable error reporting if the env is dev
  */
