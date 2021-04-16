@@ -248,52 +248,12 @@ main h1{
     text-align: center;
 }
 
-/**
- * login form css
- */
-
-/*.form-login {*/
-/*    margin: auto;*/
-/*    margin: 0 35% 0 35%;*/
-/*}*/
-/*.form-login .form-block input {*/
-/*    width: 100%;*/
-/*    padding: 12px 20px;*/
-/*    margin: 8px 0;*/
-/*    display: inline-block;*/
-/*    border: 1px solid #ccc;*/
-/*    border-radius: 4px;*/
-/*    box-sizing: border-box;*/
-/*}*/
-/*.form-login button {*/
-/*    background-color: #4CAF50;*/
-/*    color: white;*/
-/*    padding: 14px 20px;*/
-/*    margin: 8px 0;*/
-/*    border: none;*/
-/*    border-radius: 4px;*/
-/*    cursor: pointer;*/
-/*    float: right;*/
-/*}*/
-/*.form-login button:hover {*/
-/*    background:none;*/
-/*    border: 1px solid #4CAF50;*/
-/*    color: #4CAF50;*/
-/*}*/
-/*.form-login .form-block {*/
-/*    padding: 5px;*/
-/*}*/
-/*.form-login .form-block label{*/
-/*    min-width: 200px;*/
-/*    padding: 5px;*/
-/*}*/
-
 .login-form {
     max-width: 800px;
     margin: auto;
 }
 
-input[type=text], input[type=password],input[type=email] {
+input[type=text], input[type=password],input[type=email], textarea {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -383,6 +343,38 @@ input[type=submit]:hover {
     background-color: #dff0d8;
     border-color: #d6e9c6;
     padding-right: 35px;
+}
+
+/** camera page styling */
+.camera_container{
+    margin: auto;
+    text-align: center;
+}
+.camera_container .camera {
+    margin:auto;
+    border: 3px solid deeppink;
+    border-radius: 4px;
+    width: 640px;
+    height: 480px;
+}
+.camera_container .capture {
+    padding: 5px;
+    background: #4CAF50;
+    width: 632px;
+    margin: 1px auto;
+    color: white;
+    border-radius: 2px;
+}
+.camera_container .picture {
+    display: none;
+}
+
+.camera_container .picture canvas {
+    margin:auto;
+    border: 3px solid deeppink;
+    border-radius: 4px;
+    width: 640px;
+    height: 480px;
 }
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */

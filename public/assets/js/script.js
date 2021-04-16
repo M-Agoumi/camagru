@@ -9,22 +9,20 @@ async function dismissMessage() {
     source.style.display = "none";
 }
 
-async function getWebCam() {
-    try {
-        const videoSrc = await navigator.mediaDevices.getUserMedia({video: true});
-        let video = document.getElementById("video");
-        video.srcObject = videoSrc;
-    } catch (e) {
-        console.log(e);
-    }
+async function capture() {
+    const canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+
+    context.drawImage(video, 0, 0, 650, 490);
+    document.getElementById('picture').style.display = 'block';
+    document.getElementById('camera').style.display = 'none';
 }
 
-const capture = document.getElementById('capture');
-const canvas = document.getElementById('canvas');
-let context = canvas.getContext('2d');
+function save() {
+    var canvas = document.getElementById("canvas");
+    var img    = canvas.toDataURL("image/jpeg");
 
-capture.addEventListener("click", function (){
-    context.drawImage(video, 0,0,650, 490);
-});
-
-getWebCam();
+    // document.write('<img src="'+img+'"/>');
+    console.log(img);
+    document.getElementById('inputPicture').value = img;
+}
