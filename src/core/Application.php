@@ -32,7 +32,7 @@ class Application
 	public ?Router $router = null;
 	public ?Request $request = null;
 	public ?Response $response = null;
-	public $controller = null;
+	public ?controller $controller = null;
 	public ?Session $session = null;
 	public ?DbModel $user;
 	public ?View $view;
