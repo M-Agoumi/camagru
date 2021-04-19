@@ -2,13 +2,16 @@
 
 <div class="camera_container">
     <div class="camera" id="camera">
-        <video autoplay="autoplay" id="video"></video>
+        <video autoplay="autoplay" id="video" width="650" height="490"></video>
         <div class="capture" onclick="capture()">capture</div>
     </div>
     <div class="picture" id="picture">
-        <canvas id="canvas" width="650" height="490"></canvas>
+        <canvas id="canvas" width="650" height="460"></canvas>
         <div class="capture" onclick="save()">confirm image</div>
         <div class="capture" onclick="getWebCam()">Retake</div>
+        <div class="filters">
+            <span>brightness <span onclick="brightnessUp()">(+)</span><span onclick="brightnessDown()">(-)</span></span>
+        </div>
     </div>
     <div>
         <form method="post">
@@ -18,17 +21,4 @@
     </div>
 </div>
 
-<script>
-    async function getWebCam() {
-        try {
-            const videoSrc = await navigator.mediaDevices.getUserMedia({video: true});
-            let video = document.getElementById("video");
-            video.srcObject = videoSrc;
-            document.getElementById('picture').style.display = 'none';
-            document.getElementById('camera').style.display = 'block';
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    getWebCam();
-</script>
+<script src="/assets/js/camera.js"></script>
