@@ -52,7 +52,7 @@ class Field
      */
     public function __toString(): string
     {
-    	if ($this->type != self::TYPE_HIDDENT) {
+    	if ($this->type != self::TYPE_HIDDEN) {
 		    return sprintf('
 			<div class="row">
 				<div class="col-25">
