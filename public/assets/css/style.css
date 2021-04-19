@@ -377,6 +377,16 @@ input[type=submit]:hover {
     height: 480px;
 }
 
+.filters {
+	-webkit-touch-callout: none;	/* iOS Safari */
+    -webkit-user-select: none;		/* Safari */
+    -khtml-user-select: none;		/* Konqueror HTML */
+	-moz-user-select: none;			/* Old versions of Firefox */
+	-ms-user-select: none;			/* Internet Explorer/Edge */
+	user-select: none;				/* Non-prefixed version, currently
+                                  	supported by Chrome, Edge, Opera and Firefox */
+}
+
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
     .col-25, .col-75, input[type=submit] {
