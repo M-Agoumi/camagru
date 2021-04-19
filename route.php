@@ -43,10 +43,7 @@ $app->router->magic('/post/{slug}', [PostController::class, 'show']);
 
 /** debug routes */
 $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');
-$app->router->get('/debugger', function (){return $_SESSION['email_code'];});
+$app->router->get('/debugger', function (){return $_SESSION['email_code'] ?? 'no code found';});
 $app->router->get('/session', function() {var_dump($_SESSION);});
 $app->router->magic('/test/[id]', [DefaultController::class, 'test', 'id']);
 $app->router->magic('/user/{id}', [DefaultController::class, 'user']);
-
-
-
