@@ -19,6 +19,13 @@
                     <a href="#" onclick="dismissMessage()">x</a>
                 </div>
 			<?php endif; ?>
+            <?php //todo optimize this ?>
+	        <?php if (Application::$APP->session->getFlash('error')): ?>
+                <div class="alert alert-error" id="flash_message">
+			        <?= Application::$APP->session->getFlash('error') ?>
+                    <a href="#" onclick="dismissMessage()">x</a>
+                </div>
+	        <?php endif; ?>
             {{ body }}
         </div>
     </main>
