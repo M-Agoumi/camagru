@@ -345,6 +345,13 @@ input[type=submit]:hover {
     padding-right: 35px;
 }
 
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding-right: 35px;
+}
+
 /** camera page styling */
 .camera_container{
     margin: auto;
