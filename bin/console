@@ -224,7 +224,7 @@
 	  * the main menu function and it's helper
 	  */
 	function show_help() {
-		echo "This is a camagru console help pannel" . PHP_EOL;
+		echo "This is a camagru console help panel" . PHP_EOL;
 		echo "here is the list of the commands you can run so far" . PHP_EOL;
 		echo "make" . PHP_EOL;
 
