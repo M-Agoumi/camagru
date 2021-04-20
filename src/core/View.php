@@ -19,6 +19,8 @@ class View
 		/** todo pass params to the layout too */
 		$layout = $this->layoutContent($layParams);
 		$view = $this->renderOnlyView($view, $params);
+		/** since the title is present in every page I thought about putting here */
+		$layout = str_replace('{{ title }}', $layoutParams['title'] ?? Application::getEnvValue('appName'), $layout);
 		return str_replace('{{ body }}', $view, $layout);
 	}
 
