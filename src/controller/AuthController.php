@@ -125,7 +125,17 @@ class AuthController extends Controller
 		// todo retrieve the email and pass it as param
 		$code = $_SESSION['email_code'] ?? 0;
 		if ($verification == $code && $code) {
-			return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' =>New User()]);
+			$user = New User();
+			if (!$user->getOneBy('email', $_SESSION['user_email']))
+				return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);
+			else {
+				Application::$APP->session->setFlash(
+					'error',
+					'Email already assigned to another account, login or reset your password'
+				);
+				Application::$APP->response->redirect(Application::path('auth.signup'));
+				return 'wait you are being redirected to a new page';
+			}
 		}
 
 		return $this->render('messages/register_email', [
