@@ -15,12 +15,18 @@
 	$command = array_shift($arguments);
 	$arguments = $arguments ?? null;
 
+	/** get extra parameters */
+    $parameters = NULL;
+	if ($argc > 2) {
+	    $parameters = array_slice($argv, 2);
+    }
+
 	/** $console a predefine variable for other scripts to access if they are running tho console */
     $console = 1;
 
 	/** command reading debugger */
-//	echo $command . PHP_EOL;
-//	var_dump($arguments);
+    // echo $command . PHP_EOL;
+    //var_dump($parameters);
 
 	if ($command === 'make') {
 		$controllerName = getControllerName($argv[2] ?? '');
@@ -74,14 +80,50 @@
         } else {
 	        migrateHelper();
         }
-    } else {
+    } else if ($command == 'server') {
+	    if (!$arguments)
+	        serverHelper();
+	    elseif ($arguments[0] == 'start') {
+	        // check if there is a running server already
+            if (file_exists('var/server-app.pid')) {
+	            if (shell_exec("sh bin/scripts/server_status.sh") == 1) {
+		            echo "Can't run server, server is already running.." . PHP_EOL;
+	                exit(1);
+	            } else
+		            unlink('var/server-app.pid');
+            }
+		    if ($parameters) {
+			    if (in_array('-p', $parameters)) {
+				    $port = $parameters[array_search('-p', $parameters) + 1] ?? 8000;
+				    echo "Starting a development server on port " . $port . PHP_EOL;
+				    shell_exec('sh bin/scripts/server_start.sh ' . $port);
+			    } else
+			        echo "Parameter is unknown" . PHP_EOL;
+		    } else {
+			    echo "Starting a development server on port 8000" . PHP_EOL;
+			    shell_exec('sh bin/scripts/server_start.sh');
+		    }
+        } elseif ($arguments[0] == 'stop') {
+		    if (file_exists('var/server-app.pid')) {
+			    if (shell_exec("sh bin/scripts/server_status.sh") == 1) {
+				    echo "Stopping server.." . PHP_EOL;
+				    shell_exec('sh bin/scripts/server_stop.sh');
+			    } else {
+				    unlink('var/server-app.pid');
+				    echo "There is no running server.." . PHP_EOL;
+			    }
+		    } else {
+			    echo "There is no running server.." . PHP_EOL;
+            }
+        }
+	} else {
 	    echo "Command Not Found" . PHP_EOL;
         show_help();
         exit(1);
     }
 
 	/**
-	 * funcionality functions
+	 * functionality functions
 	 * 
 	 */
 
@@ -152,14 +194,30 @@
         return implode(';', $config);
     }
 
-    function migrateHelper(): void
+    function migrateHelper($var = 1): void
     {
-        echo "Here is the migrate Commands you can run:" . PHP_EOL;
+        if ($var)
+            echo "Here is the migrate Commands you can run:" . PHP_EOL;
 
         echo "migrate:create:database \tto create the project database if it doesn't not exist --database fetched from config file" . PHP_EOL;
         echo "migrate:migrate\t\t\tto apply migration from the migrations folder" . PHP_EOL;
         echo "migrate:migrate:down:int\trevert last int migrations" . PHP_EOL;
-        exit(1);
+        if ($var)
+            exit(1);
+    }
+
+    /**
+     * server command helpers
+     */
+
+    function serverHelper($s = 1): void
+    {
+        if ($s)
+	        echo "Here is the server Commands you can run:" . PHP_EOL;
+
+	    echo "server:start\t\tstart a php server on default port 8000 unless another port has been specified" . PHP_EOL;
+	    echo "\t\t\t-p\tfollowed by the port [-p 8080]" . PHP_EOL;
+	    echo "\t\t\t-d\tto run in the background" . PHP_EOL;
     }
 
 	 /**
@@ -168,13 +226,16 @@
 	function show_help() {
 		echo "This is a camagru console help pannel" . PHP_EOL;
 		echo "here is the list of the commands you can run so far" . PHP_EOL;
-		echo "make" . PHP_EOL . PHP_EOL;
+		echo "make" . PHP_EOL;
 
 		echo "make:controller" . PHP_EOL;
 
-		echo PHP_EOL . "migrations" . PHP_EOL . PHP_EOL;
+		echo PHP_EOL . "migrations" . PHP_EOL;
 
-		migrateHelper();
+		migrateHelper(0);
+
+		echo PHP_EOL . "server" . PHP_EOL;
+		serverHelper(0);
 	}
 
-	echo "\n";
+//	echo "\n";
