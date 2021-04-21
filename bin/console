@@ -86,7 +86,7 @@
 	    elseif ($arguments[0] == 'start') {
 	        // check if there is a running server already
             if (file_exists('var/server-app.pid')) {
-	            if (shell_exec("sh bin/scripts/server_status.sh") == 1) {
+	            if (shell_exec("sh bin/scripts/server_status.sh") != "0\n") {
 		            echo "Can't run server, server is already running.." . PHP_EOL;
 	                exit(1);
 	            } else
@@ -96,16 +96,16 @@
 			    if (in_array('-p', $parameters)) {
 				    $port = $parameters[array_search('-p', $parameters) + 1] ?? 8000;
 				    echo "Starting a development server on port " . $port . PHP_EOL;
-				    shell_exec('sh bin/scripts/server_start.sh ' . $port);
+				    echo shell_exec('sh bin/scripts/server_start.sh ' . $port);
 			    } else
 			        echo "Parameter is unknown" . PHP_EOL;
 		    } else {
 			    echo "Starting a development server on port 8000" . PHP_EOL;
-			    shell_exec('sh bin/scripts/server_start.sh');
+			    echo shell_exec('sh bin/scripts/server_start.sh');
 		    }
         } elseif ($arguments[0] == 'stop') {
 		    if (file_exists('var/server-app.pid')) {
-			    if (shell_exec("sh bin/scripts/server_status.sh") == 1) {
+			    if (shell_exec("sh bin/scripts/server_status.sh") != "0\n") {
 				    echo "Stopping server.." . PHP_EOL;
 				    shell_exec('sh bin/scripts/server_stop.sh');
 			    } else {
@@ -115,6 +115,17 @@
 		    } else {
 			    echo "There is no running server.." . PHP_EOL;
             }
+        } elseif ($arguments[0] == 'status') {
+		    if (file_exists('var/server-app.pid')) {
+		        $port = shell_exec("sh bin/scripts/server_status.sh");
+			    if ($port != "0\n") {
+				    echo "Server is running on http://localhost:$port";
+			    } else {
+				    unlink('var/server-app.pid');
+				    echo "There is no running server.." . PHP_EOL;
+			    }
+		    } else
+			    echo "There is no running server.." . PHP_EOL;
         }
 	} else {
 	    echo "Command Not Found" . PHP_EOL;
