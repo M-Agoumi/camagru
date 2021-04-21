@@ -89,6 +89,18 @@ class Application
 	    try {
             echo $this->router->resolve();
         }catch (Exception $e) {
+//	    	echo "<pre>";
+//	    	var_dump($e);
+//		    print_r($e->getTraceAsString());
+//		    $file = $e->getFile();
+//		    $lines = file($file);//file in to an array
+//		    $line = $e->getLine();
+//		    echo "<br>code:<br>" . ($line - 1) . "\t" .
+//			    $lines[$line - 1] . "<br>$line\t" .
+//			    $lines[$line ] . "<br>" . ($line + 1) . "\t" .
+//			    $lines[$line + 1];
+//		    echo "<br><br>on file " . $file . " line " . $line;
+//	    	echo "</pre>";
 	        $this->response->setStatusCode($e->getCode());
 	        if ($this->getDotEnv()['env'] != 'dev')
 	            echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
