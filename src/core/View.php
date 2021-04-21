@@ -69,7 +69,11 @@ class View
 			$$key = $param;
 		}
 		ob_start();
-		include_once Application::$ROOT_DIR . "/views/$view.blade.php";
+		$viewFile = Application::$ROOT_DIR . "/views/$view.blade.php";
+		if (file_exists($viewFile))
+			include_once $viewFile;
+		else
+			echo "$view is not found";
 		return ob_get_clean();
 	}
 
