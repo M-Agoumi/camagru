@@ -1,5 +1,5 @@
 # camagru
-School project where a user can register and take pictures edit them and share them.  
+### School project where a user can register and take pictures edit them and share them.  
   
 let's start by sitting up the project  
   
@@ -17,5 +17,5 @@ now after we created our database, it's time to create our tables run
 now your application is ready, just run the server  
 `bin/console server:start`  
   
-the server starts on port 8000, if it's already used you can specifiy another port  
+the server starts on port 8000, if it's already used you can specify another port  
 `bin/console server:start -p 7999`  
