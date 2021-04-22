@@ -50,7 +50,15 @@ class User extends DbModel
 	{
 		return 'id';
 	}
-	
+
+	/**
+	 * @return int|null
+	 */
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
+
 	/**
 	 * @return string|null
 	 */
@@ -96,5 +104,8 @@ class User extends DbModel
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
         ];
     }
-    
+
+	/**
+	 * @return array[]
+	 */
 }
