@@ -85,8 +85,10 @@ abstract class Model
                 	$className = $rule['class'];
                 	$uniqueAttr = $rule['attribute'] ?? $attribute;
                 	$tableName = $className::tableName();
+                	$primaryKey = $this->primaryKey();
                 	$record = $className::getOneBy($uniqueAttr, $value);
-                	if ($record)
+
+                	if ($record && $this->getId() != $record->$primaryKey)
                 		$this->addErrorForRules($attribute, self::RULE_UNIQUE, ['field' => ucfirst($attribute)]);
                 }
             }
