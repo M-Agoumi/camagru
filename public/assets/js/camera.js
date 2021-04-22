@@ -215,3 +215,12 @@ function invertdow()
 		filters.invert = parseInt( filters.invert, 10 ) - 10 + "%";
 	applyFilters();
 }
+
+// DEALING WITH MENU BUTTON
+let menuBtn  = document.querySelector(".menu");
+let navBar = document.querySelector(".nav .nav-left");
+
+
+menuBtn.onclick = function(e) {
+	navBar.classList.toggle("show");
+}
