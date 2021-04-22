@@ -5,16 +5,16 @@ use core\Application;
 ?>
 <header class="page-header">
 	<nav>
-		<ul>
-            <div>
-                <li><a class="active" href="<?=Application::path('home.index')?>"><?= $this->lang('home');?></a></li>
+		<ul class="nav">
+            <div class="nav-left">
+                <li><a class="active co" href="<?=Application::path('home.index')?>"><?= $this->lang('home');?></a></li>
                 <li><a href="#"><?= $this->lang('news');?></a></li>
                 <li><a href="#"><?= $this->lang('contact us  ');?></a></li>
                 <li><a href="#"><?= $this->lang('about');?></a></li>
                 <li><a href="<?=Application::path('camera.index')?>"><?= $this->lang('Camera');?></a></li>
             </div>
             <!-- todo change this and put it in css file -->
-            <div style="float: right">
+            <div class="nav-right">
 				<?php if (Application::isGuest()):?>
                 <li><a href="<?=Application::path('auth.login')?>"><?= $this->lang('login');?></a></li>
                 <li><a href="<?=Application::path('auth.signup')?>"><?= $this->lang('register');?></a></li>
@@ -29,6 +29,9 @@ use core\Application;
 					</a>
 				</li>
 				<?php endif; ?>
+			</div>
+			<div class="menu">
+				<i class="fa fa-bars"></i>
 			</div>
 		</ul>
 	</nav>

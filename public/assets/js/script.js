@@ -26,3 +26,4 @@ function save() {
     console.log(img);
     document.getElementById('inputPicture').value = img;
 }
+
