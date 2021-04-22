@@ -6,10 +6,18 @@ namespace controller;
 
 use core\Application;
 use core\Exception\NotFoundException;
+use core\Middleware\AuthMiddleware;
+use core\Request;
 use models\User;
 
 class UserController extends Controller
 {
+
+	public function __construct()
+	{
+		$this->registerMiddleware(New AuthMiddleware(['edit', 'update']));
+	}
+
 	public function index($username)
 	{
 		$user = new User();
@@ -24,11 +32,40 @@ class UserController extends Controller
 		return $this->render('pages/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
 	}
 
+	/**
+	 * show profile if user is logged otherwise redirect to login
+	 */
+
 	public function myProfile()
 	{
 		if (Application::$APP->user)
 			Application::$APP->response->redirect('/user/' . Application::$APP->user->username);
 		else
 			Application::$APP->response->redirect(Application::path('auth.login'));
+	}
+
+	public function edit()
+	{
+		return $this->render('pages/updateProfile', ['user' => Application::$APP->user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+	}
+
+	public function update(Request $request)
+	{
+		$user = Application::$APP->user;
+
+		$user->loadData($request->getBody());
+
+		$user->validate();
+
+		$valid = 1;
+
+		if (sizeof($user->errors) == 1 && !isset($user->errors['password']))
+			$valid = 0;
+		if ($valid && $user->update()) {
+			Application::$APP->session->setFlash('success', 'Your information has been updated');
+			return Application::$APP->response->redirect(Application::path('user.profile'));
+		}
+
+		return $this->render('pages/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
 	}
 }
