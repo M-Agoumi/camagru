@@ -15,6 +15,7 @@ namespace core\Db;
 
 use core\Application;
 use models\Model;
+use models\User;
 use \PDOStatement;
 
 abstract class DbModel extends Model
@@ -28,6 +29,8 @@ abstract class DbModel extends Model
 	
 	abstract public function primaryKey(): string;
 
+	abstract public function getId(): ?int;
+
     /**
      * save method to insert data of a specific model to it's table
      * @return bool
@@ -36,7 +39,7 @@ abstract class DbModel extends Model
     {
 		$tableName = $this->tableName();
 		$attributes = $this->attributes();
-		array_push($attributes, 'created_at', 'updated_at');
+		array_push($attributes, 'created_at');
 		$params = array_map(fn($m) => ":$m", $attributes);
 		$statement = self::prepare(
 			"INSERT INTO $tableName (". implode(", ", $attributes) . ") value (
@@ -46,7 +49,40 @@ abstract class DbModel extends Model
 		foreach ($attributes as $attribute) {
 			if ($attribute == 'created_at' && !$this->{$attribute})
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
-			elseif ($attributes == 'updated_at' && $this->created_at)
+			else
+				$statement->bindValue(":$attribute", $this->{$attribute});
+		}
+
+		return $statement->execute();
+	}
+
+	/**
+	 * update method to update data of a specific record in a specific model
+	 * @return bool
+	 */
+	public function update(): bool
+	{
+		$tableName = $this->tableName();
+		$attributes = $this->attributes();
+		array_push($attributes, 'updated_at');
+
+		$sql = "UPDATE $tableName SET ";
+		$first = 1;
+		foreach ($attributes as $attr) {
+			if (!$first)
+				$sql .= ", " . $attr . " = :" . $attr;
+			else {
+				$sql .= $attr . " = :" . $attr;
+				$first = 0;
+			}
+		}
+
+		$sql .= " WHERE " . $this->primaryKey() . "=" . $this->{$this->primaryKey()} . ";";
+
+		$statement = self::prepare($sql);
+
+		foreach ($attributes as $attribute) {
+			if ($attribute == 'updated_at')
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
 			else
 				$statement->bindValue(":$attribute", $this->{$attribute});
