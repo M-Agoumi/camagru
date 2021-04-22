@@ -33,6 +33,8 @@ $app->router->get('/profile', [UserController::class, 'myProfile'])->name('user.
 $app->router->get('/profile/', [UserController::class, 'myProfile']);
 $app->router->get('/me', [UserController::class, 'myProfile']);
 $app->router->get('/user/me', [UserController::class, 'myProfile']);
+$app->router->get('/profile/edit', [UserController::class, 'edit'])->name('user.edit');
+$app->router->post('/profile/edit', [UserController::class, 'update'])->name('user.update');
 /** todo edit user page */
 
 /** Camera Controller routes */
