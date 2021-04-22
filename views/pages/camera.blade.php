@@ -7,49 +7,51 @@
     </div>
     <div class="picture" id="picture">
         <canvas id="canvas" width="650" height="460"></canvas>
-        <div class="capture" onclick="save()">confirm image</div>
-        <div class="capture" onclick="getWebCam()">Retake</div>
+        <div class="pic-btn">
+		<div class="capture confirm" onclick="save()">confirm image</div>
+        <div class="capture retake" onclick="getWebCam()">Retake</div>
+		</div>
         <div class="filters">
-			<span onclick="clearFilters()">Original</span>
-            <span>
-				brightness:
+			<span class="origin" onclick="clearFilters()">Original</span>
+            <span class="bright">
+				<!-- brightness: -->
 				<span onclick="brightnessToggle()">bright</span>
 				<span onclick="brightnessUp()">(+)</span>
 				<span onclick="brightnessDown()">(-)</span>
 			</span>
-			<span>
-				grayscale:
+			<span class="gray">
+				<!-- grayscale: -->
 				<span onclick="grayscaleToggle()">gray</span>
 				<span onclick="grayscaleUp()">(+)</span>
 				<span onclick="grayscaleDown()">(-)</span>
 			</span>
-			<span>
-				blur:
+			<span class="blur">
+				<!-- blur: -->
 				<span onclick="blurToggle()">blur</span>
 				<span onclick="blurUp()">(+)</span>
 				<span onclick="blurDown()">(-)</span>
 			</span>
-			<span>
-				contrast:
+			<span class="contrast">
+				<!-- contrast: -->
 				<span onclick="contrastToggle()">contrast</span>
 				<span onclick="contrastUp()">(+)</span>
 				<span onclick="contrastDown()">(-)</span>
 			</span>
-			<span>
-				hue:
+			<span class="hue">
+				<!-- hue: -->
 				<span onclick="hueToggle()">hue</span>
 				<span onclick="hueUp()">(+)</span>
 				<span onclick="hueDown()">(-)</span>
 			</span>
-			<span>
-				invert:
+			<span class="invert">
+				<!-- invert: -->
 				<span onclick="invertToggle()">invert</span>
 				<span onclick="invertUp()">(+)</span>
 				<span onclick="invertDown()">(-)</span>
 			</span>
 		</div>
     </div>
-    <div>
+    <div class="btn-save">
         <form method="post">
             <input type="hidden" name='picture' id="inputPicture">
             <input type="submit" value="save">

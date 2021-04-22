@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+:root {
+    --mainColor: #fe0000;
+    --subColor: #565656;
+}
+
 html, body {
     position: relative;
     width: 100vw;
@@ -8,7 +14,7 @@ html, body {
     color: #555;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
-    font-family: europa, Helvetica, Verdana, Candara, sans-serif;
+    font-family: 'Play', sans-serif;
 }
 
 .container{
@@ -16,6 +22,11 @@ html, body {
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
+}
+
+.new-container {
+    width: 80%;
+    margin: auto;
 }
 
 body::-webkit-scrollbar {
@@ -188,33 +199,61 @@ body::-webkit-scrollbar {
 navbar css
  */
 
-nav ul {
+nav .nav {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 18px 30px rgb(0 0 0 / 8%);
+}
+
+nav .nav .hidden {
+    display: none;
 }
 
 nav li {
-    float: left;
+    display: inline-block;
+    text-transform: capitalize;
+    font-weight: 400;
+    font-size: 1.2rem;
 }
 
 nav li a {
     display: block;
-    color: white;
+    color: var(--subColor);
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
 nav li a:hover:not(.active) {
-    background-color: #111;
+    background-color: var(--mainColor);
+    color: #FFF;
+}
+
+nav li a.co {
+    color: #FFF;
 }
 
 nav .active {
-    background-color: #4CAF50;
+    background-color: var(--mainColor);
 }
+
+.nav .menu {
+    display: none;
+    margin-right: 1rem;
+    cursor: pointer
+}
+
+.nav .menu i {
+    font-size: 1.4rem;
+}
+
+/* .nav .nav-left.show {
+    clip-path: circle(1250px at 90% -30%);
+} */
 
 /**
 footer css
@@ -235,10 +274,11 @@ footer css
     flex-grow: 1;
 }
 .page-footer {
-    padding: 15px;
-    background-color: #333;
+    padding: 1rem 0;
+    background-color: var(--subColor);
     color: #FFF;
     text-align: center;
+    text-transform: capitalize;
 }
 
 /**
@@ -246,6 +286,9 @@ footer css
  */
 main h1{
     text-align: center;
+    color: var(--subColor);
+    text-transform: capitalize;
+    letter-spacing: 1px;
 }
 
 .login-form {
@@ -258,25 +301,33 @@ input[type=text], input[type=password],input[type=email], textarea {
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
-    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    border: none;
+    outline: none;
+    box-shadow: 0px 2px 8px rgb(0 0 0 / 12%);
 }
 
 input[type=submit] {
     width: 100px;
-    background-color: #4CAF50;
+    background-color: var(--mainColor);
     color: white;
     padding: 14px 20px;
-    margin: 8px 0;
+    /* margin: 8px 0; */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     float: right;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    transition: all .2s linear;
+    font-weight: 600;
 }
 
 input[type=submit]:hover {
-    background-color: #45a049;
+    background-color: #FFF;
+    color: var(--mainColor);
+    border: 1px solid var(--mainColor);
 }
 
 .is-invalid {
@@ -289,7 +340,7 @@ input[type=submit]:hover {
 
 .container {
     border-radius: 5px;
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
     padding: 20px;
 }
 
@@ -349,32 +400,65 @@ input[type=submit]:hover {
 .camera_container{
     margin: auto;
     text-align: center;
+    margin-bottom: 2rem;
 }
 .camera_container .camera {
     margin:auto;
-    border: 3px solid deeppink;
+    border: 2px solid var(--mainColor);
     border-radius: 4px;
     width: 640px;
-    height: 480px;
+    max-width: 100%;
+    min-height: 480px;
+    /* margin-bottom: 1rem; */
 }
 .camera_container .capture {
-    padding: 5px;
-    background: #4CAF50;
-    width: 632px;
-    margin: 1px auto;
+    padding: .8rem 0;
+    background: var(--mainColor);
+    max-width: 100%;
     color: white;
     border-radius: 2px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    cursor: pointer;
 }
 .camera_container .picture {
     display: none;
+    width: 640px;
+    max-width: 80%;
+    margin: auto;
+}
+
+.camera_container .picture .pic-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.camera_container .picture .pic-btn > div {
+    width: calc(50% - .3rem);
+}
+
+.camera_container .picture .confirm,
+.camera_container .picture .retake {
+    margin-bottom: .5rem;
 }
 
 .camera_container .picture canvas {
     margin:auto;
-    border: 3px solid deeppink;
+    border: 2px solid var(--mainColor);
     border-radius: 4px;
     width: 640px;
-    height: 480px;
+    max-width: 100%;
+    min-height: 480px;
+}
+
+.camera_container .btn-save {
+    margin:auto;
+    width: 640px;
+    max-width: 80%;
+    padding: 1rem 0;
+    /* background-color: #CCC; */
 }
 
 .filters {
@@ -387,6 +471,63 @@ input[type=submit]:hover {
                                   	supported by Chrome, Edge, Opera and Firefox */
 }
 
+.filters .origin {
+    display: block;
+    background-color: var(--subColor);
+    color: #FFF;
+    text-transform: capitalize;
+    font-weight: 600;
+    padding: .5rem 0;
+    margin-bottom: .5rem;
+    cursor: pointer;
+}
+
+.filters .bright,
+.filters .gray,
+.filters .blur,
+.filters .contrast,
+.filters .hue,
+.filters .invert {
+    /* display: block; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
+}
+
+.filters .bright > span,
+.filters .gray > span,
+.filters .blur > span,
+.filters .contrast > span,
+.filters .hue > span,
+.filters .invert > span {
+    background-color: var(--subColor);
+    color: #FFF;
+    text-transform: capitalize;
+    font-weight: 600;
+    padding: .5rem 0;
+    cursor: pointer;
+}
+
+.filters .bright > span:first-of-type,
+.filters .gray > span:first-of-type,
+.filters .blur > span:first-of-type,
+.filters .contrast > span:first-of-type,
+.filters .hue > span:first-of-type,
+.filters .invert > span:first-of-type {
+    width: calc(50% - 10px);
+}
+
+.filters .bright > span:not(:first-of-type),
+.filters .gray > span:not(:first-of-type),
+.filters .blur > span:not(:first-of-type),
+.filters .contrast > span:not(:first-of-type),
+.filters .hue > span:not(:first-of-type),
+.filters .invert > span:not(:first-of-type) {
+    width: calc(25% - 10px);
+}
+
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
     .col-25, .col-75, input[type=submit] {
@@ -394,4 +535,67 @@ input[type=submit]:hover {
         margin-top: 0;
     }
 }
+
+/* RESPONISVE PART */
+@media screen and (max-width: 700px) {
+    .nav {
+        overflow: hidden;
+    }
+    .nav .nav-left {
+        /* display: none; */
+        height: 100vh;
+        width: 100%;
+        background-color: var(--mainColor);
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 40px 0;
+        text-align: center;
+        padding-top: 90px;
+        transition: all 1s ease-in-out;
+        clip-path: circle(150px at 90% -30%);
+        z-index: 99;
+    }
+
+    .nav .nav-left li {
+        display: block;
+    }
+
+    .nav .nav-left li a {
+        display: inline-block;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    nav .nav-right {
+        float: right !important;
+    }
+
+    .nav .menu {
+        display: block;
+        float: left !important;
+        position: relative;
+        z-index: 999;
+    }
+
+    .nav .nav-left.show {
+        clip-path: circle(1250px at 90% -30%);
+    }
+
+}
+
+@media screen and (max-width: 475px) {
+    .camera_container .picture .pic-btn {
+        display: block;
+    }
+
+    .camera_container .picture .pic-btn > div {
+        width: 100%;
+    }
+
+    main h1 {
+        font-size: 1.6rem;
+    }
+}
+
 
