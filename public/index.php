@@ -18,6 +18,11 @@
 //declare(strict_types=1);
 
 /**
+ * set cookies to httponly to protect from XSS
+ */
+ini_set('session.cookie_httponly', 1);
+
+/**
  * Getting global setting from the env file
  * enable error reporting if the env is dev
  */
