@@ -15,6 +15,7 @@ namespace controller;
 
 use core\Application;
 use core\Middleware\AuthMiddleware;
+use core\Request;
 use models\User;
 
 /**
@@ -40,6 +41,19 @@ class DefaultController extends Controller
 		];
 
 		return $this->render('home', $params, ['title' => 'Home']);
+	}
+
+	public function test(Request $request)
+	{
+		if (Application::$APP->request->isPost())
+		{
+			$user = New User();
+
+			$user->loadData($request->getBody());
+			print_r($user);
+			return ("game on");
+		}
+		return $this->render('test');
 	}
 
 }
