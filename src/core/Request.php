@@ -66,13 +66,30 @@ class Request
 	public function getBody(): array
 	{
 		$body = [];
-		if ($this->Method() === 'get') foreach ($_GET as $key => $value) {
-			$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+		if ($this->Method() === 'get') {
+			if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
+				if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
+					die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
+					contact an admin");
+			} else {
+				die("Form submitted without CSRF token");
+			}
+			foreach ($_GET as $key => $value) {
+				$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+			}
 		}
-		if ($this->Method() === 'post') foreach ($_POST as $key => $value) {
-			$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+		if ($this->Method() === 'post') {
+			if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
+				if ($_POST['__csrf'] !== Application::$APP->session->getCsrf())
+					die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
+					contact an admin");
+			} else {
+				die("Form submitted without CSRF token");
+			}
+			foreach ($_POST as $key => $value) {
+				$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+			}
 		}
-
 		return $body;
 	}
 
