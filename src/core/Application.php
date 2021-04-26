@@ -198,11 +198,10 @@ class Application
 	
 	public static function logout()
 	{
-		$token = Application::$APP->request->getBody()['token'] ?? '';
-		if ($token == 123123) {
-			Application::$APP->user = NULL;
-			Application::$APP->session->remove('user');
-		}
+		$token = Application::$APP->request->getBody() ?? '';
+		Application::$APP->user = NULL;
+		Application::$APP->session->remove('user');
+
 		Application::$APP->response->redirect('/');
 	}
 }
