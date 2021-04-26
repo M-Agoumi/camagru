@@ -13,6 +13,7 @@
 
 namespace core\Form;
 
+use core\Application;
 use models\Model;
 
 class Form
@@ -20,52 +21,54 @@ class Form
 	public Field $field;
 	public TextArea $textArea;
 
-    /** echo the start of a form
-     * @param string $action
-     * @param string $method
-     * @param string $class
-     * @return Form instance so we can access it's method to generate a form
-     */
-    public static function begin(string $action = '', string $method = '', string $class = ''): Form
-    {
-		// if (!$action)
-		// 	$action = PHP_SELF // todo google this and change it later
+	/** echo the start of a form
+	 * @param string $action
+	 * @param string $method
+	 * @param string $class
+	 * @return Form instance so we can access it's method to generate a form
+	 */
+	public static function begin(string $action = '', string $method = '', string $class = ''): Form
+	{
+		if (!$action)
+			$action = Application::$APP->request->getPath();
+		Application::$APP->session->generateCsrf();
 		echo sprintf('<form action="%s" method="%s" class="form %s">', $action, $method, $class);
-		return New Form();
+		echo sprintf('<input type="hidden" name="__csrf" value="%s">', Application::$APP->session->get('__CSRF')[1]);
+		return new Form();
 	}
 
-    /**
-     * echo the close tag of the form
-     */
-    public static function end()
+	/**
+	 * echo the close tag of the form
+	 */
+	public static function end()
 	{
 		echo '</form>';
 	}
 
-    /**
-     * generate a new form field
-     * @param Model $model
-     * @param string $attribute
-     * @param string $label
-     * @return Field
-     */
-    public function field(Model $model, string $attribute, string $label = ''): Field
-    {
-		$this->field = New Field($model, $attribute, $label);
+	/**
+	 * generate a new form field
+	 * @param Model $model
+	 * @param string $attribute
+	 * @param string $label
+	 * @return Field
+	 */
+	public function field(Model $model, string $attribute, string $label = ''): Field
+	{
+		$this->field = new Field($model, $attribute, $label);
 		return $this->field;
 	}
 
 	public function text(Model $model, string $attribute)
 	{
-		$this->textArea = New TextArea($model, $attribute);
+		$this->textArea = new TextArea($model, $attribute);
 		return $this->textArea;
 	}
 
-    /** return a submit type input
-     * @param string $value
-     * @return string
-     */
-    public function submit(string $value): string
+	/** return a submit type input
+	 * @param string $value
+	 * @return string
+	 */
+	public function submit(string $value): string
 	{
 		return '<div class="row"><input type="submit" value="' . $value . '"></div>';
 	}

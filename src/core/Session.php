@@ -66,7 +66,26 @@ class Session
 	{
 		return $_SESSION[self::FLASH_KEY][$key]['value'] ?? false;
 	}
-	
+
+	/**
+	 * generate CSRF token
+	 * @throws \Exception
+	 */
+	public function generateCsrf()
+	{
+		if (!isset($_SESSION['__CSRF']) || (isset($_SESSION['__CSRF']) && $_SESSION['__CSRF'][0])) {
+			$_SESSION['__CSRF'] = [0, bin2hex(random_bytes(16))];
+//			echo "<script>console.log('created token: ". $_SESSION['__CSRF'][1] . "');</script>" ;
+		}
+	}
+
+	/**
+	 * @return false|string csrf token if stored in session
+	 */
+	public function getCsrf()
+	{
+		return $_SESSION['__CSRF'][1] ?? FALSE;
+	}
 	
 	/**
 	 * iterate over marked messages to be removed
@@ -83,6 +102,12 @@ class Session
 		}
 		
 		$_SESSION[self::FLASH_KEY] = $flashMessages;
+		if (isset($_SESSION['__CSRF']) && $_SESSION['__CSRF'][0]) {
+			unset($_SESSION['__CSRF']);
+		}
+		if (isset($_SESSION['__CSRF']) && !$_SESSION['__CSRF'][0]) {
+			$_SESSION['__CSRF'][0] = 1;
+		}
 	}
 	
 }

@@ -23,7 +23,8 @@ use core\Application;
 				<li>
 					<a>
 						<form action="<?=Application::path('app.logout')?>" method="post">
-							<input type="hidden" name="token" value="123123">
+							<?php Application::$APP->session->generateCsrf() ?>
+							<input type="hidden" name="__csrf" value="<?=Application::$APP->session->getCsrf()?>">
 							<button><?= Application::$APP->user->username;?></button>
 						</form>
 					</a>
