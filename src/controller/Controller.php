@@ -62,4 +62,12 @@ abstract class Controller
         $this->middlewares[] = $middleware;
     }
 
+    public function mail($to, $content):bool
+    {
+    	$data = "to: $to\nyour password token is $content";
+    	if (file_put_contents(Application::$ROOT_DIR . '/var/mail.tmp', $data))
+    		return true;
+    	return false;
+    }
+
 }

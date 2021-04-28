@@ -14,8 +14,11 @@
 namespace controller;
 
 use core\Application;
+use core\Middleware\AuthMiddleware;
 use core\Request;
+use DateTime;
 use models\LoginForm;
+use models\Password_reset;
 use models\User;
 
 /**
@@ -25,6 +28,11 @@ use models\User;
 
 class AuthController extends Controller
 {
+
+	public function __construct()
+	{
+		$this->registerMiddleware(New AuthMiddleware(['updatePassword']));
+	}
 
     /** render login form view
      * @route('get' => '/login')
@@ -69,11 +77,9 @@ class AuthController extends Controller
 	{
 		$loginForm = New LoginForm();
 		$loginForm->loadData($request->getBody());
-		
-		if ($loginForm->validate() && $loginForm->login()) {
-//			Application::$APP->session->setFlash('success', 'Your account has been created successfully');
-//			return Application::$APP->response->redirect('/');
-			echo "yes";
+
+		if ($loginForm->validate() && $loginForm->login($_GET['ref'] ?? '/')) {
+
 		}
 		return $this->render('login', ['user' => $loginForm]);
 	}
@@ -183,6 +189,117 @@ class AuthController extends Controller
 		return $this->test($request, $user);
 	}
 
+	/**
+	 * @param Request $request
+	 * @return false|string|string[]
+	 */
+
+	public function restore(Request $request){
+		if (Application::$APP->user)
+			Application::$APP->response->redirect('/');
+
+		$password = New Password_reset();
+		if ($request->isPost()){
+			$password->loadData($request->getBody());
+			$password->token = bin2hex(random_bytes(18));
+			$password->used = 0;
+			if ($password->validate()) {
+				$user = New User();
+
+				$user = $user->getOneBy('email', $password->email);
+
+				if ($user) {
+					if ($this->mail($password->email, $password->token)){
+						$pass = New Password_reset();
+						/** @var  $pass Password_reset */
+						$pass = $pass->getOneBy('email', $password->email);
+						if ($pass->used)
+							$password->save();
+						else {
+							$password->id = $pass->id;
+							$password->update();
+						}
+					}
+				}
+
+				return $this->render('messages/restore_message',
+					['email' => $request->getBody()['email'] ?? ''],
+					['title' => 'Restore Password']
+				);
+			}
+		}
+
+    	return $this->render('messages/restore_password', ['user' => $password], ['title' => 'Restore Password']);
+	}
+
+	/**
+	 * @param $token
+	 * @return false|string|string[]|void
+	 * @throws \Exception
+	 */
+	public function checkToken($token)
+	{
+		$pass = New Password_reset();
+		$pass = $pass->findOne(['token' => $token, 'used' => 0]);
+
+		if ($pass) {
+			if (!$pass->used) {
+				$time = New DateTime(date('Y-m-d H:i:s', time()));
+				$passTime = $time->diff(New DateTime($pass->updated_at ?? $pass->created_at));
+
+				if ($passTime->i < 60) {
+					$pass->used = 1;
+					$pass->update();
+					$user = New User();
+					$tmp = $user->getOneBy('email', $pass->email);
+					$user->loadData(json_decode(json_encode($tmp), true));
+
+					if ($user){
+						Application::$APP->session->setFlash('system', '1');
+						return Application::$APP->login($user, '/set_new_password');
+					}
+				}
+			}
+		}
+
+		return $this->render('messages/expired_token');
+	}
+
+	/**
+	 * @param Request $request
+	 * @return false|string|string[]
+	 */
+
+	public function updatePassword(Request $request)
+	{
+		if (!Application::$APP->session->getFlash('system'))
+			Application::$APP->response->redirect('/');
+
+		$user = Application::$APP->user;
+
+		$user->password = '';
+		if ($request->isPost()) {
+			$user->loadData($request->getBody());
+			if ($user->validate()) {
+				$tmp =  $user->getOneBy('id', $user->id);
+				if (password_verify($user->password, $tmp->password))
+					$user->addError('password' , 'New Password can\'t be the same as the old one');
+				else
+					if ($user->update()) {
+						Application::$APP->session->setFlash('success', 'Password updated');
+						Application::$APP->response->redirect('/');
+					}
+			}
+
+		}
+
+		Application::$APP->session->setFlash('system', '1');
+		return $this->render('messages/setPassword', ['user' => $user]);
+	}
+
+	/*
+	 * log out method
+	 */
 	public function logout()
 	{
 		Application::logout();
