@@ -16,7 +16,7 @@ use core\Application;
             <!-- todo change this and put it in css file -->
             <div class="nav-right">
 				<?php if (Application::isGuest()):?>
-                <li><a href="<?=Application::path('auth.login')?>"><?= $this->lang('login');?></a></li>
+                <li><a href="<?=Application::path('auth.login')?>?ref=<?=urlencode(Application::$APP->request->getPath())?>"><?= $this->lang('login');?></a></li>
                 <li><a href="<?=Application::path('auth.signup')?>"><?= $this->lang('register');?></a></li>
             	<?php else: ?>
                 <li><a href="<?=Application::path('user.profile')?>"><?= $this->lang('profile')?></a></li>

@@ -27,7 +27,7 @@ class LoginForm extends Model
 		];
 	}
 	
-	public function login()
+	public function login(string $ref)
 	{
 		$user = User::findOne(['username' => $this->username]);
 		if (!$user) {
@@ -42,6 +42,6 @@ class LoginForm extends Model
 			return false;
 		}
 		
-		return Application::$APP->login($user);
+		return Application::$APP->login($user, $ref);
  	}
 }

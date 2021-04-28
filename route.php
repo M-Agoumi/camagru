@@ -26,6 +26,11 @@ $app->router->post('/register_step_2', [AuthController::class, 'register'])->nam
 $app->router->get('/register_step_2', [AuthController::class, 'test'])->name('auth.test');
 $app->router->post('/registration', [AuthController::class, 'insertUser'])->name('auth.insertUser');
 $app->router->post('/logout', [AuthController::class, 'logout'])->name('app.logout');
+$app->router->get('/restore_password', [AuthController::class, 'restore']);
+$app->router->post('/restore_password', [AuthController::class, 'restore'])->name('auth.restore');
+$app->router->magic("/verifyToken/{token}", [AuthController::class, 'checkToken']);
+$app->router->get("/set_new_password", [AuthController::class, 'updatePassword'])->name('auth.updatePassword');
+$app->router->post("/set_new_password", [AuthController::class, 'updatePassword']);
 
 /** User Controller routes */
 $app->router->magic('/user/{username}', [UserController::class, 'index']);
@@ -46,6 +51,7 @@ $app->router->magic('/post/{slug}', [PostController::class, 'show']);
 /** debug routes */
 $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');
 $app->router->get('/debugger', function (){return $_SESSION['email_code'] ?? 'no code found';});
+$app->router->get('/mailer', function (){return file_get_contents(Application::$ROOT_DIR. '/var/mail.tmp') ?? 'no mail found';});
 $app->router->get('/session', function() {var_dump($_SESSION);});
 $app->router->get('/test', [DefaultController::class, 'test']);
 $app->router->post('/test', [DefaultController::class, 'test']);

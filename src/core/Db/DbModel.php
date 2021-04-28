@@ -94,7 +94,7 @@ abstract class DbModel extends Model
     /**
      * @param $key
      * @param $value
-     * @return false|User
+     * @return false|Model
      */
     public function getOneBy($key, $value)
     {
@@ -111,7 +111,7 @@ abstract class DbModel extends Model
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
-		$sql = implode("AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
+		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
 		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);

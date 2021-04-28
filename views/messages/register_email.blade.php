@@ -10,6 +10,8 @@ if (!$email)
 <h1>One More Step Before Joining Us</h1>
 <p>We have sent a code to <?=$email?> enter it to continue your sign up</p>
 <form method="post" action="/register_step_2">
+    <?php \core\Application::$APP->session->generateCsrf();?>
+    <input type="hidden" name="__csrf" value="<?=\core\Application::$APP->session->getCsrf()?>">
 	<input type="text" name="verification">
 	<?php if (!empty($error)): ?>
 		<?=$error?> <a href="#">resend code</a>
