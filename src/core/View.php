@@ -73,7 +73,7 @@ class View
 		if (file_exists($viewFile))
 			include_once $viewFile;
 		else
-			echo "$view is not found";
+			echo "the view <b>$view</b> is not found";
 		return ob_get_clean();
 	}
 
