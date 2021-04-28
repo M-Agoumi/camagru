@@ -187,13 +187,13 @@ class Application
     	return self::$APP->router->path($name);
     }
 	
-	public function login(DbModel $user)
+	public function login(DbModel $user, string $ref)
 	{
 		$this->user = $user;
 		$primaryKey = $user->primaryKey();
 		$primaryValue = $user->{$primaryKey};
 		$this->session->set('user', $primaryValue);
-		$this->response->redirect('/');
+		$this->response->redirect($ref);
 	}
 	
 	public static function logout()
