@@ -100,7 +100,7 @@ class Router
 	 */
 	public function path(string $name): string
 	{
-		if ($this->paths[$name])
+		if (isset($this->paths[$name]))
 			return $this->paths[$name];
 		/** todo throw and exception  */
 		die("there is no path with the name $name");
@@ -141,7 +141,7 @@ class Router
 			$callback[0] = $controller;
 
 			if (sizeof($callback) === 3)
-				return $controller->{$callback[1]}($callback[2]);
+				return $controller->{$callback[1]}($callback[2], $this->request);
 		}
 
 		if (is_callable($callback))
