@@ -95,12 +95,12 @@
 		    if ($parameters) {
 			    if (in_array('-p', $parameters)) {
 				    $port = $parameters[array_search('-p', $parameters) + 1] ?? 8000;
-				    echo "Starting a development server on port " . $port . PHP_EOL;
+				    echo "Starting a development server on http://localhost:" . $port . PHP_EOL;
 				    echo shell_exec('sh bin/scripts/server_start.sh ' . $port);
 			    } else
 			        echo "Parameter is unknown" . PHP_EOL;
 		    } else {
-			    echo "Starting a development server on port 8000" . PHP_EOL;
+			    echo "Starting a development server on http://localhost:8000" . PHP_EOL;
 			    echo shell_exec('sh bin/scripts/server_start.sh');
 		    }
         } elseif ($arguments[0] == 'stop') {
@@ -126,7 +126,12 @@
 			    }
 		    } else
 			    echo "There is no running server.." . PHP_EOL;
-        }
+        } elseif ($arguments[0] == 'restart'){
+		    echo "server restarting\n";
+		    echo shell_exec("sh bin/scripts/server_restart.sh");
+	    } else {
+	    	serverHelper();
+	    }
 	} else {
 	    echo "Command Not Found" . PHP_EOL;
         show_help();
