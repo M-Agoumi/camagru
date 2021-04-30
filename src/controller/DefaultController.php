@@ -45,15 +45,12 @@ class DefaultController extends Controller
 
 	public function test(Request $request)
 	{
-		if (Application::$APP->request->isPost())
-		{
-			$user = New User();
-
+		$user = New User();
+		if ($request->isPost()){
 			$user->loadData($request->getBody());
-			print_r($user);
-			return ("game on");
 		}
-		return $this->render('test');
+
+		return $this->render('test', ['user' => $user]);
 	}
 
 }
