@@ -80,7 +80,7 @@ class Request
 		}
 		if ($this->Method() === 'post') {
 			if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
-				if ($_POST['__csrf'] !== Application::$APP->session->getCsrf())
+				if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
 					die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
 					contact an admin");
 			} else {

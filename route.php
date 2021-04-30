@@ -16,6 +16,8 @@ $app = Application::$APP;
 
 /** default Controller routes */
 $app->router->get('/', [DefaultController::class, 'index'])->name('home.index');
+$app->router->get('/testa', [DefaultController::class, 'test']);
+$app->router->post('/testa', [DefaultController::class, 'test']);
 
 /** Auth Controller routes */
 $app->router->get('/login', [AuthController::class, 'login'])->name("auth.login");

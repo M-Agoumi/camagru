@@ -22,6 +22,8 @@ class Session
 			$flashMessage['remove'] = true;
 		}
 		$_SESSION[self::FLASH_KEY] = $flashMessages;
+		if (!isset($_SESSION['__CSRF']))
+			$_SESSION['__CSRF'] = [];
 	}
 	
 	/**
@@ -41,11 +43,15 @@ class Session
 	{
 		return $_SESSION[$key] ?? NULL;
 	}
-	
+
+	/**
+	 * @param string $key to remove
+	 */
 	public function remove(string $key)
 	{
 		unset($_SESSION[$key]);
 	}
+
 	/**
 	 * @param $key     string success/warning/danger
 	 * @param $message string the content of the flash message
@@ -73,10 +79,30 @@ class Session
 	 */
 	public function generateCsrf()
 	{
-		if (!isset($_SESSION['__CSRF']) || (isset($_SESSION['__CSRF']) && $_SESSION['__CSRF'][0])) {
-			$_SESSION['__CSRF'] = [0, bin2hex(random_bytes(16))];
-//			echo "<script>console.log('created token: ". $_SESSION['__CSRF'][1] . "');</script>" ;
+		array_push($_SESSION['__CSRF'], [0, bin2hex(random_bytes(16))]);
+	}
+
+	/**
+	 * @param string $token
+	 * @return bool
+	 */
+
+	public function checkCsrf(string $token): bool
+	{
+		function array_search2d($needle, $haystack) {
+			for ($i = 0, $l = count($haystack); $i < $l; ++$i) {
+				if (in_array($needle, $haystack[$i])) return $i;
+			}
+			return false;
 		}
+
+		$index = array_search2d($token, $_SESSION['__CSRF']);
+		if ($index !== false) {
+			unset($_SESSION['__CSRF'][$index]);
+			$_SESSION['__CSRF'] = array_values($_SESSION['__CSRF']);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -84,7 +110,15 @@ class Session
 	 */
 	public function getCsrf()
 	{
-		return $_SESSION['__CSRF'][1] ?? FALSE;
+		$i = 0;
+		while ($i < count($_SESSION['__CSRF'])) {
+			if (!$_SESSION['__CSRF'][$i][0]) {
+				$_SESSION['__CSRF'][$i][0] = 1;
+				return $_SESSION['__CSRF'][$i][1];
+			}
+			$i++;
+		}
+		return false;
 	}
 	
 	/**
@@ -102,12 +136,6 @@ class Session
 		}
 		
 		$_SESSION[self::FLASH_KEY] = $flashMessages;
-		if (isset($_SESSION['__CSRF']) && $_SESSION['__CSRF'][0]) {
-			unset($_SESSION['__CSRF']);
-		}
-		if (isset($_SESSION['__CSRF']) && !$_SESSION['__CSRF'][0]) {
-			$_SESSION['__CSRF'][0] = 1;
-		}
 	}
 	
 }

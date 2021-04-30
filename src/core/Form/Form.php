@@ -33,7 +33,7 @@ class Form
 			$action = Application::$APP->request->getPath();
 		Application::$APP->session->generateCsrf();
 		echo sprintf('<form action="%s" method="%s" class="form %s">', $action, $method, $class);
-		echo sprintf('<input type="hidden" name="__csrf" value="%s">', Application::$APP->session->get('__CSRF')[1]);
+		echo sprintf('<input type="hidden" name="__csrf" value="%s">', Application::$APP->session->getCsrf());
 		return new Form();
 	}
 
