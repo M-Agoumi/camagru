@@ -15,8 +15,7 @@ namespace core\Db;
 
 use core\Application;
 use models\Model;
-use models\User;
-use \PDOStatement;
+use PDOStatement;
 
 abstract class DbModel extends Model
 {
@@ -96,13 +95,19 @@ abstract class DbModel extends Model
      * @param $value
      * @return false|Model
      */
-    public function getOneBy($key, $value)
+    public function getOneBy($key, $value = null)
     {
         $tableName = $this->tableName();
 
-        $statement = self::prepare("SELECT * FROM $tableName WHERE $key = :value");
-        $statement->bindParam(":value", $value);
-        $statement->execute();
+        if ($value) {
+	        $statement = self::prepare("SELECT * FROM $tableName WHERE $key = :value");
+	        $statement->bindParam(":value", $value);
+        } else {
+        	$primary = $this->primaryKey();
+        	$statement = self::prepare("SELECT * FROM $tableName WHERE $primary = :key");
+	        $statement->bindParam(":key", $key);
+        }
+	    $statement->execute();
 
         return $statement->fetchObject();
     }
