@@ -23,7 +23,7 @@ function autoloader($class_name) {
 
         // echo "class include ".$class_name . "<br>";
   
-		require_once($file_name);
+		require($file_name);
     } else {
         echo "file not found: " . $file_name;
     }
