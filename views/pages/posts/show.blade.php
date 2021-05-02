@@ -1,7 +1,7 @@
 <?php
     /** @var $post \models\Post */
 ?>
-<h1><?=$post->title?> <sub><small><em><?=!$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
+<h1><?=$post->title?> <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
 <img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
 <p><?=$post->comment?></p>
 <?php
