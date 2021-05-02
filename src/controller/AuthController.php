@@ -247,7 +247,7 @@ class AuthController extends Controller
 				$time = New DateTime(date('Y-m-d H:i:s', time()));
 				$passTime = $time->diff(New DateTime($pass->updated_at ?? $pass->created_at));
 
-				if ($passTime->i < 60) {
+				if ($passTime->i < 15) {
 					$pass->used = 1;
 					$pass->update();
 					$user = New User();
