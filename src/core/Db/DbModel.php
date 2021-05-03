@@ -15,6 +15,7 @@ namespace core\Db;
 
 use core\Application;
 use models\Model;
+use PDO;
 use PDOStatement;
 
 abstract class DbModel extends Model
@@ -121,9 +122,56 @@ abstract class DbModel extends Model
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}
-		
 		$stmt->execute();
+
 		return $stmt->fetchObject(static::class);
+	}
+
+	/** get all records of a specific entity
+	 * @return mixed
+	 */
+	public function findAll(){
+		$tableName = static::tableName();
+		$stmt = self::prepare("SELECT * FROM $tableName;");
+		$stmt->execute();
+
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * @param array $where
+	 * @return array
+	 */
+	public function findAllBy(array $where)
+	{
+		$tableName = static::tableName();
+		$attributes = array_keys($where);
+		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
+		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
+		foreach ($where as $key => $item) {
+			$stmt->bindValue(":$key", $item);
+		}
+		$stmt->execute();
+
+		return $stmt->fetchAll();
+	}
+
+	/** return the count number of an element
+	 * @param array $where
+	 * @return int
+	 */
+	public function getCount(array $where):int
+	{
+		$tableName = static::tableName();
+		$attributes = array_keys($where);
+		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
+		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
+		foreach ($where as $key => $item) {
+			$stmt->bindValue(":$key", $item);
+		}
+		$stmt->execute();
+
+		return $stmt->rowCount();
 	}
     /**
      * this method is just to keep the code clean
