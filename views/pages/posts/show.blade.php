@@ -1,37 +1,82 @@
 <?php
-    /** @var $post \models\Post */
+use core\Application;
+/** @var $post \models\Post */
 ?>
-<h1><?=$post->title?> <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
-<img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
-<p><?=$post->comment?></p>
-<?php
-    /** todo place this one somewhere better :D */
-function humanTiming ($time): string
-{
+<div class="center">
+    <h1><?=$post->title?> <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
+    <img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
+    <p><?=$post->comment?></p>
+	<?php
+	/** todo place this one somewhere better :D */
+	function humanTiming($time): string
+	{
 
-	$time = time() - $time; // to get the time since that moment
-	$time = ($time<1)? 1 : $time;
-	$tokens = array (
-		31536000 => 'year',
-		2592000 => 'month',
-		604800 => 'week',
-		86400 => 'day',
-		3600 => 'hour',
-		60 => 'minute',
-		1 => 'second'
-	);
+		$time = time() - $time; // to get the time since that moment
+		$time = ($time < 1) ? 1 : $time;
+		$tokens = array(
+			31536000 => 'year',
+			2592000 => 'month',
+			604800 => 'week',
+			86400 => 'day',
+			3600 => 'hour',
+			60 => 'minute',
+			1 => 'second'
+		);
 
-	foreach ($tokens as $unit => $text) {
-		if ($time < $unit) continue;
-		$numberOfUnits = floor($time / $unit);
-		return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
+		foreach ($tokens as $unit => $text) {
+			if ($time < $unit) continue;
+			$numberOfUnits = floor($time / $unit);
+			return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '');
+		}
+		return "0";
 	}
-}
-$author = New \models\User();
-$author = $author->getOneBy($post->author);
-if ($author)
-	$author = $author->name;
-else
-	$author = 'Anonymous';
-?>
-<p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <?=$author?></p>
+
+	/** get author name */
+	$author = New \models\User();
+	$author = $author->getOneBy($post->author);
+	if ($author)
+		$author = $author->name;
+	else
+		$author = 'Anonymous';
+
+	/** get likes */
+    $likes = New \models\Likes();
+
+    $likesCount = $likes->getCount(['post' => $post->id]);
+    if (Application::$APP->user)
+        $liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId()]);
+    else
+    	$liked = 0;
+
+//    echo $post->author;
+	?>
+    <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <?=$author?></p>
+    <div class="filters">
+    <span class="origin">
+        <span>
+            <?php if ($liked): ?>
+                liked
+            <?php else: ?>
+                <?php
+                    /** generate like form */
+                    $form = \core\Form\Form::begin(Application::path('post.like', $post->id), 'POST', 'hidden', "onsubmit='return likePost(event)'");
+                        echo $form->field($likes, 'post')->default($post->id)->disabled();
+                        echo $form->submit('Like');
+                        $form::end();
+
+                ?>
+            <?php endif; ?>
+        </span>
+<?php
+	    if (Application::$APP->user && Application::$APP->user->id == $post->author):
+	    ?>
+        <span>edit post</span>
+<?php endif; ?>
+    </span>
+        <pre>
+        <?php
+//	        var_dump($likesCount, $liked);
+        ?>
+        </pre>
+    </div>
+</div>

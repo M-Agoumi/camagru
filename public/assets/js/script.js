@@ -27,3 +27,33 @@ function save() {
     document.getElementById('inputPicture').value = img;
 }
 
+/* starting ajax code */
+
+
+/* like button */
+function likePost(e) {
+    e.preventDefault();
+    try {
+        // Create XHR Object
+        var xhr = new XMLHttpRequest();
+
+        // Open - type, url/file, asyc
+        xhr.open('post', "/post/like/1", true);
+
+        xhr.onload = function () {
+            // check if request is okay
+            if (this.status == 200) {
+                console.log(this.responseText);
+            } else {
+                console.log('error ' + this.status);
+            }
+        }
+
+        // Send request
+        xhr.send();
+    } catch (e) {
+        throw new Error(e.message);
+    }
+    return false;
+}
+
