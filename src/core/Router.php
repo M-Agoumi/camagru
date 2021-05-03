@@ -96,12 +96,21 @@ class Router
 
 	/**
 	 * @param string $name
+	 * @param $var
 	 * @return string
 	 */
-	public function path(string $name): string
+	public function path(string $name, $var = null): string
 	{
-		if (isset($this->paths[$name]))
-			return $this->paths[$name];
+		/** check if it's a magic link */
+		if (isset($this->paths[$name])) {
+			if ($var) {
+				$path = $this->paths[$name];
+				return preg_replace('~\{.*\}~', $var, $path);
+			} else
+				return $this->paths[$name];
+		}
+
+
 		/** todo throw and exception  */
 		die("there is no path with the name $name");
 	}

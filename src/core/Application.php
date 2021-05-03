@@ -182,9 +182,9 @@ class Application
 	 * @param string $name
 	 * @return string
 	 */
-	public static function path(string $name): string
+	public static function path(string $name, $var = null): string
     {
-    	return self::$APP->router->path($name);
+    	return self::$APP->router->path($name, $var);
     }
 	
 	public function login(DbModel $user, string $ref)
