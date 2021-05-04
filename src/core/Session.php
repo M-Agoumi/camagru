@@ -82,6 +82,12 @@ class Session
 		array_push($_SESSION['__CSRF'], [0, bin2hex(random_bytes(16))]);
 	}
 
+	public function array_search2d($needle, $haystack) {
+		for ($i = 0, $l = count($haystack); $i < $l; ++$i) {
+			if (in_array($needle, $haystack[$i])) return $i;
+		}
+		return false;
+	}
 	/**
 	 * @param string $token
 	 * @return bool
@@ -89,14 +95,7 @@ class Session
 
 	public function checkCsrf(string $token): bool
 	{
-		function array_search2d($needle, $haystack) {
-			for ($i = 0, $l = count($haystack); $i < $l; ++$i) {
-				if (in_array($needle, $haystack[$i])) return $i;
-			}
-			return false;
-		}
-
-		$index = array_search2d($token, $_SESSION['__CSRF']);
+		$index = $this->array_search2d($token, $_SESSION['__CSRF']);
 		if ($index !== false) {
 			unset($_SESSION['__CSRF'][$index]);
 			$_SESSION['__CSRF'] = array_values($_SESSION['__CSRF']);
