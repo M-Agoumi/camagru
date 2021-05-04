@@ -153,7 +153,7 @@ abstract class DbModel extends Model
 		}
 		$stmt->execute();
 
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(2);
 	}
 
 	/** return the count number of an element
