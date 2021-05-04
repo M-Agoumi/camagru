@@ -48,6 +48,7 @@ class Router
 	 */
 	public function get($path, $callback): Router
 	{
+		$path = strtolower($path);
 		if (!isset($this->routes['get'][$path]))
 			$this->routes['get'][$path] = $callback;
 		else
@@ -68,6 +69,7 @@ class Router
 	 */
 	public function post($path, $callback): Router
 	{
+		$path = strtolower($path);
 		if (!isset($this->routes['post'][$path]))
 			$this->routes['post'][$path] = $callback;
 		else
@@ -78,6 +80,7 @@ class Router
 
 	public function magic($path, $callback): Router
 	{
+		$path = strtolower($path);
 		if (!isset($this->routes['magic'][$path]))
 			$this->routes['magic'][$path] = $callback;
 		else
@@ -125,7 +128,7 @@ class Router
 	 */
 	public function resolve()
 	{
-		$path = $this->request->getPath();
+		$path = strtolower($this->request->getPath());
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
 
