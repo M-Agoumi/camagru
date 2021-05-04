@@ -30,20 +30,44 @@ function save() {
 /* starting ajax code */
 
 
+/* login popup */
+
+function loginPopUp()
+{
+    if (confirm('You need to login to like this post, login?')) {
+        var path = window.location.href;
+        window.location.href = "/login?ref=" + path;
+    }
+}
+
 /* like button */
-function likePost(e) {
-    e.preventDefault();
+function likePost(post, elem) {
     try {
         // Create XHR Object
         var xhr = new XMLHttpRequest();
+        var liked = elem.textContent;
+        var likes = elem.previousElementSibling;
+
+        console.log(parseInt(likes.textContent));
 
         // Open - type, url/file, asyc
-        xhr.open('post', "/post/like/1", true);
+        xhr.open('post', "/post/like/" + post, true);
 
         xhr.onload = function () {
             // check if request is okay
             if (this.status == 200) {
-                console.log(this.responseText);
+                // console.log(this.responseText);
+                if (this.responseText == -1)
+                    loginPopUp();
+                else {
+                    if (this.responseText == 0) {
+                        elem.innerHTML = "Like";
+                        likes.innerHTML = parseInt(likes.textContent) - 1;
+                    } else {
+                        elem.innerHTML = "Liked";
+                        likes.innerHTML = parseInt(likes.textContent) + 1;
+                    }
+                }
             } else {
                 console.log('error ' + this.status);
             }

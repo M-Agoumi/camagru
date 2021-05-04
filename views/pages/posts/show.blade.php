@@ -40,31 +40,25 @@ use core\Application;
 		$author = 'Anonymous';
 
 	/** get likes */
-    $likes = New \models\Likes();
+	$likes = New \models\Likes();
 
-    $likesCount = $likes->getCount(['post' => $post->id]);
-    if (Application::$APP->user)
-        $liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId()]);
-    else
-    	$liked = 0;
+	$likesCount = $likes->getCount(['post' => $post->id]);
+	if (Application::$APP->user)
+		$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId()]);
+	else
+		$liked = 0;
 
-//    echo $post->author;
+	//    echo $post->author;
 	?>
     <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <?=$author?></p>
     <div class="filters">
     <span class="origin">
         <span>
+            (<span><?=$likesCount?></span>)
             <?php if ($liked): ?>
-                liked
+            <span onclick="likePost(<?=$post->id?>, this)">liked</span>
             <?php else: ?>
-                <?php
-                    /** generate like form */
-                    $form = \core\Form\Form::begin(Application::path('post.like', $post->id), 'POST', 'hidden', "onsubmit='return likePost(event)'");
-                        echo $form->field($likes, 'post')->default($post->id)->disabled();
-                        echo $form->submit('Like');
-                        $form::end();
-
-                ?>
+                <span onclick="likePost(<?=$post->id?>, this)">like</span>
             <?php endif; ?>
         </span>
 <?php
@@ -73,10 +67,5 @@ use core\Application;
         <span>edit post</span>
 <?php endif; ?>
     </span>
-        <pre>
-        <?php
-//	        var_dump($likesCount, $liked);
-        ?>
-        </pre>
     </div>
 </div>
