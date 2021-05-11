@@ -21,8 +21,9 @@ class PostController extends Controller
 	{
 		$post = New Post();
 
-		$post = $post->getOneBy('slug', $slug);
-		if ($post)
+		$postc = $post->getOneBy('slug', $slug, 0);
+		$post->loadData($postc);
+		if ($postc)
 			return $this->render('pages/posts/show', ['post' => $post], ['title' => $post->title]);
 		throw New NotFoundException();
 	}
