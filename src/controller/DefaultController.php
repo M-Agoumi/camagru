@@ -16,6 +16,7 @@ namespace controller;
 use core\Application;
 use core\Middleware\AuthMiddleware;
 use core\Request;
+use models\Post;
 use models\User;
 
 /**
@@ -37,7 +38,8 @@ class DefaultController extends Controller
 		$params = [
 			'name' => "Magoumi",
 			'title' => "Home",
-			'test' => 'yohoo'
+			'test' => 'yohoo',
+			'postModule' => New Post()
 		];
 
 		return $this->render('home', $params, ['title' => 'Home']);
