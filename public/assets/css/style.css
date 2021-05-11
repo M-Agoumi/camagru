@@ -47,6 +47,19 @@ body::-webkit-scrollbar {
     margin: 50px auto 0;
 }
 
+.masonry-container a{
+	text-decoration: none;
+	color: #FFF;
+}
+
+.panel-tags{
+	font-size: 0.55em !important;
+	font-weight: 400 !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.05em !important;
+	color: #fff !important;
+}
+
 .panel {
     position: relative;
     display: inline-block;
