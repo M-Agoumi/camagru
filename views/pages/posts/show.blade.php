@@ -5,7 +5,7 @@ use core\Application;
 <div class="center">
     <h1><?=$post->title?> <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
     <img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
-    <p><?=$post->comment?></p>
+    <p><?=$post->highlightHashtag($post->comment)?></p>
 	<?php
 	/** todo place this one somewhere better :D */
 	function humanTiming($time): string
@@ -66,6 +66,7 @@ use core\Application;
 	    ?>
         <span>edit post</span>
 <?php endif; ?>
+        <?php //var_dump($post)?>
     </span>
     </div>
 </div>
