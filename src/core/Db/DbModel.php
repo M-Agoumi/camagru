@@ -96,7 +96,7 @@ abstract class DbModel extends Model
      * @param $value
      * @return false|Model
      */
-    public function getOneBy($key, $value = null)
+    public function getOneBy($key, $value = null, $object = 1)
     {
         $tableName = $this->tableName();
 
@@ -110,7 +110,9 @@ abstract class DbModel extends Model
         }
 	    $statement->execute();
 
-        return $statement->fetchObject();
+        if ($object)
+            return $statement->fetchObject();
+        return $statement->fetch(0);
     }
 	
 	public static function findOne(array $where)
