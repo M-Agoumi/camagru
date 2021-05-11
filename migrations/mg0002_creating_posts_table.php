@@ -14,7 +14,7 @@ class mg0002_creating_posts_table
 						 `title`      varchar(255) NULL ,
 						 `comment`    text NULL ,
 						 `picture`    varchar(255) NOT NULL ,
-						 `slug`       varchar(255) NOT NULL ,
+						 `slug`       varchar(255) NOT NULL UNIQUE,
 						 `created_at` timestamp NOT NULL ,
 						 `updated_at` timestamp NULL ,
 						 `status`     tinyint NOT NULL default 0,
