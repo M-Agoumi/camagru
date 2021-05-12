@@ -34,7 +34,7 @@ function save() {
 
 function loginPopUp()
 {
-    if (confirm('You need to login to like this post, login?')) {
+    if (confirm('You need to login to do this action, login?')) {
         var path = window.location.href;
         window.location.href = "/login?ref=" + path;
     }
@@ -81,3 +81,53 @@ function likePost(post, elem) {
     return false;
 }
 
+/** show people who liked the post */
+
+function hideLikes() {
+    document.getElementsByClassName('usersLikes')[0].style.display = 'none';
+}
+
+function showLikes(post) {
+    try {
+        var xhr = new XMLHttpRequest();
+
+        // Open - type, url/file, asyc
+        xhr.open('post', "/api/post/likes/" + post, true);
+
+        xhr.onload = function () {
+            // check if request is okay
+            if (this.status === 200) {
+                if (this.responseText == -1)
+                    loginPopUp();
+                else {
+                    var users = JSON.parse(this.responseText);
+
+                    var output = '<span class="fa fa-close close" onclick="hideLikes()"></span>';
+                    for (let i in users) {
+                        output += '<ul>' +
+                            '<li><img src="' + users[i].picture + '" alt="profile picture"></li>' +
+                            '<li>' + users[i].user + '</li>';
+                        if (users[i].react == 0)
+                            output += '<li><span class="fa fa-thumbs-o-up"></span></li>';
+                        else if (users[i].react == 1)
+                            output += '<li><span class="fa fa-heart"></span></li>';
+
+
+                        output += '</ul>';
+                    }
+                    console.log(users);
+                    document.getElementsByClassName('content')[0].innerHTML = output;
+                    document.getElementsByClassName('usersLikes')[0].style.display = 'block';
+                }
+            } else {
+                console.log('error ' + this.status);
+            }
+        }
+
+        // Send request
+        xhr.send();
+
+    } catch (e) {
+        throw new Error(e.message);
+    }
+}

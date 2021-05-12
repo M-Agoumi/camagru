@@ -11,6 +11,7 @@ use core\Exception\NotFoundException;
 use core\Request;
 use models\Likes;
 use models\Post;
+use models\User;
 
 class PostController extends Controller
 {
@@ -68,6 +69,41 @@ class PostController extends Controller
 
 			return "\n";
 		}
+		throw New ForbiddenException();
+	}
+
+	public function showLikes(string $id, Request $request)
+	{
+		if ($request->isPost()) {
+			/** check if the user is logged or not */
+			if (Application::isGuest())
+				return "-1";
+
+			/** Users array */
+			$usersLikes = [];
+
+			/** create like model to fetch likes */
+			$likes = New Likes();
+
+			$postLikes = $likes->findAllBy(['post' => $id, 'status' => 0]);
+			/** create a user model to fetch users */
+			$users = New User();
+
+			/** fetch first 5 users */
+			$i = 0;
+			while ($i < count($postLikes) && $i < 5) {
+				$user = $users->getOneBy($postLikes[$i]['user']);
+				array_push($usersLikes, [
+					'user' => $user->name,
+					'picture' => '/uploads/dps/default.jpg',
+					'react' => $postLikes[$i]['type']
+				]);
+				$i++;
+			}
+
+			return json_encode($usersLikes);
+		}
+
 		throw New ForbiddenException();
 	}
 }

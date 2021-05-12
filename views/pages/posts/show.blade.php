@@ -54,7 +54,7 @@ use core\Application;
     <div class="filters">
     <span class="origin">
         <span>
-            (<span><?=$likesCount?></span>)
+            (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
             <?php if ($liked): ?>
             <span onclick="likePost(<?=$post->id?>, this)">liked</span>
             <?php else: ?>
@@ -68,5 +68,11 @@ use core\Application;
 <?php endif; ?>
         <?php //var_dump($post)?>
     </span>
+        <div class="usersLikes">
+            <div class="content">
+                <span class="fa fa-close close" onclick="hideLikes()"></span>
+                Hello World
+            </div>
+        </div>
     </div>
 </div>
