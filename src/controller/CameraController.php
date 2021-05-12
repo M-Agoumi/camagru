@@ -15,7 +15,7 @@ class CameraController extends Controller
 		return $this->render('pages/camera', [], ['title' => 'Camera']);
 	}
 
-	public function save()
+	public function save(Request $request)
 	{
 		$post = New Post();
 		$data = Application::$APP->request->getBody()['picture'];
@@ -28,6 +28,15 @@ class CameraController extends Controller
 		if (file_put_contents($path, $data))
 			$post->picture = $image;
 		Application::$APP->session->set('picture', $path);
+		return $this->render('pages/cameraShare', ['post'=> $post]);
+	}
+
+	public function test()
+	{
+		$post = New Post();
+
+		$post->picture = '609bf97b8215b';
+
 		return $this->render('pages/cameraShare', ['post'=> $post]);
 	}
 
