@@ -25,7 +25,8 @@ class AuthMiddleware extends BaseMiddleware
     {
         if (Application::isGuest()) {
             if (empty($this->action) || in_array(Application::$APP->controller->action, $this->action)) {
-                throw new ForbiddenException();
+                // throw new ForbiddenException();
+				Application::$APP->response->redirect('/');
             }
         }
     }

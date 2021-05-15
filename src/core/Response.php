@@ -35,6 +35,7 @@ class Response
 	public function redirect(string $url): bool
 	{
 		header('Location: '. $url);
+		die('you are being redicted');
 		return false;
 	}
 }
