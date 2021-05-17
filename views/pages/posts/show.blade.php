@@ -42,9 +42,9 @@ use core\Application;
 	/** get likes */
 	$likes = New \models\Likes();
 
-	$likesCount = $likes->getCount(['post' => $post->id]);
+	$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
 	if (Application::$APP->user)
-		$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId()]);
+		$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId(), 'status' => 0]);
 	else
 		$liked = 0;
 
@@ -58,8 +58,13 @@ use core\Application;
             <?php if ($liked): ?>
             <span onclick="likePost(<?=$post->id?>, this)">liked</span>
             <?php else: ?>
-                <span onclick="likePost(<?=$post->id?>, this)">like</span>
+                <span onclick="likePost(<?=$post->id?>, this, 0)">like</span>
             <?php endif; ?>
+                <span onclick="likePost(<?=$post->id?>, this, 1)">heart</span>
+                <span onclick="likePost(<?=$post->id?>, this, 2)">wow</span>
+                <span onclick="likePost(<?=$post->id?>, this, 3)">haha</span>
+                <span onclick="likePost(<?=$post->id?>, this, 4)">sad</span>
+                <span onclick="likePost(<?=$post->id?>, this, 5)">angry</span>
         </span>
 <?php
 	    if (Application::$APP->user && Application::$APP->user->id == $post->author):

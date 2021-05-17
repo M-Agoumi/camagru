@@ -13,6 +13,7 @@ class Likes extends DbModel
 	public ?int $post = null;
 	public ?int $user = null;
 	public ?int $status = null;
+	public int $type = 0;
 
 
 	public function tableName(): string

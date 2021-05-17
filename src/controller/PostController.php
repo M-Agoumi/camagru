@@ -46,28 +46,30 @@ class PostController extends Controller
 				$liked = $likes->findOne([
 					'user' => Application::$APP->user->getId(),
 					'post' => $post->id,
-					]
-				);
+					]);
+
 				if ($liked) {
+
 					if ($liked->status) {
 						$liked->status = 0;
+						$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
 						if ($liked->update())
-							echo "0";
+							echo "1";
 					} else {
 						$liked->status = 1;
 						if ($liked->update())
-							echo "1";
+							echo "0";
 					}
 				} else {
 					$likes->post = $id;
 					$likes->user = Application::$APP->user->getId();
 					$likes->status = 0;
-					$likes->type = 0;
+					$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
 					if ($likes->save())
 						echo "1";
 				}
 			} else
-				echo "Post not found maybe got deleted";
+				echo "-2";
 
 
 			return "\n";

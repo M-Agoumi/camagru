@@ -40,31 +40,31 @@ function loginPopUp()
     }
 }
 
+var reacts = ['Like', 'Heart', 'Wow', 'Haha', 'Sad', 'Angry'];
 /* like button */
-function likePost(post, elem) {
+function likePost(post, elem, react = 1) {
     try {
         // Create XHR Object
         var xhr = new XMLHttpRequest();
         var liked = elem.textContent;
         var likes = elem.previousElementSibling;
 
-        console.log(parseInt(likes.textContent));
-
         // Open - type, url/file, asyc
-        xhr.open('post', "/post/like/" + post, true);
+        console.log('request: ' + "/post/like/" + post + "?react=" + react);
+        xhr.open('post', "/post/like/" + post + "?react=" + react, true);
 
         xhr.onload = function () {
             // check if request is okay
             if (this.status == 200) {
-                // console.log(this.responseText);
+                console.log('API: ' + this.responseText);
                 if (this.responseText == -1)
                     loginPopUp();
                 else {
                     if (this.responseText == 0) {
-                        elem.innerHTML = "Like";
+                        elem.innerHTML = reacts[react];
                         likes.innerHTML = parseInt(likes.textContent) - 1;
                     } else {
-                        elem.innerHTML = "Liked";
+                        elem.innerHTML = reacts[react] + 'ed';
                         likes.innerHTML = parseInt(likes.textContent) + 1;
                     }
                 }
@@ -103,17 +103,21 @@ function showLikes(post) {
                     var users = JSON.parse(this.responseText);
 
                     var output = '<span class="fa fa-close close" onclick="hideLikes()"></span>';
-                    for (let i in users) {
-                        output += '<ul>' +
-                            '<li><img src="' + users[i].picture + '" alt="profile picture"></li>' +
-                            '<li>' + users[i].user + '</li>';
-                        if (users[i].react == 0)
-                            output += '<li><span class="fa fa-thumbs-o-up"></span></li>';
-                        else if (users[i].react == 1)
-                            output += '<li><span class="fa fa-heart"></span></li>';
+                    if(!Object.keys(users).length){
+                        output += "this post has no likes yet, why don't you be the first?";
+                    } else {
+                        for (let i in users) {
+                            output += '<ul>' +
+                                '<li><img src="' + users[i].picture + '" alt="profile picture"></li>' +
+                                '<li>' + users[i].user + '</li>';
+                            if (users[i].react == 0)
+                                output += '<li><span class="fa fa-thumbs-o-up"></span></li>';
+                            else if (users[i].react == 1)
+                                output += '<li><span class="fa fa-heart"></span></li>';
 
 
-                        output += '</ul>';
+                            output += '</ul>';
+                        }
                     }
                     console.log(users);
                     document.getElementsByClassName('content')[0].innerHTML = output;
