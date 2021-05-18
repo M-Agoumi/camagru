@@ -43,19 +43,11 @@ use core\Application;
 		/** get likes */
 		$likes = New \models\Likes();
 
-<<<<<<< HEAD
-		$likesCount = $likes->getCount(['post' => $post->id]);
-		if (Application::$APP->user)
-			$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId()]);
-		else
-			$liked = 0;
-=======
 	$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
 	if (Application::$APP->user)
 		$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId(), 'status' => 0]);
 	else
 		$liked = 0;
->>>>>>> 92746b9b60c8255d9483fcbe7f6f75bb0d866d52
 
 		//    echo $post->author;
 		?>
@@ -63,13 +55,11 @@ use core\Application;
 	</div>
     <div class="filters">
     <span class="origin">
-<<<<<<< HEAD
-        <span class="likedPost">
-            (<span><?=$likesCount?></span>)
-=======
         <span>
             (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
->>>>>>> 92746b9b60c8255d9483fcbe7f6f75bb0d866d52
+
+        <span>
+            (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
             <?php if ($liked): ?>
             <span onclick="likePost(<?=$post->id?>, this)">liked</span>
             <?php else: ?>
