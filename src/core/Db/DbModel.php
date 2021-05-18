@@ -148,8 +148,9 @@ abstract class DbModel extends Model
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
+		$primary = static::primaryKey();
 		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
-		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
+		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql . " ORDER BY " . $primary ." DESC");
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}
