@@ -15,7 +15,7 @@ class UserController extends Controller
 
 	public function __construct()
 	{
-		$this->registerMiddleware(New AuthMiddleware(['edit', 'update']));
+		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'getName']));
 	}
 
 	public function index($username)
@@ -67,5 +67,10 @@ class UserController extends Controller
 		}
 
 		return $this->render('pages/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+	}
+
+	public function getName()
+	{
+		return Application::$APP->user->name;
 	}
 }
