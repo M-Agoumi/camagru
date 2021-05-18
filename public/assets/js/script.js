@@ -135,3 +135,66 @@ function showLikes(post) {
         throw new Error(e.message);
     }
 }
+
+/** add a new comment */
+
+var UserName = 'name';
+getUserName();
+
+function addComment(e, slug) {
+    e.preventDefault();
+
+    const form = document.getElementById('addCommentForm');
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', '/api/post/comment/' + slug);
+
+    let data = new FormData(form);
+
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+    xhr.send(data);
+
+    xhr.onload = () => {
+        let response = xhr.responseText;
+        console.log(response);
+
+        if (response == -2)
+            loginPopUp();
+        if (response == -1)
+            console.log('post not found');
+        if (response == 0) {
+            document.getElementsByClassName('invalid-feedback')[0].innerHTML = 'comment is not valid';
+            document.getElementById('content').classList.add('is-invalid');
+        }
+        if (response == 1) {
+            var table = document.getElementById("commentsTable");
+            var row = table.insertRow(0);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            // console.log('username: ' + getUserName());
+            cell1.innerHTML = UserName;
+            cell2.innerHTML = document.getElementById('content').value;
+            document.getElementById('content').value = "";
+        }
+    }
+
+    return false;
+}
+
+function getUserName() {
+    return new Promise(resolve => {
+        var xhr = new XMLHttpRequest();
+
+        var name = 'name';
+        xhr.open('POST', '/api/user/name');
+
+        xhr.onload = function () {
+            resolve(this.responseText);
+            UserName = this.responseText;
+        }
+
+        xhr.send();
+    });
+}

@@ -1,5 +1,8 @@
 <?php
+
 use core\Application;
+use models\Comments;
+
 /** @var $post \models\Post */
 ?>
 <div class="center">
@@ -71,8 +74,41 @@ use core\Application;
 	    ?>
         <span>edit post</span>
 <?php endif; ?>
-        <?php //var_dump($post)?>
+	    <?php //var_dump($post)?>
     </span>
+        <div>
+            <h2>Comments</h2>
+            <div>
+				<?php
+				$comment = New Comments();
+				$form = \core\Form\Form::begin(
+					'/api/post/comment/' . $post->slug, 'POST', '',
+					'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"'
+				);
+				echo $form->field($comment, 'content', 'Comment')
+					->setHolder('Comment Content')
+					->required();
+				echo $form->submit('comment', 'class=""');
+				$form::end();
+
+				?>
+            </div>
+            <div>
+                <table id="commentsTable">
+					<?php
+                    /** post comments table content */
+					$comments = $comment->findAllBy(['post' => $post->id]);
+					foreach ($comments as $com) {
+						echo '<tr>';
+						$user = $comment->user($com['user']);
+						echo '<td>' . $user->name . '</td> ';
+						echo '<td>' . $com['content'] . '</td>';
+						echo '</tr>';
+					}
+					?>
+                </table>
+            </div>
+        </div>
         <div class="usersLikes">
             <div class="content">
                 <span class="fa fa-close close" onclick="hideLikes()"></span>
