@@ -43,11 +43,19 @@ use core\Application;
 		/** get likes */
 		$likes = New \models\Likes();
 
+<<<<<<< HEAD
 		$likesCount = $likes->getCount(['post' => $post->id]);
 		if (Application::$APP->user)
 			$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId()]);
 		else
 			$liked = 0;
+=======
+	$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
+	if (Application::$APP->user)
+		$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId(), 'status' => 0]);
+	else
+		$liked = 0;
+>>>>>>> 92746b9b60c8255d9483fcbe7f6f75bb0d866d52
 
 		//    echo $post->author;
 		?>
@@ -55,13 +63,23 @@ use core\Application;
 	</div>
     <div class="filters">
     <span class="origin">
+<<<<<<< HEAD
         <span class="likedPost">
             (<span><?=$likesCount?></span>)
+=======
+        <span>
+            (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
+>>>>>>> 92746b9b60c8255d9483fcbe7f6f75bb0d866d52
             <?php if ($liked): ?>
             <span onclick="likePost(<?=$post->id?>, this)">liked</span>
             <?php else: ?>
-                <span onclick="likePost(<?=$post->id?>, this)">like</span>
+                <span onclick="likePost(<?=$post->id?>, this, 0)">like</span>
             <?php endif; ?>
+                <span onclick="likePost(<?=$post->id?>, this, 1)">heart</span>
+                <span onclick="likePost(<?=$post->id?>, this, 2)">wow</span>
+                <span onclick="likePost(<?=$post->id?>, this, 3)">haha</span>
+                <span onclick="likePost(<?=$post->id?>, this, 4)">sad</span>
+                <span onclick="likePost(<?=$post->id?>, this, 5)">angry</span>
         </span>
 <?php
 	    if (Application::$APP->user && Application::$APP->user->id == $post->author):
@@ -70,5 +88,11 @@ use core\Application;
 <?php endif; ?>
         <?php //var_dump($post)?>
     </span>
+        <div class="usersLikes">
+            <div class="content">
+                <span class="fa fa-close close" onclick="hideLikes()"></span>
+                Hello World
+            </div>
+        </div>
     </div>
 </div>

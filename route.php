@@ -47,12 +47,14 @@ $app->router->post('/profile/edit', [UserController::class, 'update'])->name('us
 /** Camera Controller routes */
 $app->router->get('/camera', [CameraController::class, 'index'])->name('camera.index');
 $app->router->post('/camera', [CameraController::class, 'save'])->name('camera.save');
-$app->router->get('/cameraa', [CameraController::class, 'test'])->name('camera.test');
 $app->router->post('/camera/share', [CameraController::class, 'share'])->name('camera.share');
 
 /** post Controller routes */
 $app->router->magic('/post/{slug}', [PostController::class, 'show']);
 $app->router->magic('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
+
+/** API routes */
+$app->router->magic('/api/post/likes/{id}', [PostController::class, 'showLikes']);
 
 /** debug routes */
 $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');

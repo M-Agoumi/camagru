@@ -5,11 +5,17 @@ namespace controller;
 
 
 use core\Application;
+use core\Middleware\AuthMiddleware;
 use core\Request;
 use models\Post;
 
 class CameraController extends Controller
 {
+	public function __construct()
+    {
+        $this->registerMiddleware(New AuthMiddleware([]));
+    }
+
 	public function index()
 	{
 		return $this->render('pages/camera', [], ['title' => 'Camera']);
@@ -18,7 +24,8 @@ class CameraController extends Controller
 	public function save(Request $request)
 	{
 		$post = New Post();
-		$data = Application::$APP->request->getBody()['picture'];
+		$imgCode = Application::$APP->request->getBody()['picture'];
+		$data = $imgCode;
 
 		list($type, $data) = explode(';', $data);
 		list(, $data)      = explode(',', $data);
@@ -28,14 +35,7 @@ class CameraController extends Controller
 		if (file_put_contents($path, $data))
 			$post->picture = $image;
 		Application::$APP->session->set('picture', $path);
-		return $this->render('pages/cameraShare', ['post'=> $post]);
-	}
-
-	public function test()
-	{
-		$post = New Post();
-
-		$post->picture = '609bf97b8215b';
+		Application::$APP->session->set('pictureData', $imgCode);
 
 		return $this->render('pages/cameraShare', ['post'=> $post]);
 	}
