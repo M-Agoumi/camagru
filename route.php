@@ -3,6 +3,7 @@
 use controller\AuthController;
 use controller\CameraController;
 use controller\DefaultController;
+use controller\PostCommentController;
 use controller\PostController;
 use controller\UserController;
 use core\Application;
@@ -54,7 +55,9 @@ $app->router->magic('/post/{slug}', [PostController::class, 'show']);
 $app->router->magic('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
 
 /** API routes */
-$app->router->magic('/api/post/likes/{id}', [PostController::class, 'showLikes']);
+$app->router->magic('/api/post/likes/{id}', [PostController::class, 'showLikes']); /** post fetch like */
+$app->router->magic('/api/post/comment/{slug}', [PostCommentController::class, 'add']); /** post add comments */
+$app->router->post('/api/user/name', [UserController::class, 'getName']); /** get logged user name */
 
 /** debug routes */
 $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.auth2');
