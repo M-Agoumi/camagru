@@ -60,6 +60,7 @@ class Request
 
 	/**
 	 * handle the data coming from a form
+	 * and check for csrf token if its validation is enabled in env
 	 * todo add more filters for more security
 	 * @return array
 	 */
@@ -67,24 +68,28 @@ class Request
 	{
 		$body = [];
 		if ($this->Method() === 'get') {
-			if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
-				if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
-					die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
+			if (Application::getEnvValue('csrfVerification')) {
+				if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
+					if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
+						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
 					contact an admin");
-			} else {
-				die("Form submitted without CSRF token");
+				} else {
+					die("Form submitted without CSRF token");
+				}
 			}
 			foreach ($_GET as $key => $value) {
 				$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
 			}
 		}
 		if ($this->Method() === 'post') {
-			if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
-				if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
-					die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
+			if (Application::getEnvValue('csrfVerification')) {
+				if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
+					if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
+						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
 					contact an admin");
-			} else {
-				die("Form submitted without CSRF token");
+				} else {
+					die("Form submitted without CSRF token");
+				}
 			}
 			foreach ($_POST as $key => $value) {
 				$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
