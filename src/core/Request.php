@@ -95,6 +95,7 @@ class Request
 				$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
 			}
 		}
+
 		return $body;
 	}
 
@@ -114,6 +115,7 @@ class Request
 				break;
 			}
 		}
+
 		return $ret ?? false;
 	}
 
@@ -127,12 +129,14 @@ class Request
 			$newRoutes[] = array($key => $value);
 
 		}
+
 		return $newRoutes;
 	}
 
 	private function getMagicPath(string $path)
 	{
 		$position = strrpos($path, '/');
+
 		return substr($path, 0, $position);
 	}
 
@@ -140,6 +144,7 @@ class Request
 	{
 		$path = $this->getPath();
 		$position = strrpos($path, '/');
+
 		return (substr($path, $position + 1));
 	}
 }
