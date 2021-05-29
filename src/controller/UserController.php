@@ -27,9 +27,9 @@ class UserController extends Controller
 			throw new NotFoundException();
 		if (Application::$APP->user) {
 			if ($user->username === Application::$APP->user->username)
-				return $this->render('pages/myProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Profile"]);
+				return $this->render('pages/profile/myProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Profile"]);
 		}
-		return $this->render('pages/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
+		return $this->render('pages/profile/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class UserController extends Controller
 
 	public function edit()
 	{
-		return $this->render('pages/updateProfile', ['user' => Application::$APP->user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+		return $this->render('pages/profile/updateProfile', ['user' => Application::$APP->user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
 	}
 
 	public function update(Request $request)
@@ -66,7 +66,7 @@ class UserController extends Controller
 			return Application::$APP->response->redirect(Application::path('user.profile'));
 		}
 
-		return $this->render('pages/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+		return $this->render('pages/profile/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
 	}
 
 	public function getName()
