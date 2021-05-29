@@ -16,6 +16,7 @@ namespace controller;
 use core\Application;
 use core\Middleware\AuthMiddleware;
 use core\Request;
+use models\ContactUs;
 use models\Post;
 use models\User;
 
@@ -53,6 +54,33 @@ class DefaultController extends Controller
 		}
 
 		return $this->render('test', ['user' => $user]);
+	}
+
+	public function contactUs(Request $request)
+	{
+		$contact = New ContactUs();
+
+		if ($request->isPost()) {
+			$contact->loadData($request->getBody());
+
+			$contact->logged = !Application::isGuest();
+			$contact->user = $contact->logged ? Application::$APP->user->getId() : NULL;
+
+			if (!$contact->logged && empty($contact->email))
+				$contact->addError('email', 'this field is required');
+
+			$contact->status = 1;
+
+			if ($contact->validate() && $contact->save()) {
+				Application::$APP->session->setFlash('success', 'Message sent successfully');
+				Application::$APP->response->redirect('/');
+			}
+
+			var_export($contact);
+
+		}
+
+		return $this->render('forms/contactUs', ['contact' => $contact], ['title' => 'Contact Us']);
 	}
 
 }

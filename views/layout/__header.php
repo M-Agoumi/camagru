@@ -8,7 +8,7 @@ use core\Application;
 		<ul class="nav">
             <div class="nav-left">
                 <li><a class="active co" href="<?=Application::path('home.index')?>"><?= $this->lang('home');?></a></li>
-                <li><a href="#"><?= $this->lang('contact us');?></a></li>
+                <li><a href="<?=Application::path('contact.us')?>"><?= $this->lang('contact us');?></a></li>
                 <li><a href="#"><?= $this->lang('about');?></a></li>
                 <li><a href="<?=Application::path('camera.index')?>"><?= $this->lang('Camera');?></a></li>
             </div>
