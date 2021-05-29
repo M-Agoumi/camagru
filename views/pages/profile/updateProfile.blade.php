@@ -11,3 +11,7 @@ use core\Form\Form;
         echo $form->field($user, 'email');
         echo $form->submit('edit');
     Form::end();
+?>
+<a href="<?=Application::path('user.update.password')?>">
+    <h4 class="center">update password</h4>
+</a>

@@ -69,6 +69,43 @@ class UserController extends Controller
 		return $this->render('pages/profile/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
 	}
 
+	public function UpdatePassword(Request $request)
+	{
+		$user = Application::$APP->user;
+
+		if ($request->isPost()) {
+		    $newUser = clone $user;
+
+		    $newUser->loadData($request->getBody());
+
+		    if (password_verify($newUser->password, $user->password)) {
+		    	$password = filter_input(INPUT_POST, "newPassword", FILTER_SANITIZE_SPECIAL_CHARS);
+		    	$retypePassword = filter_input(INPUT_POST, "retypePassword", FILTER_SANITIZE_SPECIAL_CHARS);
+
+		    	$user->password = $password;
+
+		    	if ($password === $retypePassword) {
+		    		if ($user->validate()) {
+					    if ($user->update()) {
+					        Application::$APP->session->setFlash('success', 'Password Updated');
+					        Application::$APP->response->redirect('/user/' . $user->username);
+					    } else
+						    echo "something went wrong";
+				    } else {
+					    unset($user->errors['password']);
+					    $user->addError('newPassword', 'Password is not valid');
+				    }
+			    } else {
+				    $user->addError('retypePassword', "new password doesn't match");
+			    }
+		    } else
+		    	$user->addError('password', 'password is wrong');
+		}
+		$user->password = '';
+
+		return $this->render('pages/profile/updatePassword', ['user' => $user]);
+	}
+
 	public function getName()
 	{
 		return Application::$APP->user->name;

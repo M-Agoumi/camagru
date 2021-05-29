@@ -1,0 +1,34 @@
+<?php
+use core\Form\Form;
+/** @var \models\User $user */
+?>
+<h1>Update Password</h1>
+<?php
+    $form = Form::begin(\core\Application::path('user.update.password'));
+        echo $form->field($user, 'password')->setLabel('Old password')->passwordField();
+        ?>
+        <div class="row">
+            <div class="col-25">
+                <label for="password">New password</label>
+            </div>
+            <div class="col-75">
+                <input type="password" class="" id="newPassword" name="newPassword" placeholder="New Password">
+                <div class="invalid-feedback">
+	                <?= $user->getFirstError('newPassword'); ?>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="password">New password</label>
+            </div>
+            <div class="col-75">
+                <input type="password" class="" id="retypePassword" name="retypePassword" placeholder="Repeat New Password">
+                <div class="invalid-feedback">
+	                <?= $user->getFirstError('retypePassword'); ?>
+                </div>
+            </div>
+        </div>
+<?php
+        echo $form->submit('update');
+    $form::end();
