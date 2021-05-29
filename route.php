@@ -17,6 +17,8 @@ $app = Application::$APP;
 
 /** default Controller routes */
 $app->router->get('/', [DefaultController::class, 'index'])->name('home.index');
+$app->router->get('/contactus', [DefaultController::class, 'contactUs'])->name('contact.us');
+$app->router->post('/contactus', [DefaultController::class, 'contactUs']);
 $app->router->get('/testa', [DefaultController::class, 'test']);
 $app->router->post('/testa', [DefaultController::class, 'test']);
 

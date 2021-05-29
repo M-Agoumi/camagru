@@ -60,7 +60,7 @@ class TextArea
 			, $this->model->hasError($this->attribute) ? 'is-invalid' : ''
 			, $this->attribute
 			, $this->attribute
-			, !empty($this->holder) ? $this->holder : $this->attribute
+			, !empty($this->holder) ? $this->holder : (!empty($this->label) ? $this->label : $this->attribute)
 			, $this->disabled
 			, $this->required
 			, $this->model->{$this->attribute}
@@ -111,6 +111,13 @@ class TextArea
 	public function setHolder(string $string): TextArea
 	{
 		$this->holder = $string;
+
+		return $this;
+	}
+
+	public function setLabel(string $string): TextArea
+	{
+		$this->label = $string;
 
 		return $this;
 	}

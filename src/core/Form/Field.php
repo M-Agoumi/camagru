@@ -95,7 +95,7 @@ class Field
 		    , $this->attribute
 		    , $this->attribute
 		    , $this->model->{$this->attribute}
-		    , !empty($this->holder) ? $this->holder : $this->attribute
+		    , !empty($this->holder) ? $this->holder : (!empty($this->label) ? $this->label : $this->attribute)
 		    , $this->disabled
 		    , $this->required
 		    , $this->model->getFirstError($this->attribute)
@@ -174,6 +174,13 @@ class Field
 	public function hiddentField(): Field
 	{
 		$this->type = self::TYPE_HIDDEN;
+
+		return $this;
+	}
+
+	public function setLabel(string $string): Field
+	{
+		$this->label = $string;
 
 		return $this;
 	}
