@@ -57,22 +57,17 @@ use models\Comments;
 		<p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span class="authorName"><?=$author?></span></p>
 	</div>
     <div class="filters">
-    <span class="origin">
+    <span>
         <span>
             (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
-
+        </span>
         <span>
-            (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
-            <?php if ($liked): ?>
-            <span onclick="likePost(<?=$post->id?>, this)">liked</span>
-            <?php else: ?>
-                <span onclick="likePost(<?=$post->id?>, this, 0)">like</span>
-            <?php endif; ?>
-                <span onclick="likePost(<?=$post->id?>, this, 1)">heart</span>
-                <span onclick="likePost(<?=$post->id?>, this, 2)">wow</span>
-                <span onclick="likePost(<?=$post->id?>, this, 3)">haha</span>
-                <span onclick="likePost(<?=$post->id?>, this, 4)">sad</span>
-                <span onclick="likePost(<?=$post->id?>, this, 5)">angry</span>
+            <span onclick="likePost(<?=$post->id?>, this, 0)"><img class="react" src="/uploads/reactions/like.png"/></span>
+            <span onclick="likePost(<?=$post->id?>, this, 1)"><img class="react" src="/uploads/reactions/heart.png"/></span>
+            <span onclick="likePost(<?=$post->id?>, this, 5)"><img class="react" src="/uploads/reactions/wow.png"/></span>
+            <span onclick="likePost(<?=$post->id?>, this, 2)"><img class="react" src="/uploads/reactions/haha.png"/></span>
+            <span onclick="likePost(<?=$post->id?>, this, 3)"><img class="react" src="/uploads/reactions/sad.png"/></span>
+            <span onclick="likePost(<?=$post->id?>, this, 4)"><img class="react" src="/uploads/reactions/angry.png"/></span>
         </span>
 <?php
 	    if (Application::$APP->user && Application::$APP->user->id == $post->author):
