@@ -9,7 +9,7 @@ use models\Comments;
     <h1 class="usernameTitle"><?=$post->title?> <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
     <img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
     <div class="usernameInfo">
-		<p><?=$post->highlightHashtag($post->comment)?></p>
+        <p><?=$post->highlightHashtag($post->comment)?></p>
 		<?php
 		/** todo place this one somewhere better :D */
 		function humanTiming($time): string
@@ -46,66 +46,88 @@ use models\Comments;
 		/** get likes */
 		$likes = New \models\Likes();
 
-	$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
-	if (Application::$APP->user)
-		$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId(), 'status' => 0]);
-	else
-		$liked = 0;
+		$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
+		if (Application::$APP->user)
+			$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId(), 'status' => 0]);
+		else
+			$liked = 0;
 
 		//    echo $post->author;
 		?>
-		<p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span class="authorName"><?=$author?></span></p>
-	</div>
+        <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span class="authorName"><?=$author?></span></p>
+    </div>
     <div class="filters">
-    <span>
+    <span class="origin">
         <span>
-            (<span onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
-        </span>
-        <span>
-            <span onclick="likePost(<?=$post->id?>, this, 0)"><img class="react" src="/uploads/reactions/like.png"/></span>
-            <span onclick="likePost(<?=$post->id?>, this, 1)"><img class="react" src="/uploads/reactions/heart.png"/></span>
-            <span onclick="likePost(<?=$post->id?>, this, 5)"><img class="react" src="/uploads/reactions/wow.png"/></span>
-            <span onclick="likePost(<?=$post->id?>, this, 2)"><img class="react" src="/uploads/reactions/haha.png"/></span>
-            <span onclick="likePost(<?=$post->id?>, this, 3)"><img class="react" src="/uploads/reactions/sad.png"/></span>
-            <span onclick="likePost(<?=$post->id?>, this, 4)"><img class="react" src="/uploads/reactions/angry.png"/></span>
+            (<span class="likeCount" onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
+
+        <span class="wrapper-like">
+            <?php if ($liked): ?>
+            <span onclick="likePost(<?=$post->id?>, this)">liked</span>
+            <?php else: ?>
+                <div class="icon like">
+					<div class="tooltip">like</div>
+					<span onclick="likePost(<?=$post->id?>, this, 0)"><i class="fa fa-thumbs-up"></i></span>
+				</div>
+            <?php endif; ?>
+				<div class="icon love">
+					<div class="tooltip">love</div>
+					<span onclick="likePost(<?=$post->id?>, this, 1)"><i class="fa fa-heart"></i></span>
+				</div>
+				<div class="icon wow">
+					<div class="tooltip">wow</div>
+					<span onclick="likePost(<?=$post->id?>, this, 2)"><i class="fas fa-grin-alt"></i></span>
+				</div>
+				<div class="icon haha">
+					<div class="tooltip">haha</div>
+					<span onclick="likePost(<?=$post->id?>, this, 3)"><i class="fas fa-grin-squint-tears"></i></span>
+				</div>
+				<div class="icon sad">
+					<div class="tooltip">sad</div>
+					<span onclick="likePost(<?=$post->id?>, this, 4)"><i class="fas fa-sad-tear"></i></span>
+				</div>
+				<div class="icon angry">
+					<div class="tooltip">angry</div>
+					<span onclick="likePost(<?=$post->id?>, this, 5)"><i class="fa fa-angry"></i></span>
+				</div>
         </span>
 <?php
-	    if (Application::$APP->user && Application::$APP->user->id == $post->author):
-	    ?>
+	        if (Application::$APP->user && Application::$APP->user->id == $post->author):
+	        ?>
         <span>edit post</span>
 <?php endif; ?>
-	    <?php //var_dump($post)?>
+	        <?php //var_dump($post)?>
     </span>
         <div>
             <h2>Comments</h2>
             <div>
 				<?php
-				$comment = New Comments();
-				$form = \core\Form\Form::begin(
-					'/api/post/comment/' . $post->slug, 'POST', '',
-					'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"'
-				);
-				echo $form->field($comment, 'content', 'Comment')
-					->setHolder('Comment Content')
-					->required();
-				echo $form->submit('comment', 'class=""');
-				$form::end();
+	            $comment = New Comments();
+	            $form = \core\Form\Form::begin(
+		            '/api/post/comment/' . $post->slug, 'POST', '',
+		            'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"'
+	            );
+	            echo $form->field($comment, 'content', 'Comment')
+		            ->setHolder('Comment Content')
+		            ->required();
+	            echo $form->submit('comment', 'class="com"');
+	            $form::end();
 
-				?>
+	            ?>
             </div>
             <div>
                 <table id="commentsTable">
 					<?php
-                    /** post comments table content */
-					$comments = $comment->findAllBy(['post' => $post->id]);
-					foreach ($comments as $com) {
-						echo '<tr>';
-						$user = $comment->user($com['user']);
-						echo '<td>' . $user->name . '</td> ';
-						echo '<td>' . $com['content'] . '</td>';
-						echo '</tr>';
-					}
-					?>
+	                /** post comments table content */
+	                $comments = $comment->findAllBy(['post' => $post->id]);
+	                foreach ($comments as $com) {
+		                echo '<tr>';
+		                $user = $comment->user($com['user']);
+		                echo '<td>' . $user->name . '</td> ';
+		                echo '<td>' . $com['content'] . '</td>';
+		                echo '</tr>';
+	                }
+	                ?>
                 </table>
             </div>
         </div>
