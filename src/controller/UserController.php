@@ -17,7 +17,7 @@ class UserController extends Controller
 
 	public function __construct()
 	{
-		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'getName']));
+		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'getName', 'preferences']));
 	}
 
 	public function index($username)
