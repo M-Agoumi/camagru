@@ -20,6 +20,7 @@ class Form
 {
 	public Field $field;
 	public TextArea $textArea;
+	public Select $select;
 
 	/** echo the start of a form
 	 * @param string $action
@@ -58,10 +59,18 @@ class Form
 		return $this->field;
 	}
 
-	public function text(Model $model, string $attribute)
+	public function text(Model $model, string $attribute): TextArea
 	{
 		$this->textArea = new TextArea($model, $attribute);
+
 		return $this->textArea;
+	}
+
+	public function select(Model $model, string $attribute, $elements): Select
+	{
+		$this->select = new Select($model, $attribute, $elements);
+
+		return $this->select;
 	}
 
 	/** return a submit type input

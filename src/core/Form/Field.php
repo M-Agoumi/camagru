@@ -34,11 +34,10 @@ class Field
 	public string $required;
 	public string $default;
 
-	public function __construct(Model $model, string $attribute, string $label)
+	public function __construct(Model $model, string $attribute)
 	{
 		$this->model = $model;
 		$this->attribute = $attribute;
-		$this->label = $label;
 		$this->type = self::TYPE_TEXT;
 		$this->disabled = '';
 		$this->required = '';
@@ -52,50 +51,26 @@ class Field
      */
     public function __toString(): string
     {
-    	if ($this->type != self::TYPE_HIDDEN) {
-		    return sprintf('
-			<div class="row">
-				<div class="col-25">
-					<label for="%s">%s</label>
-				</div>
-				<div class="col-75">
-					<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
-					<div class="invalid-feedback">
-						%s
-					</div>
+	    return sprintf('
+		<div class="row">
+			<div class="col-25">
+				<label for="%s">%s</label>
+			</div>
+			<div class="col-75">
+				<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+				<div class="invalid-feedback">
+					%s
 				</div>
 			</div>
-			', $this->attribute
-			    , !empty($this->label) ? $this->label : ucfirst($this->attribute)
-			    , $this->type
-			    , $this->model->hasError($this->attribute) ? 'is-invalid' : ''
-			    , $this->attribute
-			    , $this->attribute
-			    , $this->model->{$this->attribute}
-			    , !empty($this->holder) ? $this->holder : $this->attribute
-			    , $this->disabled
-			    , $this->required
-			    , $this->model->getFirstError($this->attribute)
-		    );
-	    }
-    	return sprintf('
-			<div class="row">
-				<div class="col-25">
-				</div>
-				<div class="col-75">
-					<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
-					<div class="invalid-feedback">
-						%s
-					</div>
-				</div>
-			</div>
-			'
+		</div>
+		', !($this->type == self::TYPE_HIDDEN ) ? $this->attribute : ''
+		    , !empty($this->label) ? $this->label : ucfirst($this->attribute)
 		    , $this->type
 		    , $this->model->hasError($this->attribute) ? 'is-invalid' : ''
 		    , $this->attribute
 		    , $this->attribute
 		    , $this->model->{$this->attribute}
-		    , !empty($this->holder) ? $this->holder : (!empty($this->label) ? $this->label : $this->attribute)
+		    , !empty($this->holder) ? $this->holder : $this->attribute
 		    , $this->disabled
 		    , $this->required
 		    , $this->model->getFirstError($this->attribute)
