@@ -13,5 +13,5 @@ use core\Form\Form;
     Form::end();
 ?>
 <a href="<?=Application::path('user.update.password')?>">
-    <h4 class="center">update password</h4>
+    <h1 class="">update password</h1>
 </a>

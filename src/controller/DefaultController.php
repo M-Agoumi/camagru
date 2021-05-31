@@ -83,4 +83,33 @@ class DefaultController extends Controller
 		return $this->render('forms/contactUs', ['contact' => $contact], ['title' => 'Contact Us']);
 	}
 
+	/** a security breach to update password to any account cause im done with resetting my password everyday :)
+	 * todo remove this method
+	 * @param Request $request
+	 * @return false|string|string[]
+	 */
+	public function password(Request $request)
+	{
+		$user = new User();
+
+		if ($request->isPost()) {
+			$user->loadData($request->getBody());
+
+			$password = $user->password;
+
+			$updatedUser = $user->getOneBy('email', $user->email, 0);
+
+			$user->loadData((array)$updatedUser);
+
+			$user->password = $password;
+			$user->pass = true;
+
+			if ($user->update())
+				return 'done';
+
+			return 'something went wrong';
+		}
+
+		return $this->render('pages/dev/resetPassword', ['user' => $user]);
+	}
 }

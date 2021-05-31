@@ -8,6 +8,8 @@ use core\Application;
 use core\Exception\NotFoundException;
 use core\Middleware\AuthMiddleware;
 use core\Request;
+use models\core\languages;
+use models\core\preferences;
 use models\User;
 
 class UserController extends Controller
@@ -104,6 +106,41 @@ class UserController extends Controller
 		$user->password = '';
 
 		return $this->render('pages/profile/updatePassword', ['user' => $user]);
+	}
+
+
+	public function preferences(Request $request)
+	{
+		$pref = New preferences();
+		$user = Application::$APP->user->getId();
+
+		$pref->loadData($pref->getOneBy('user', $user, 0));
+
+		if ($request->isPost()) {
+			$pref->loadData($request->getBody());
+
+			$userPref = $pref->getOneBy('user', $user);
+
+			if ($userPref) {
+				$pref->id = $userPref->id;
+
+				if ($pref->validate() && $pref->update()){
+					Application::$APP->session->set('lang_main', (languages::getLang($pref->language))->language);
+					Application::$APP->session->setFlash('success', 'your preferences has been updated');
+					Application::$APP->response->redirect(Application::path('user.preferences'));
+				}
+			} else {
+				$pref->user = $user;
+
+				if ($pref->validate() && $pref->save()) {
+					Application::$APP->session->set('lang_main', (languages::getLang($pref->language))->language);
+					Application::$APP->session->setFlash('success', 'your preferences has been updated');
+					Application::$APP->response->redirect(Application::path('user.preferences'));
+				}
+			}
+		}
+
+		return $this->render('pages/profile/preferences', ['pref' => $pref], ['title' => 'test']);
 	}
 
 	public function getName()

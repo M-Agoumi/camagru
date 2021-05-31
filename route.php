@@ -47,6 +47,8 @@ $app->router->get('/profile/edit', [UserController::class, 'edit'])->name('user.
 $app->router->post('/profile/edit', [UserController::class, 'update'])->name('user.update');
 $app->router->get('/profile/edit/password', [UserController::class, 'UpdatePassword'])->name('user.update.password');
 $app->router->post('/profile/edit/password', [UserController::class, 'UpdatePassword']);
+$app->router->get('/profile/preferences', [UserController::class, 'preferences'])->name('user.preferences');
+$app->router->post('/profile/preferences', [UserController::class, 'preferences']);
 
 /** Camera Controller routes */
 $app->router->get('/camera', [CameraController::class, 'index'])->name('camera.index');
@@ -67,6 +69,9 @@ $app->router->post('/testing', [AuthController::class, 'auth2'])->name('auth.aut
 $app->router->get('/debugger', function (){return $_SESSION['email_code'] ?? 'no code found';});
 $app->router->get('/mailer', function (){return file_get_contents(Application::$ROOT_DIR. '/var/mail.tmp') ?? 'no mail found';});
 $app->router->get('/session', function() {var_dump($_SESSION);});
+$app->router->get('/unset_session', function() {session_destroy();});
 $app->router->get('/test', [DefaultController::class, 'test']);
 $app->router->post('/test', [DefaultController::class, 'test']);
 $app->router->magic('/user/{id}', [DefaultController::class, 'user']);
+$app->router->get('/dev/set-password', [DefaultController::class, 'password']);
+$app->router->post('/dev/set-password', [DefaultController::class, 'password']);

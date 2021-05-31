@@ -112,7 +112,7 @@ abstract class DbModel extends Model
 
         if ($object)
             return $statement->fetchObject();
-        return $statement->fetch(0);
+        return $statement->fetch(2);
     }
 	
 	public static function findOne(array $where)

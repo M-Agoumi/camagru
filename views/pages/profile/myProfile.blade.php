@@ -8,4 +8,6 @@
 <p>Status: <?=$user->status ? 'Activated' : 'Not Activated'?></p>
 <p>Joined: <?=explode(" ", $user->created_at)[0]?></p>
 <a href="<?=\core\Application::path('user.edit')?>">Edit Information</a>
+<a href="<?=\core\Application::path('user.preferences')?>">update preferences</a>
+
 

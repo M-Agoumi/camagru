@@ -17,6 +17,8 @@ use controller\Controller;
 use core\Db\Database;
 use core\Db\DbModel;
 use Exception;
+use models\core\languages;
+use models\core\preferences;
 use models\User;
 
 /**
@@ -34,9 +36,10 @@ class Application
 	public ?Response $response = null;
 	public ?controller $controller = null;
 	public ?Session $session = null;
+	public ?preferences $preferences = null;
 	public ?DbModel $user;
 	public ?View $view;
-	protected array $MainLang = [];
+	public array $MainLang = [];
 	protected array $fallbackLang = [];
 
 	/**
@@ -56,10 +59,11 @@ class Application
 		$this->router = New Router($this->request, $this->response);
 		$this->db = New Database($this->getDatabaseConfig());
 		$this->view = New View();
-		// todo implement session save for language preference and add more languages to choose from
-		$this->MainLang = $this->setLang()[0];
-		$this->fallbackLang = $this->setLang()[1];
 		$this->user = self::getUser();
+		$this->preferences = $this->user ? preferences::getPeref($this->user->getId()) : null;
+		$lang = $this->setLang();
+		$this->MainLang = $lang[0];
+		$this->fallbackLang = $lang[1];
 	}
 	
 	private static function getUser()
@@ -70,6 +74,7 @@ class Application
 			$primaryKey = self::$APP->userCLass::primaryKey();
 			return self::$APP->userCLass::findOne([$primaryKey =>  $primaryValue]);
 		}
+
 		return NULL;
 	}
 	
@@ -167,14 +172,36 @@ class Application
     /** read language config file
      * @return array
      */
-    private function setLang(): array
+    public function setLang(): array
     {
         $lang = [];
 		// todo handle the case when one of those files is not presented (include fail)
         $config = parse_ini_file(self::$ROOT_DIR . "/config/lang.conf");
-        // todo check session if the preferenced lang is stored use it otherwise take it from the config and set it to the session
-        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
-        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
+        // todo check session if the preference lang is stored use it otherwise take it from the config and set it to the session
+	    if ($this->session->get('lang_main')) {
+	    	/** already in session just get em */
+		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_main') . '.lang.php');
+		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_fb') . '.lang.php');
+	    } else {
+	    	/** not in session check database */
+		    if ($this->preferences) {
+		    	$language = languages::getLang($this->preferences->language)->language;
+		    	Application::$APP->session->set('lang_main', $language);
+			    array_push($lang, include self::$ROOT_DIR . '/translation/' . $language. '.lang.php');
+			    if ($lang != $config['fallback_language']) {
+				    Application::$APP->session->set('lang_fb', $config['fallback_language']);
+				    array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
+			    } else {
+				    Application::$APP->session->set('lang_fb', $config['main_language']);
+				    array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
+			    }
+		    } else {
+		    	/** not in database take default setting from config file */
+		        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
+		        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
+		    }
+	    }
+
         return $lang;
     }
 	
