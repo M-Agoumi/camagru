@@ -110,7 +110,7 @@ use models\Comments;
 	            echo $form->field($comment, 'content', 'Comment')
 		            ->setHolder('Comment Content')
 		            ->required();
-	            echo $form->submit('comment', 'class="com"');
+	            echo $form->submit('comment', '');
 	            $form::end();
 
 	            ?>

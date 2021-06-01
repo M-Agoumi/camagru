@@ -666,7 +666,7 @@ input[type=text], input[type=password],input[type=email], textarea {
 
 input[type=submit] {
 
-	width: 100px;
+	/*width: 100px;*/
 
 	background-color: var(--mainColor);
 
@@ -990,6 +990,8 @@ input[type=submit]:hover {
 
 .center {
 
+	margin: auto;
+
 	width: 700px;
 
 	max-width: 100%;
@@ -998,19 +1000,7 @@ input[type=submit]:hover {
 
 	background-color: #FFF;
 
-	position: absolute;
-
-	top: 50%;
-
-	left: 50%;
-
-	transform: translate(-50%, -50%);
-
 	box-shadow: 0px 2px 8px rgb(0 0 0 / 20%);
-
-	height: 700px;
-
-	overflow-y: auto;
 
 }
 

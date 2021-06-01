@@ -175,7 +175,7 @@ function addComment(e, slug) {
             var cell2 = row.insertCell(1);
             // console.log('username: ' + getUserName());
             cell1.innerHTML = UserName;
-            cell2.innerHTML = document.getElementById('content').value;
+            cell2.innerText = document.getElementById('content').value;
             document.getElementById('content').value = "";
         }
     }
