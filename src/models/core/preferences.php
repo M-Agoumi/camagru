@@ -45,9 +45,13 @@ class preferences extends DBModel
 		];
 	}
 
-	public static function getPeref(int $user)
+	public static function getPerf(int $user)
 	{
-		return self::findOne(['user' => $user]);
+		$results = self::findOne(['user' => $user]);
+
+		if ($results)
+			return $results;
+		return NULL;
 	}
 
 }

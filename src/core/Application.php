@@ -60,7 +60,7 @@ class Application
 		$this->db = New Database($this->getDatabaseConfig());
 		$this->view = New View();
 		$this->user = self::getUser();
-		$this->preferences = $this->user ? preferences::getPeref($this->user->getId()) : null;
+		$this->preferences = $this->user ? preferences::getPerf($this->user->getId()) : null;
 		$lang = $this->setLang();
 		$this->MainLang = $lang[0];
 		$this->fallbackLang = $lang[1];

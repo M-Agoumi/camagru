@@ -28,6 +28,10 @@ return array(
     'home' => 'Accueil',
     'login' => 'Connexion',
     'register' =>'S\'inscrire',
+    'profile' => 'Profil',
+    'camera' => 'Caméra',
+    'about' => 'à propos de nous',
+    'contact' => 'Contacter Nous',
 
     /** error messages[form validation][models/Model.php] */
 

@@ -112,4 +112,9 @@ class DefaultController extends Controller
 
 		return $this->render('pages/dev/resetPassword', ['user' => $user]);
 	}
+
+	public function api(): string
+	{
+		return 'api on';
+	}
 }

@@ -27,8 +27,9 @@ return array(
 
     'home' => 'Home',
     'news' => 'News',
-    'contact us' => 'Contact Us',
-    'about' => 'About',
+    'contact' => 'Contact Us',
+    'about' => 'About Us',
+    'camera' => 'camera',
     'login' => 'Login',
     'register' =>'Register',
 

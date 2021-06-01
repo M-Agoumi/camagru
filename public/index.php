@@ -28,10 +28,10 @@ ini_set('session.cookie_httponly', 1);
  */
 
 $config = parse_ini_file(__DIR__ . "/../.env");
- if (isset($config['env']) && $config['env'] === 'dev')
- 	error_reporting(E_ALL ^ E_DEPRECATED);
- else
- 	error_reporting(0);
+if (isset($config['env']) && $config['env'] === 'dev')
+	error_reporting(E_ALL ^ E_DEPRECATED);
+else
+	error_reporting(0);
 
 /**
  * require our autoloader

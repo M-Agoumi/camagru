@@ -8,9 +8,13 @@ use core\Application;
 		<ul class="nav">
             <div class="nav-left">
                 <li><a class="active co" href="<?=Application::path('home.index')?>"><?= $this->lang('home');?></a></li>
-                <li><a href="<?=Application::path('contact.us')?>"><?= $this->lang('contact us');?></a></li>
+                <li><a href="<?=Application::path('contact.us')?>"><?= $this->lang('contact');?></a></li>
                 <li><a href="#"><?= $this->lang('about');?></a></li>
-                <li><a href="<?=Application::path('camera.index')?>"><?= $this->lang('Camera');?></a></li>
+	             <?php if (!Application::isGuest()):?>
+                    <li><a href="<?=Application::path('camera.index')?>"><?= $this->lang('camera');?></a></li>
+	             <?php else: ?>
+		             <li><a href="#" onclick="loginPopUp()"><?= $this->lang('camera');?></a></li>
+	            <?php endif ?>
             </div>
             <!-- todo change this and put it in css file -->
             <div class="nav-right">
