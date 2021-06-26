@@ -104,33 +104,47 @@ class Request
 	 */
 	public function magicPath()
 	{
-		$x = $this->getRoutes();
+		$routes = $this->getRoutes();
 		$path = $this->getMagicPath($this->getPath());
-		$ret = null;
-		foreach ($x as $key => $value) {
-			// print_r($value);
+		$return = null;
+
+		foreach ($routes as $key => $value) {
 			if (isset($value[$path])) {
-				$ret = $value[$path];
-				array_push($ret, $this->getPathVar());
+				$return = $value[$path];
+				array_push($return, $this->getPathVar());
 				break;
 			}
 		}
 
-		return $ret ?? false;
+		return $return ?? false;
 	}
 
 	public function getRoutes(): array
 	{
 		$routes = Application::$APP->router->routes['magic'] ?? [];
 		$newRoutes = [];
-		foreach ($routes as $key => $value) {
-			$key = preg_replace('~\{.*\}~', "", $key);
-			$key = substr_replace($key, "", -1);
-			$newRoutes[] = array($key => $value);
 
+		foreach ($routes as $key => $value) {
+			$url_variable = $this->getStringBetween($key);
+			/** this is a zombie code don't bring it to life please
+			 * $key = preg_replace('~\{.*\}~', "", $key);
+			 * $key = substr_replace($key, "", -1);
+			 */
+			$key = str_replace('/{'.$url_variable . '}', "", $key);
+			array_push($value, $url_variable);
+			$newRoutes[] = array($key => $value);
 		}
 
 		return $newRoutes;
+	}
+
+	private function getStringBetween($string){
+		$string = ' ' . $string;
+		$ini = strpos($string, '{');
+		if ($ini == 0) return '';
+		$ini += strlen('{');
+		$len = strpos($string, '}', $ini) - $ini;
+		return substr($string, $ini, $len);
 	}
 
 	private function getMagicPath(string $path)

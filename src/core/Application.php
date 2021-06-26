@@ -85,7 +85,21 @@ class Application
 	{
 		return !self::$APP->user;
 	}
-	
+
+	public static function isAppProperty($instance)
+	{
+		$rc = new \ReflectionClass(Application::class);
+
+		$properties = $rc->getProperties();
+		foreach ($properties as $property) {
+			if ($instance == $property->name)
+				return true;
+		}
+
+		unset($rc);
+		return false;
+	}
+
 	/**
 	 * calling the resolver method to handle our request
 	 */

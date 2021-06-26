@@ -15,6 +15,8 @@ namespace core;
 
 use controller\Controller;
 use core\Exception\NotFoundException;
+use ReflectionClass;
+
 
 class Router
 {
@@ -46,15 +48,23 @@ class Router
 	 * does not return anything
 	 * @return Router
 	 */
-	public function get($path, $callback): Router
+	public static function get($path, $callback): Router
 	{
+		return self::setRoute('get', $path, $callback);
+	}
+
+	private static function setRoute(string $method, $path, $callback)
+	{
+		$router = Application::$APP->router;
+
 		$path = strtolower($path);
-		if (!isset($this->routes['get'][$path]))
-			$this->routes['get'][$path] = $callback;
+		if (!isset($router->routes[$method][$path]))
+			$router->routes[$method][$path] = $callback;
 		else
 			die("route $path is already used please update it");
-		$this->tmp = $path;
-		return $this;
+		$router->tmp = $path;
+
+		return $router;
 	}
 
 	/**
@@ -67,26 +77,14 @@ class Router
 	 * does not return anything
 	 * @return Router
 	 */
-	public function post($path, $callback): Router
+	public static function post($path, $callback): Router
 	{
-		$path = strtolower($path);
-		if (!isset($this->routes['post'][$path]))
-			$this->routes['post'][$path] = $callback;
-		else
-			die("route $path is already used please update it");
-		$this->tmp = $path;
-		return $this;
+		return self::setRoute('post', $path, $callback);
 	}
 
-	public function magic($path, $callback): Router
+	public static function magic($path, $callback): Router
 	{
-		$path = strtolower($path);
-		if (!isset($this->routes['magic'][$path]))
-			$this->routes['magic'][$path] = $callback;
-		else
-			die("route $path is already used please update it");
-		$this->tmp = $path;
-		return $this;
+		return self::setRoute('magic', $path, $callback);
 	}
 
 	public function name(string $name)
@@ -128,6 +126,23 @@ class Router
 	 */
 	public function resolve()
 	{
+		$callback = $this->getCallbackOrFail();
+
+		if (is_string($callback))
+			return $this->renderView($callback);
+
+		if (is_array($callback))
+			return $this->execArrayCallback($callback);
+
+		if (is_callable($callback))
+			return call_user_func($callback, $this->request);
+
+		return "Method [$callback[1]] is not found in [" . get_class($callback[0]) . ']';
+	}
+
+	public function getCallbackOrFail()
+	{
+		$this->getRoutes();
 		$path = strtolower($this->request->getPath());
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
@@ -138,32 +153,90 @@ class Router
 		if ($callback === false)
 			throw new NotFoundException();
 
-		if (is_string($callback))
-			return $this->renderView($callback);
+		return $callback;
+	}
 
-		if (is_array($callback)) {
-			/** @var Controller $controller */
-			$controller = new $callback[0]();
-			Application::$APP->controller = $controller;
-			$controller->action = $callback[1];
-			foreach ($controller->getMiddlewares() as $middleware) {
-				$middleware->execute();
-			}
+	protected function execArrayCallback($callback)
+	{
+		/** @var Controller $controller */
+		$controller = new $callback[0]();
+		Application::$APP->controller = $controller;
+		$controller->action = $callback[0][1];
 
-			$callback[0] = $controller;
-
-			if (sizeof($callback) === 3)
-				return $controller->{$callback[1]}($callback[2], $this->request);
+		foreach ($controller->getMiddlewares() as $middleware) {
+			$middleware->execute();
 		}
 
-		if (is_callable($callback))
-			return call_user_func($callback, $this->request);
+		$callback[0] = $controller;
 
-		return "Method [$callback[1]] is not found in [" . get_class($callback[0]) . ']';
+		$params = $this->injectDependencies($callback);
+		unset($callback[2], $callback[3]);
+
+		return call_user_func_array($callback, $params);
+//		if (sizeof($callback) === 3)
+//			return $controller->{$callback[1]}($callback[2], $this->request);
+	}
+
+	/**
+	 *
+	 * @throws \ReflectionException
+	 */
+	protected function injectDependencies($callback): array
+	{
+		$params = [];
+
+		$reflector = new ReflectionClass($callback[0]);
+		foreach ($reflector->getMethod($callback[1])->getParameters() as $param) {
+			$modelName =  $param->name;
+
+			$modelType = $param->getClass()->name;
+			array_push($params, $this->injectClassOrModule($modelType, $modelName, $callback));
+		}
+
+		return $params;
+	}
+
+	/**
+	 * @param $type
+	 * @param $name
+	 * @param $callback
+	 * @return mixed
+	 * @throws NotFoundException
+	 */
+	protected function injectClassOrModule($type, $name, $callback)
+	{
+		$param = null;
+
+		if (Application::isAppProperty($name) && $name != 'user') {
+			$param = Application::$APP->$name;
+		} else {
+			if (class_exists($type)) {
+				$param = new $type();
+				$primaryKey = $callback[2] ?? '';
+
+				if ($name == $primaryKey)
+					$primaryKey = $param->primaryKey();
+
+				if (isset($callback[3]))
+					$param = $param::findOne([$primaryKey => $callback[3]]);
+
+				if (!$param)
+					throw new NotFoundException();
+			} else {
+				die('class ' . $type . ' not found while trying to inject it');
+			}
+		}
+
+		return $param;
 	}
 
 	protected function renderView(string $callback)
 	{
 		return Application::$APP->view->renderView($callback);
+	}
+
+	private function getRoutes()
+	{
+		include Application::$ROOT_DIR . "/routes/web.php";
 	}
 }
