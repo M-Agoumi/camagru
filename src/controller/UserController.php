@@ -20,17 +20,11 @@ class UserController extends Controller
 		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'getName', 'preferences']));
 	}
 
-	public function index($username)
+	public function index(User $user)
 	{
-		$user = new User();
+		if ($user->username === Application::$APP->user->username)
+			return $this->render('pages/profile/myProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Profile"]);
 
-		$user = $user->getOneBy('username', $username);
-		if (!$user)
-			throw new NotFoundException();
-		if (Application::$APP->user) {
-			if ($user->username === Application::$APP->user->username)
-				return $this->render('pages/profile/myProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Profile"]);
-		}
 		return $this->render('pages/profile/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
 	}
 

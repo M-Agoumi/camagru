@@ -24,16 +24,15 @@ class PostCommentController extends Controller
 	 * 1 => comment added
 	 * 2 => error occurred while saving the comment
 	 */
-	public function add(string $slug, Request $request):string
+	public function add(Post $post, Request $request):string
 	{
 		if (!$request->isPost())
 			throw New ForbiddenException();
 		if (Application::isGuest()) {
 			return "-2";
 		}
-		$post = New Post();
 
-		$postc = $post->getOneBy('slug', $slug);
+		$postc = $post;
 
 		/** proceed if post exists */
 		if ($postc) {
@@ -46,9 +45,6 @@ class PostCommentController extends Controller
 				/** fill all fields */
 				$comment->post = $postc->id;
 				$comment->user = Application::$APP->user->getId();
-//				echo "<pre>";
-//				var_export($comment);
-//				echo "</pre>";
 				if ($comment->save())
 					return "1";
 				else
@@ -58,6 +54,6 @@ class PostCommentController extends Controller
 
 		}
 
-		return $slug . "<br>-1";
+		return "-1";
 	}
 }

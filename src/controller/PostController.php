@@ -9,6 +9,7 @@ use core\Exception\ForbiddenException;
 use core\Exception\NotFoundException;
 
 use core\Request;
+use core\Response;
 use models\Likes;
 use models\Post;
 use models\User;
@@ -16,65 +17,46 @@ use models\User;
 class PostController extends Controller
 {
 	/**
-	 * @throws NotFoundException
+	 * @param Post $post
+	 * @return false|string|string[]
 	 */
-	public function show($slug)
+	public function show(Post $post)
 	{
-		$post = New Post();
-
-		
-		$postc = $post->getOneBy('slug', $slug, 0);
-		if ($postc) {
-			$post->loadData($postc);
-			return $this->render('pages/posts/show', ['post' => $post], ['title' => $post->title]);
-		}
-
-		throw New NotFoundException();
+		return $this->render('pages/posts/show', ['post' => $post], ['title' => $post->title]);
 	}
 
-	public function like(string $id, Request $request): string
+	public function like(Post $post, Likes $likes,  Request $request): string
 	{
-		if ($request->isPost()) {
-			if (Application::isGuest())
-				return "-1";
+		if (Application::isGuest() || !$request->isPost())
+			return "-1";
 
-			$post = New Post();
-			$post = $post->getOneBy($id);
+		$liked = $likes->findOne([
+						'user' => Application::$APP->user->getId(),
+						'post' => $post->id,
+						]);
 
-			if ($post) {
-				$likes = New Likes();
-				$liked = $likes->findOne([
-					'user' => Application::$APP->user->getId(),
-					'post' => $post->id,
-					]);
+		if ($liked) {
 
-				if ($liked) {
-
-					if ($liked->status) {
-						$liked->status = 0;
-						$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
-						if ($liked->update())
-							echo "1";
-					} else {
-						$liked->status = 1;
-						if ($liked->update())
-							echo "0";
-					}
-				} else {
-					$likes->post = $id;
-					$likes->user = Application::$APP->user->getId();
-					$likes->status = 0;
-					$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
-					if ($likes->save())
-						echo "1";
-				}
-			} else
-				echo "-2";
-
-
-			return "\n";
+			if ($liked->status) {
+				$liked->status = 0;
+				$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
+				if ($liked->update())
+					echo "1";
+			} else {
+				$liked->status = 1;
+				if ($liked->update())
+					echo "0";
+			}
+		} else {
+			$likes->post = $post->getId();
+			$likes->user = Application::$APP->user->getId();
+			$likes->status = 0;
+			$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
+			if ($likes->save())
+				echo "1";
 		}
-		throw New ForbiddenException();
+
+		return "\n";
 	}
 
 	public function showLikes(string $id, Request $request)
