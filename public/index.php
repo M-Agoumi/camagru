@@ -12,6 +12,9 @@
 /* ************************************************************************************************ */
 
 /**
+ * coded on php 7.4.3 environment compatible with php 8.0*
+ * (*)has not been tested on it yet
+ *
  * let make our code professional by declaring strict Type
  */
 
@@ -46,13 +49,6 @@ use core\Application;
  */
 
 $app = new Application(dirname(__DIR__));
-
-/**
- * require the routes of our application
- */
-
-require_once "../route.php";
-
 
 /**
  * run our application
