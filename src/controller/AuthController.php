@@ -14,9 +14,10 @@
 namespace controller;
 
 use core\Application;
-use core\Middleware\AuthMiddleware;
 use core\Request;
 use DateTime;
+use Middlewares\AuthMiddleware;
+use Middlewares\GuestMiddleware;
 use models\LoginForm;
 use models\Password_reset;
 use models\User;
@@ -25,13 +26,13 @@ use models\User;
  * Class AuthController for the authentications
  */
 
-
 class AuthController extends Controller
 {
 
 	public function __construct()
 	{
 		$this->registerMiddleware(New AuthMiddleware(['updatePassword']));
+		$this->registerMiddleware(New GuestMiddleware(['restore']));
 	}
 
     /** render login form view
@@ -46,46 +47,23 @@ class AuthController extends Controller
 
 		return $this->render('login', ['user' => New User()], ['title' => 'Login']);
 	}
-	
+
 	/** this the method responsible for handling the login attempts
 	 * checks if everything cool let him in
 	 * @route('post' => '/login')
+	 * @param LoginForm $loginForm
 	 * @param Request $request
-	 * @return false|string|string[]|void
+	 * @return false|string|string[]
 	 */
-	public function auth(Request $request)
+
+	public function auth(LoginForm $loginForm, Request $request)
 	{
-		$body = $request->getBody();
-		$user = new User();
-        $record = $user->getOneBy('username', $body['username']);
-		if (!$record)
-		    $record = $user->getOneBy('email', $body['username']);
-        $user->loadData((array)$record);
-		if ($user)
-		    if (password_verify($body['password'], $user->password))
-		        return var_dump($user);
-		// todo save to session after creating it
-        unset($user);
-        $user = New User();
-        $user->username = $body['username'];
-        $user->addError('username' ,'');
-        $user->addError('password' , 'Username or password is wrong');
-        return $this->render('login', ['auth' => 1,'user' => $user]);
-	}
-	
-	public function auth2(Request $request)
-	{
-		$loginForm = New LoginForm();
 		$loginForm->loadData($request->getBody());
 
-		if ($loginForm->validate() && $loginForm->login($_GET['ref'] ?? '/')) {
-
-		}
-		return $this->render('login', ['user' => $loginForm]);
+		if (!($loginForm->validate() && $loginForm->login($_GET['ref'] ?? '/')))
+			return $this->render('login', ['user' => $loginForm]);
+		exit(1);
 	}
-
-
-	// todo please fix this repeated code in this file it's so bad
 
 	/** render the signup form
      * @route('get' => '/signup')
@@ -96,24 +74,29 @@ class AuthController extends Controller
 		return $this->render('register', ['user' => New User], ['title' => 'Signup']);
 	}
 
-	/** todo save the email to the database or session and send verification code
-     * then render the view where the user can enter his verification code
-     * @route('post' => '/signup')
+	/** todo save the email to the database or session and send verification code on mail
+	 * then render the view where the user can enter his verification code
+	 * @route('post' => '/signup')
 	 * @param Request $request
+	 * @param User $user
 	 * @return false|string|string[]
 	 */
 
-	public function verifyEmail(Request $request)
+	public function verifyEmail(Request $request, User $user)
 	{
 		$body = $request->getBody();
 		if (!empty($body['email'])) {
-			/** todo check if email is valid */
-			$_SESSION['user_email'] = $body['email'];
-			$_SESSION['email_code'] = rand(100000,999999);
-			return $this->render('messages/register_email');
+			$user->email = $body['email'];
+			$user->validate();
+
+			if (empty($user->errors['email'])) {
+				$_SESSION['user_email'] = $body['email'];
+				$_SESSION['email_code'] = rand(100000, 999999);
+				return $this->render('messages/register_email');
+			}
 		}
 
-		return Application::$APP->response->redirect('/signup');
+		return $this->render('register', ['user' => $user], ['title' => 'Signup']);
 	}
 
 	/** get the verification code sent to the user email if it's valid
@@ -123,15 +106,12 @@ class AuthController extends Controller
 	 * @return false|string|string[]
 	 */
 
-	public function register(Request $request)
+	public function register(Request $request, User $user)
 	{
 		$verification = intval($request->getBody()['verification'] ?? 0);
 
-		// todo change the below condition to check with the database;
-		// todo retrieve the email and pass it as param
 		$code = $_SESSION['email_code'] ?? 0;
-		if ($verification == $code && $code) {
-			$user = New User();
+		if ($verification === $code && $code) {
 			if (!$user->getOneBy('email', $_SESSION['user_email']))
 				return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);
 			else {
@@ -140,7 +120,7 @@ class AuthController extends Controller
 					'Email already assigned to another account, login or reset your password'
 				);
 				Application::$APP->response->redirect(Application::path('auth.signup'));
-				return 'wait you are being redirected to a new page';
+				die('wait you are being redirected to a new page');
 			}
 		}
 
@@ -150,34 +130,13 @@ class AuthController extends Controller
 		]);
 	}
 
-    /** just a temporary method to handle the get access to our registration form
-     * it should be accessible only after verifying your email with a single use token
-     * you can create an account right after you validate your email
-     * todo delete this method when you implement the above
-     * @route('get' => '/register_step_2')
-     * @param Request $request
-     * @param User|null $user
-     * @return false|string|string[]
-     */
-    public function test(Request $request, User $user = null)
-	{
-		if (!$user)
-			$user = New User();
-		// $user->email = 'example@email.com';
-		return $this->render('forms/register', [
-			'email' => 'example@email.com',
-			'user' => $user
-		]);
-	}
-
     /** saving user to the database todo change return type from string to view
      * @route('post' => '/registration')
      * @param Request $request
      * @return false|string|string[]
      */
-    public function insertUser(Request $request)
+    public function insertUser(Request $request, User $user)
 	{
-		$user = New User();
 		$user->loadData($request->getBody());
 
 		$user->setEmail($_SESSION['user_email']);
@@ -186,23 +145,23 @@ class AuthController extends Controller
 			return Application::$APP->response->redirect('/');
 		}
 
-		return $this->test($request, $user);
+		return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);
 	}
 
 	/**
 	 * @param Request $request
 	 * @return false|string|string[]
+	 * @throws \Exception
 	 */
 
 	public function restore(Request $request){
-		if (Application::$APP->user)
-			Application::$APP->response->redirect('/');
-
 		$password = New Password_reset();
+
 		if ($request->isPost()){
 			$password->loadData($request->getBody());
 			$password->token = bin2hex(random_bytes(18));
 			$password->used = 0;
+
 			if ($password->validate()) {
 				$user = New User();
 
@@ -211,9 +170,8 @@ class AuthController extends Controller
 				if ($user) {
 					if ($this->mail($password->email, $password->token)){
 						$pass = New Password_reset();
-						/** @var  $pass Password_reset */
 						$pass = $pass->getOneBy('email', $password->email);
-						if ($pass->used)
+						if (!$pass)
 							$password->save();
 						else {
 							$password->id = $pass->id;
@@ -229,7 +187,7 @@ class AuthController extends Controller
 			}
 		}
 
-    	return $this->render('messages/restore_password', ['user' => $password], ['title' => 'Restore Password']);
+    	return $this->render('messages/restore_password', ['password' => $password], ['title' => 'Restore Password']);
 	}
 
 	/**
@@ -237,30 +195,29 @@ class AuthController extends Controller
 	 * @return false|string|string[]|void
 	 * @throws \Exception
 	 */
-	public function checkToken($token)
+	public function checkToken(Password_reset $password_reset)
 	{
-		$pass = New Password_reset();
-		$pass = $pass->findOne(['token' => $token, 'used' => 0]);
+		$pass = $password_reset;
 
-		if ($pass) {
-			if (!$pass->used) {
-				$time = New DateTime(date('Y-m-d H:i:s', time()));
-				$passTime = $time->diff(New DateTime($pass->updated_at ?? $pass->created_at));
+		if (!$pass->used) {
+			$time = New DateTime(date('Y-m-d H:i:s', time()));
+			$passTime = $time->diff(New DateTime($pass->updated_at ?? $pass->created_at));
 
-				if ($passTime->i < 15) {
-					$pass->used = 1;
-					$pass->update();
-					$user = New User();
-					$tmp = $user->getOneBy('email', $pass->email);
-					$user->loadData(json_decode(json_encode($tmp), true));
+			if ($passTime->i < 15) {
+				$pass->used = 1;
+				$pass->update();
+				$user = New User();
+				$tmp = $user->getOneBy('email', $pass->email);
+				$user->loadData((array)$tmp);
+				/** json_decode(json_encode($tmp), true) */
 
-					if ($user){
-						Application::$APP->session->setFlash('system', '1');
-						return Application::$APP->login($user, '/set_new_password');
-					}
+				if ($user){
+					Application::$APP->session->setFlash('system', '1');
+					return Application::$APP->login($user, '/set_new_password');
 				}
 			}
 		}
+
 
 		return $this->render('messages/expired_token');
 	}
@@ -282,6 +239,7 @@ class AuthController extends Controller
 			$user->loadData($request->getBody());
 			if ($user->validate()) {
 				$tmp =  $user->getOneBy('id', $user->id);
+				$user->pass = true;
 				if (password_verify($user->password, $tmp->password))
 					$user->addError('password' , 'New Password can\'t be the same as the old one');
 				else

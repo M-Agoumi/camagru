@@ -5,9 +5,8 @@ namespace controller;
 
 
 use core\Application;
-use core\Exception\NotFoundException;
-use core\Middleware\AuthMiddleware;
 use core\Request;
+use Middlewares\AuthMiddleware;
 use models\core\languages;
 use models\core\preferences;
 use models\User;
@@ -22,8 +21,10 @@ class UserController extends Controller
 
 	public function index(User $user)
 	{
-		if ($user->username === Application::$APP->user->username)
-			return $this->render('pages/profile/myProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Profile"]);
+		if (!Application::isGuest())
+			if ($user->username === Application::$APP->user->username)
+				return $this->render('pages/profile/myProfile', ['user' => $user],
+							['title' => Application::$APP->user->name . " - Profile"]);
 
 		return $this->render('pages/profile/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
 	}
@@ -108,7 +109,9 @@ class UserController extends Controller
 		$pref = New preferences();
 		$user = Application::$APP->user->getId();
 
-		$pref->loadData($pref->getOneBy('user', $user, 0));
+		$tmp = $pref->getOneBy('user', $user, 0);
+		if ($tmp)
+			$pref->loadData($tmp);
 
 		if ($request->isPost()) {
 			$pref->loadData($request->getBody());
@@ -120,6 +123,7 @@ class UserController extends Controller
 
 				if ($pref->validate() && $pref->update()){
 					Application::$APP->session->set('lang_main', (languages::getLang($pref->language))->language);
+					Application::$APP->session->set('lang_fb', (languages::getLang($pref->language))->language);
 					Application::$APP->session->setFlash('success', 'your preferences has been updated');
 					Application::$APP->response->redirect(Application::path('user.preferences'));
 				}

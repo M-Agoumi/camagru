@@ -52,7 +52,7 @@ class Application
 		self::$ROOT_DIR = $rootPath;
 		self::$APP = $this;
 		self::$ENV = $this->getDotEnv();
-		$this->userCLass = self::getEnvValue('userClass');
+		$this->userCLass = self::getEnvValue('userClass') ?? 'User';
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->session = New Session();
@@ -192,7 +192,7 @@ class Application
 		// todo handle the case when one of those files is not presented (include fail)
         $config = parse_ini_file(self::$ROOT_DIR . "/config/lang.conf");
         // todo check session if the preference lang is stored use it otherwise take it from the config and set it to the session
-	    if ($this->session->get('lang_main')) {
+	    if ($this->session->get('lang_main') && $this->session->get('lang_fb')) {
 	    	/** already in session just get em */
 		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_main') . '.lang.php');
 		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_fb') . '.lang.php');

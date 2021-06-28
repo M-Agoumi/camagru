@@ -161,7 +161,7 @@ class Router
 		/** @var Controller $controller */
 		$controller = new $callback[0]();
 		Application::$APP->controller = $controller;
-		$controller->action = $callback[0][1];
+		$controller->action = $callback[1];
 
 		foreach ($controller->getMiddlewares() as $middleware) {
 			$middleware->execute();
@@ -189,7 +189,7 @@ class Router
 		foreach ($reflector->getMethod($callback[1])->getParameters() as $param) {
 			$modelName =  $param->name;
 
-			$modelType = $param->getClass()->name;
+			$modelType = $param->getClass()->name ?? NULL;
 			array_push($params, $this->injectClassOrModule($modelType, $modelName, $callback));
 		}
 
@@ -223,7 +223,11 @@ class Router
 				if (!$param)
 					throw new NotFoundException();
 			} else {
-				die('class ' . $type . ' not found while trying to inject it');
+				if (isset($callback[3])) {
+					$param = $callback[3];
+				} else {
+					die('class ' . $type . ' not found while trying to inject it');
+				}
 			}
 		}
 

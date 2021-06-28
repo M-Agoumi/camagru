@@ -8,7 +8,7 @@
 <h1>Sign In</h1>
 <?php
     $url = $_GET['ref'] ?? '/';
- 	$form = Form::begin(Application::path('auth.auth2') . "?ref=" . $url, "POST", "login-form");
+ 	$form = Form::begin(Application::path('auth.auth') . "?ref=" . $url, "POST", "login-form");
 		echo $form->field($user, 'username', 'Username OR Email')->required()->setHolder('John Dracula');
 		echo $form->field($user, 'password')->passwordField();
         echo $form->submit('Sign in');

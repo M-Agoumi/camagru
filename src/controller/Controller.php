@@ -64,7 +64,7 @@ abstract class Controller
 
     public function mail($to, $content):bool
     {
-    	$data = "to: $to\nyour password token is $content";
+    	$data = "to: $to\nyour password token is http://localhost:8000/verify-token/$content";
     	if (file_put_contents(Application::$ROOT_DIR . '/var/mail.tmp', $data))
     		return true;
     	return false;

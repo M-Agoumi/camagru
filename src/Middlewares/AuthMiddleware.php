@@ -1,24 +1,21 @@
 <?php
 
 
-namespace core\Middleware;
+namespace Middlewares;
 
 
 use core\Application;
 use core\Exception\ForbiddenException;
+use core\Middleware\BaseMiddleware;
 
 class AuthMiddleware extends BaseMiddleware
 {
-
-    public array $action = [];
-
     public function __construct(array $action = [])
     {
-        $this->action = $action;
+	    parent::__construct($action);
     }
 
     /**
-     *
      * @throws ForbiddenException
      */
     public function execute()

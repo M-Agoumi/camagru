@@ -4,7 +4,15 @@
 namespace core\Middleware;
 
 
-abstract class BaseMiddleware
+abstract class BaseMiddleware implements BaseMiddlewareInterface
 {
-    abstract public function execute();
+	public array $action = [];
+
+	public function __construct(array $action = [])
+	{
+		$this->action = $action;
+	}
+
+	abstract public function execute();
+
 }

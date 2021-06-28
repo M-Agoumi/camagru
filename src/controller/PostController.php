@@ -6,10 +6,8 @@ namespace controller;
 
 use core\Application;
 use core\Exception\ForbiddenException;
-use core\Exception\NotFoundException;
 
 use core\Request;
-use core\Response;
 use models\Likes;
 use models\Post;
 use models\User;

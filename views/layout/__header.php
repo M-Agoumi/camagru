@@ -16,7 +16,6 @@ use core\Application;
 		             <li><a href="#" onclick="loginPopUp()"><?= $this->lang('camera');?></a></li>
 	            <?php endif ?>
             </div>
-            <!-- todo change this and put it in css file -->
             <div class="nav-right">
 				<?php if (Application::isGuest()):?>
                 <li><a href="<?=Application::path('auth.login')?>?ref=<?=urlencode(Application::$APP->request->getPath())?>"><?= $this->lang('login');?></a></li>

@@ -18,4 +18,3 @@ if (!$email)
 		<!-- todo call method to resend email verification code -->
 	<?php endif; ?>
 </form>
-<!-- todo handle this page and code next steps -->
