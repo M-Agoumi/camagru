@@ -32,7 +32,7 @@ class AuthController extends Controller
 	public function __construct()
 	{
 		$this->registerMiddleware(New AuthMiddleware(['updatePassword']));
-		$this->registerMiddleware(New GuestMiddleware(['restore']));
+		$this->registerMiddleware(New GuestMiddleware(['restore', 'signup']));
 	}
 
     /** render login form view
