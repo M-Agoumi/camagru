@@ -238,7 +238,7 @@ class AuthController extends Controller
 		if ($request->isPost()) {
 			$user->loadData($request->getBody());
 			if ($user->validate()) {
-				$tmp =  $user->getOneBy('id', $user->id);
+				$tmp =  Application::$APP->user;
 				$user->pass = true;
 				if (password_verify($user->password, $tmp->password))
 					$user->addError('password' , 'New Password can\'t be the same as the old one');

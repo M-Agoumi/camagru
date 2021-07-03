@@ -111,6 +111,43 @@
 	    		$port = 8000;
 		    }
 	        serverStartNoFail($parameters, $port);
+	    } elseif($arguments[0] == 'log') {
+	    	$server = serverStatus();
+	    	if ($server)
+	    		echo "server is running on http://localhost:" . $server;
+	    	else
+	    		echo "server is not running";
+
+		    if ($parameters) {
+			    if (in_array('-t', $parameters)) {
+				    $file = "runtime/logs/server.log";
+				    $last_modify_time = 0;
+				    $first_time = true;
+				    while (true) {
+					    sleep(1); // 1 s
+					    clearstatcache(true, $file);
+					    $curr_modify_time = filemtime($file);
+					    if ($last_modify_time < $curr_modify_time) {
+					    	if ($first_time)
+					    		$first_time = false;
+					    	else
+						        echo file_get_contents($file);
+					    }
+
+					    $last_modify_time = $curr_modify_time;
+				    }
+			    } else
+				    echo "Parameter is unknown" . PHP_EOL;
+		    }
+		    $file = file("runtime/logs/server.log");
+		    for ($i = max(0, count($file)-11); $i < count($file); $i++) {
+			    echo $file[$i];
+		    }
+	    } elseif($arguments[0] == 'clear') {
+		    $filePath = 'runtime/logs/server.log';
+		    unlink($filePath);
+		    fopen($filePath, 'wb');
+		    echo 'logs cleared' . PHP_EOL;
 	    } else {
 	    	serverHelper();
 	    }
@@ -127,7 +164,38 @@
 
 	/** make functions */
 	function makeController($controllerName) {
-		echo "making $controllerName"; //todo make it work :D
+		echo "making $controllerName" . PHP_EOL;
+		$controllerContent = ControllerContent($controllerName);
+
+		$controller = fopen("src/controller/" . $controllerName . ".php", "w");
+
+		fwrite($controller, $controllerContent);
+		fclose($controller);
+		echo 'Controller created';
+	}
+
+	function ControllerContent($controllerName) {
+		$time = date("Y/m/d H:i:s");;
+		$content = '<?php' . PHP_EOL;
+		$content .= '/* ************************************************************************************************ */
+/*                                                                                                  */
+/*                                                        :::   ::::::::   ::::::::  :::::::::::    */
+/*   ' . $controllerName . '.php                                :+:+:  :+:    :+: :+:    :+: :+:     :+:     */
+/*                                                      +:+         +:+        +:+        +:+       */
+/*   By: magoumi <magoumi@student.1337.ma>             +#+      +#++:      +#++:        +#+         */
+/*                                                    +#+         +#+        +#+      +#+           */
+/*   Created: ' . $time . ' by magoumi         #+#  #+#    #+# #+#    #+#     #+#             */
+/*   Updated: ' . $time . ' by magoumi      ####### ########   ########      ###.ma           */
+/*                                                                                                  */
+/* ************************************************************************************************ */
+';
+		$content .= PHP_EOL . 'namespace controller;' . PHP_EOL . PHP_EOL;
+		$content .= 'class ' . $controllerName . ' extends Controller' . PHP_EOL;
+		$content .= '{' . PHP_EOL . PHP_EOL;
+		$content .= '   public function __construct()' . PHP_EOL;
+		$content .= '   {' . PHP_EOL . '        // TODO implement your controller' . PHP_EOL . '   }' . PHP_EOL . '}' . PHP_EOL;
+
+		return $content;
 	}
 
 	/** server functions */
@@ -276,7 +344,11 @@
 
 	    echo "server:start\t\tstart a php server on default port 8000 unless another port has been specified" . PHP_EOL;
 	    echo "\t\t\t-p\tfollowed by the port [-p 8080]" . PHP_EOL;
-	    echo "\t\t\t-d\tto run in the background" . PHP_EOL;
+	    echo "server:status\t\tsee server status and on which port it's running" . PHP_EOL;
+	    echo "server:stop\t\tstop the running server" . PHP_EOL;
+	    echo "server:restart\t\trestart server ps:will keep the same port" . PHP_EOL;
+	    echo "server:log\t\tget php server logs" . PHP_EOL;
+	    echo "\t\t\t-t\tkeep watching outputting logs" . PHP_EOL;
     }
 
 	 /**
