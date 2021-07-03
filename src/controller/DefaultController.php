@@ -14,8 +14,8 @@
 namespace controller;
 
 use core\Application;
-use core\Middleware\AuthMiddleware;
 use core\Request;
+use Middlewares\AuthMiddleware;
 use models\ContactUs;
 use models\Post;
 use models\User;
@@ -46,16 +46,11 @@ class DefaultController extends Controller
 		return $this->render('home', $params, ['title' => 'Home']);
 	}
 
-	public function test(Request $request)
-	{
-		$user = New User();
-		if ($request->isPost()){
-			$user->loadData($request->getBody());
-		}
-
-		return $this->render('test', ['user' => $user]);
-	}
-
+	/** contact us page
+	 * @Route("get/post","/contact")
+	 * @param Request $request
+	 * @return false|string|string[]
+	 */
 	public function contactUs(Request $request)
 	{
 		$contact = New ContactUs();
@@ -75,9 +70,6 @@ class DefaultController extends Controller
 				Application::$APP->session->setFlash('success', 'Message sent successfully');
 				Application::$APP->response->redirect('/');
 			}
-
-			var_export($contact);
-
 		}
 
 		return $this->render('forms/contactUs', ['contact' => $contact], ['title' => 'Contact Us']);
