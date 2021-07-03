@@ -1,5 +1,6 @@
 <?php
 
+use controller\Admin\DashboardController;
 use controller\PostCommentController;
 use controller\TestController;
 use core\Router;
@@ -61,6 +62,9 @@ Router::magic('/post/like/{id}', [PostController::class, 'like'])->name('post.li
 Router::magic('/api/post/likes/{id}', [PostController::class, 'showLikes']); /** post fetch like */
 Router::magic('/api/post/comment/{slug}', [PostCommentController::class, 'add']); /** post add comments */
 Router::post('/api/user/name', [UserController::class, 'getName']); /** get logged user name */
+
+/** Admin dashboard routes */
+Router::get('/dashboard', [DashboardController::class, 'index']);
 
 /** debug routes */
 Router::get('/dev/code', function (){return $_SESSION['email_code'] ?? 'no code found';});
