@@ -80,6 +80,7 @@ class UserController extends Controller
 		    	$retypePassword = filter_input(INPUT_POST, "retypePassword", FILTER_SANITIZE_SPECIAL_CHARS);
 
 		    	$user->password = $password;
+		    	$user->pass = true;
 
 		    	if ($password === $retypePassword) {
 		    		if ($user->validate()) {
