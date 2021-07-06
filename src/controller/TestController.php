@@ -4,6 +4,8 @@
 namespace controller;
 
 use Middlewares\DevMiddleware;
+use models\Post;
+use models\Roles;
 use models\User;
 
 class TestController extends Controller
@@ -26,5 +28,13 @@ class TestController extends Controller
 	public function mailTest()
 	{
 		var_dump($this->mailer('agoumihunter@gmail.com', 'testing', 'this is a huge fat test'));
+	}
+
+	public function autowire()
+	{
+		$post = new Post();
+
+		$post->getOneBy(1);
+		return $post;
 	}
 }

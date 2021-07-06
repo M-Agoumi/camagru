@@ -7,14 +7,14 @@ namespace models;
 class Roles extends \core\Db\DbModel
 {
 	public ?int $id = null;
-	public ?int $user = null;
+	public ?User $user = null;
 	public bool $super_admin = false;
 	public bool $users = false;
 	public bool $posts = false;
 	public bool $comments = false;
 	public bool $likes = false;
 	public bool $promote = false;
-	public ?int $updated_by = null;
+	public ?User $updated_by = null;
 
 
 	public function tableName(): string
@@ -43,5 +43,10 @@ class Roles extends \core\Db\DbModel
 	public function rules(): array
 	{
 		return [];
+	}
+
+	public function relationships(): array
+	{
+		return ['user' => User::class, 'updated_by' => User::class];
 	}
 }

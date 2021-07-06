@@ -77,3 +77,4 @@ Router::post('/dev/set-password', [DefaultController::class, 'password']);
 Router::magic('/dev/link/{var}', [TestController::class, 'linkVar']);
 Router::get('/canvas', [TestController::class, 'imageCanvas']);
 Router::get('/test', [TestController::class, 'mailTest']);
+Router::get('/autowire', [TestController::class, 'autowire']);

@@ -110,12 +110,25 @@ abstract class DbModel extends Model
         }
 	    $statement->execute();
 
-        if ($object)
+        if ($object){
+        	$data = $statement->fetch(2);
+        	if (method_exists($this, 'relationships')) {
+	            $relations = $this->relationships();
+	            foreach ($relations as $key => $value) {
+	                $model = new $value;
+	                $model->loadData($model->getOneBy($data[$key],'',false));
+	                $data[$key] = $model;
+		        }
+	        }
+
+        	$this->loadData($data);
+
             return $statement->fetchObject();
+        }
         return $statement->fetch(2);
     }
 	
-	public static function findOne(array $where)
+	public static function findOne(array $where, array $relations = [])
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
@@ -126,7 +139,19 @@ abstract class DbModel extends Model
 		}
 		$stmt->execute();
 
-		return $stmt->fetchObject(static::class);
+		$data = $stmt->fetch(2);
+
+		foreach ($relations as $key => $value) {
+			$model = new $value;
+			$model->loadData($model->getOneBy($data[$key],'',false));
+			$data[$key] = $model;
+
+		}
+		$class = static::class;
+		$class = new $class;
+		$class->loaddata($data);
+
+		return $class;
 	}
 
 	/** get all records of a specific entity

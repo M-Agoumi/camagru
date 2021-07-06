@@ -149,5 +149,5 @@ class Database
         $statement->execute();
     }
 
-
+//	abstract function relationships():array;
 }

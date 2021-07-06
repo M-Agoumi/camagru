@@ -36,12 +36,7 @@ use models\Comments;
 		}
 
 		/** get author name */
-		$author = New \models\User();
-		$author = $author->getOneBy($post->author);
-		if ($author)
-			$author = $author->name;
-		else
-			$author = 'Anonymous';
+		$author = $post->author;
 
 		/** get likes */
 		$likes = New \models\Likes();
@@ -54,7 +49,7 @@ use models\Comments;
 
 		//    echo $post->author;
 		?>
-        <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span class="authorName"><?=$author?></span></p>
+        <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span class="authorName"><?=$author->name?></span></p>
     </div>
     <div class="filters">
     <span class="origin">

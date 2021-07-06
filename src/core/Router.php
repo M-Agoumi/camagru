@@ -212,13 +212,18 @@ class Router
 		} else {
 			if (class_exists($type)) {
 				$param = new $type();
+				$relations = [];
+
+				if (method_exists($param, 'relationships'))
+					$relations = $param->relationships();
+
 				$primaryKey = $callback[2] ?? '';
 
 				if ($name == $primaryKey)
 					$primaryKey = $param->primaryKey();
 
 				if (isset($callback[3]))
-					$param = $param::findOne([$primaryKey => $callback[3]]);
+					$param = $param::findOne([$primaryKey => $callback[3]], $relations);
 
 				if (!$param)
 					throw new NotFoundException();

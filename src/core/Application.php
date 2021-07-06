@@ -108,7 +108,11 @@ class Application
 	public function run()
 	{
 	    try {
-            echo $this->router->resolve();
+	    	$output = $this->router->resolve();
+	    	if (is_string($output))
+                echo $output;
+	    	else
+	    		var_dump($output);
         }catch (Exception $e) {
 //	    	echo "<pre>";
 //	    	var_dump($e);

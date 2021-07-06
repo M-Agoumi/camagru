@@ -15,7 +15,7 @@ class Post extends DbModel
 	public ?string $picture = null;
 	public ?string $slug = null;
 	public ?int $status = null;
-	public ?int $author = null;
+	public ?User $author = null;
 
 
 	/**
@@ -55,6 +55,11 @@ class Post extends DbModel
 	public function getId(): ?int
 	{
 		return $this->id;
+	}
+
+	public function relationships(): array
+	{
+		return ['author' => User::class];
 	}
 
 	public function hashtag(string $comment)
