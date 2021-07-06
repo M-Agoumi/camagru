@@ -34,6 +34,11 @@ class Request
 		return substr($path, 0, $position);
 	}
 
+	public function port()
+	{
+		return $_SERVER['SERVER_PORT'];
+	}
+
 	/**
 	 * @return string the method of our request [get|post] in lowercase
 	 */
