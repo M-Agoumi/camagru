@@ -86,4 +86,13 @@ class View
 	{
 		return Application::$APP->lang($key);
 	}
+
+	public function asset(string $link): string
+	{
+		$protocol = Application::getEnvValue('secure') ? 'https://' : 'http://';
+		$appUrl = Application::getEnvValue('appURL');
+		$appPort = Request::port();
+
+		return $protocol . $appUrl . ":" . $appPort . "/" . $link;
+	}
 }
