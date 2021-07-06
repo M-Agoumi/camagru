@@ -1,7 +1,7 @@
 # camagru
 #### School project where a user can register and take pictures edit them and share them.  
   
-###let's start by sitting up the project  
+### let's start by sitting up the project  
 you can set up the project using the helper console command by running
 <br>`bin/console setup:setup`
 and following the instructions
