@@ -22,7 +22,8 @@ function save() {
     var canvas = document.getElementById("canvas");
     var img    = canvas.toDataURL("image/jpeg");
 
-    // document.write('<img src="'+img+'"/>');
+    var tmp = document.getElementById('tmp');
+    tmp.innerHTML = '<img src="'+img+'" alt="tmp image"/>';
     console.log(img);
     document.getElementById('inputPicture').value = img;
 }

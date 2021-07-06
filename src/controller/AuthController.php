@@ -168,7 +168,8 @@ class AuthController extends Controller
 				$user = $user->getOneBy('email', $password->email);
 
 				if ($user) {
-					if ($this->mail($password->email, $password->token)){
+					$data = ['restorePassword', ['port' => $_SERVER['SERVER_PORT'], 'token' => $password->token]];
+					if ($this->mail($password->email, 'Restore your password', $data)){
 						$pass = New Password_reset();
 						$pass = $pass->getOneBy('email', $password->email);
 						if (!$pass)

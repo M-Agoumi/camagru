@@ -39,6 +39,7 @@ class Application
 	public ?preferences $preferences = null;
 	public ?DbModel $user;
 	public ?View $view;
+	public ?Helper $helper = null;
 	public array $MainLang = [];
 	protected array $fallbackLang = [];
 
@@ -59,6 +60,7 @@ class Application
 		$this->router = New Router($this->request, $this->response);
 		$this->db = New Database($this->getDatabaseConfig());
 		$this->view = New View();
+		$this->helper = New Helper();
 		$this->user = self::getUser();
 		$this->preferences = $this->user ? preferences::getPerf($this->user->getId()) : null;
 		$lang = $this->setLang();

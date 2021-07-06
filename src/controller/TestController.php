@@ -22,4 +22,9 @@ class TestController extends Controller
 	{
 		return $this->render('test', ['user' => $user]);
 	}
+
+	public function mailTest()
+	{
+		var_dump($this->mailer('agoumihunter@gmail.com', 'testing', 'this is a huge fat test'));
+	}
 }

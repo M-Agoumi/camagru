@@ -5,8 +5,8 @@ namespace controller;
 
 
 use core\Application;
-use core\Middleware\AuthMiddleware;
 use core\Request;
+use Middlewares\AuthMiddleware;
 use models\Post;
 
 class CameraController extends Controller
