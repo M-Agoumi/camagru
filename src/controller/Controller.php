@@ -62,12 +62,28 @@ abstract class Controller
         $this->middlewares[] = $middleware;
     }
 
-    public function mail($to, $content):bool
-    {
-    	$data = "to: $to\nyour password token is http://localhost:8000/verify-token/$content";
-    	if (file_put_contents(Application::$ROOT_DIR . '/var/mail.tmp', $data))
-    		return true;
-    	return false;
-    }
+	public function mailer(string $to, string $subject, string $body): bool
+	{
+		if (mail($to, $subject, $body))
+			return true;
 
+		return false;
+	}
+
+    public function mail($to, $subject ,$content):bool
+    {
+	    $headers = 'From: webmaster@yourdot.com' . "\r\n" .
+		    'Reply-To: agoumihunter@gmail.com' . "\r\n" .
+		    'X-Mailer: PHP/' . phpversion();
+
+    	if (is_array($content)) {
+			$swap = $this->layout;
+    		$this->layout = 'mail';
+    		$body = $this->render('mails/' . $content[0], $content[1], ['title' => $subject]);
+    		$this->layout = $swap;
+
+    		return $this->mailer($to, $subject, $body, $headers);
+	    } else
+    	    return $this->mailer($to, $subject, $content, $headers);
+    }
 }
