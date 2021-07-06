@@ -1,6 +1,31 @@
 #!/usr/bin/env php
 <?php
 
+	/** our constants variables */
+
+	/** colors */
+	CONST RESET = "\e[0m";
+	CONST RED = "\e[31m";
+	CONST GREEN = "\e[32m";
+	CONST YELLOW = "\e[33m";
+	CONST BLUE = "\e[34m";
+	CONST MAGENTA = "\e[35m";
+	CONST CYAN = "\e[36m";
+	CONST WHITE = "\e[37m";
+	/** background colors */
+	CONST B_RESET = "\e[0;1m";
+	CONST B_RED = "\e[31;1m";
+	CONST B_GREEN = "\e[32;1m";
+	CONST B_YELLOW = "\e[33;1m";
+	CONST B_BLUE = "\e[34;1m";
+	CONST B_MAGENTA = "\e[35;1m";
+	CONST B_CYAN = "\e[36;1m";
+	CONST B_WHITE = "\e[37;1m";
+
+
+	/** start of script */
+
+	/** check if script is run as a cli */
 	if (PHP_SAPI !== 'cli') {
     		echo 'bin/console must be run as a CLI application';
     		exit(1);
@@ -57,12 +82,12 @@
                 try {
                     $dbh = new PDO($dsn, $user , $pass);
 
-                    $dbh->exec("CREATE DATABASE `$database`;
+                    $dbh->exec("CREATE DATABASE IF NOT EXISTS `$database` ;
                         CREATE USER '$user'@'localhost' IDENTIFIED BY '$pass';
                         GRANT ALL ON `$database`.* TO '$user'@'localhost';
                         FLUSH PRIVILEGES;")
                     or die(print_r($dbh->errorInfo(), true));
-                    echo "database $database created";
+                    echo "database $database created or already exists\n";
                     unset($dbh);
                 }
                 catch (PDOException $e) {
@@ -103,14 +128,7 @@
 	    	else
 	    		echo 'server is not running' . PHP_EOL;
         } elseif ($arguments[0] == 'restart'){
-	    	$port = serverStatus();
-	    	if ($port) {
-	    		echo "stopping server\n";
-		        shell_exec('sh bin/scripts/server_stop.sh');
-		    } else {
-	    		$port = 8000;
-		    }
-	        serverStartNoFail($parameters, $port);
+	    	serverRestart($parameters);
 	    } elseif($arguments[0] == 'log') {
 	    	$server = serverStatus();
 	    	if ($server)
@@ -151,6 +169,37 @@
 	    } else {
 	    	serverHelper();
 	    }
+	} elseif ($command == 'setup') {
+		if (!$arguments)
+			setupHelper();
+		elseif ($arguments[0] == 'email') {
+			$email = getUserEmail();
+			shell_exec('sh bin/scripts/mailcatcher.sh ' . $email);
+			$status = serverStatus();
+			if ($status != 0)
+				serverRestart($parameters);
+		} elseif ($arguments[0] == 'setup') {
+			/** full setup for the first run */
+			/** check if database config file exists */
+			if (!file_exists('config/db.conf')) {
+				write("Couldn't find database config file, creating one...",'warning',true);
+				$config = getUserDatabaseConfig();
+				createDatabaseConfigFile($config);
+				write('database config file created', 'success', true);
+			}
+			write('creating database if doesn\'t exist', 'warning', true);
+			shell_exec('php bin/console migrate:create:database');
+			write('applying migrations', 'warning', true);
+			liveExecuteCommand('bin/console migrate:migrate');
+			write("all ready now, do you want to run a server in development mode?[y\\n]", 'success');
+			write('[no]', 'danger', true);
+			write('you can always run a server see [bin/console server] for more information', 'warning', true);
+			$start = readline();
+			if ($start == 'y' || $start == 'Y')
+				echo shell_exec('bin/console server:start');
+		} else {
+			setupHelper();
+		}
 	} else {
 	    echo "Command Not Found" . PHP_EOL;
         show_help();
@@ -159,8 +208,97 @@
 
 	/**
 	 * functionality functions
-	 * 
 	 */
+
+	function liveExecuteCommand($cmd)
+	{
+
+		while (@ ob_end_flush()); // end all output buffers if any
+
+		$proc = popen("$cmd 2>&1 ; echo Exit status : $?", 'r');
+
+		$live_output     = "";
+		$complete_output = "";
+
+		while (!feof($proc))
+		{
+			$live_output     = fread($proc, 4096);
+			$complete_output = $complete_output . $live_output;
+			echo "$live_output";
+			@ flush();
+		}
+
+		pclose($proc);
+
+		// get exit status
+		preg_match('/[0-9]+$/', $complete_output, $matches);
+
+		// return exit status and intended output
+		return array (
+			'exit_status'  => intval($matches[0]),
+			'output'       => str_replace("Exit status : " . $matches[0], '', $complete_output)
+		);
+	}
+
+	function getUserEmail() {
+		$confirmation = 'n';
+		$email = 'example@email.com';
+
+		while (!($confirmation == 'Y' || $confirmation == 'y')) {
+			write('please provide application email:');
+			write('', 'info', true, false);
+			$email = readline();
+			write('your email is ' . $email . '? [Y\n]', 'warning');
+			write('[n]', 'danger');
+			write(' ', 'info', true, false);
+			$confirmation = readline();
+		}
+		write('address email confirmed', 'success', true);
+
+		return $email;
+	}
+
+	function getUserDatabaseConfig(): array
+	{
+		write('please provide your database host [127.0.0.1]:');
+		write('', 'info', true, false);
+		$host = readline();
+
+		write('please provide your database port [3306]:');
+		write('', 'info', true, false);
+		$port = readline();
+
+		write('please provide your database name:');
+		write('', 'info', true, false);
+		$dbname = readline();
+
+		write('please provide your database user [username]:');
+		write('', 'info', true, false);
+		$username = readline() ?? 'username';
+
+		write('please provide your database password [password]:');
+		write('', 'info', true, false);
+		$password = readline() ?? 'password';
+
+		return [
+			'host' => !empty($host) ? $host : '127.0.0.1',
+			'port' => !empty($port) ? $port : '3306',
+			'dbname' => $dbname,
+			'username' => !empty($username) ? $username : 'username',
+			'password' => !empty($password) ? $password : 'password'
+		];
+	}
+
+	/** create database config file */
+	function createDatabaseConfigFile(array $config) {
+		$fileContent = "DB_DSN = \"mysql:host=" . $config['host'] . ";port=" . $config['port'] .
+			";dbname=" . $config['dbname'] . '"' .PHP_EOL;
+		$fileContent .= "DB_USER = " . $config['username'] . PHP_EOL;
+		$fileContent .= "DB_PASSWORD = " . $config['password'] . PHP_EOL;
+
+		$configFile = fopen("config/db.conf", "w");
+		fwrite($configFile, $fileContent);
+	}
 
 	/** make functions */
 	function makeController($controllerName) {
@@ -260,6 +398,17 @@
 			echo "There is no running server" . PHP_EOL;
 	}
 
+	function serverRestart($parameters) {
+		$port = serverStatus();
+		if ($port) {
+			echo "stopping server\n";
+			shell_exec('sh bin/scripts/server_stop.sh');
+		} else {
+			$port = 8000;
+		}
+		serverStartNoFail($parameters, $port);
+	}
+
 
 
 	/**
@@ -267,6 +416,33 @@
 	 * 
 	 * those functions are helping the main functions up
 	 */
+
+	/** general helpers */
+
+	function write($text, $color = "", $newline = false, $reset = true) {
+
+		switch ($color) {
+			case "warning":
+				echo YELLOW;
+				break;
+			case 'danger':
+				echo RED;
+				break;
+			case 'info':
+				echo BLUE;
+				break;
+
+			default:
+				echo GREEN;
+				break;
+		}
+
+		echo $text;
+		if ($newline)
+			echo PHP_EOL;
+		if ($reset)
+			echo RESET;
+	}
 
 	 /** Make helper functions */
 
@@ -350,6 +526,16 @@
 	    echo "server:log\t\tget php server logs" . PHP_EOL;
 	    echo "\t\t\t-t\tkeep watching outputting logs" . PHP_EOL;
     }
+
+	/**
+	 * Setup helper
+	 */
+
+	function setupHelper():void
+	{
+		echo "setup:setup\t\tsetup your local env, you should run this command if you just installed the app" . PHP_EOL;
+		echo "setup:mail\t\tsetup your mail server, so you can send mails" . PHP_EOL;
+	}
 
 	 /**
 	  * the main menu function and it's helper
