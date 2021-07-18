@@ -326,7 +326,7 @@
 
 		fwrite($controller, $controllerContent);
 		fclose($controller);
-		echo 'Controller created';
+		echo 'Controller created'. PHP_EOL;
 	}
 
 	function ControllerContent($controllerName) {
