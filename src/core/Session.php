@@ -136,5 +136,10 @@ class Session
 		
 		$_SESSION[self::FLASH_KEY] = $flashMessages;
 	}
-	
+
+	public function unset(string $key)
+	{
+		unset($_SESSION[$key]);
+	}
+
 }

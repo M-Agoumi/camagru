@@ -66,6 +66,11 @@ class Cookie
 		setcookie($key, '', ['expires' => time() - 3600, 'path' => '/', 'httponly' => TRUE]);
 	}
 
+	public function get(string $key)
+	{
+		return $_COOKIE[$key] ?? NULL;
+	}
+
 	private function destroyCookies()
 	{
 		if (isset($_SERVER['HTTP_COOKIE'])) {

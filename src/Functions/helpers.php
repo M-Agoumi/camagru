@@ -17,9 +17,14 @@ function render(string $view, array $params = [], array $layParams = [])
 	return Application::$APP->view->renderView($view, $params, $layParams);
 }
 
-function route($path): string
+function route($path, $var = null): string
 {
-	return Application::path($path);
+	return Application::path($path, $var);
+}
+
+function redirect($path = null)
+{
+	Application::$APP->response->redirect($path);
 }
 
 /** convert from timestamp to human readable time

@@ -48,7 +48,37 @@ class AuthController extends Controller
 			return Application::$APP->response->redirect('/');
 		$this->setLayout('auth');
 
-		return render('login', ['user' => New User()], ['title' => 'Login']);
+		$savedUsers = unserialize(Application::$APP->cookie->get('user'));
+
+		$users = array();
+		foreach ($savedUsers as $savedUser) {
+			$token = new UserToken();
+			$token->getOneBy('token', $savedUser);
+			if ($token->id)
+				array_push($users, $token);
+		}
+
+		return render('login', [
+				'user' => New User(),
+				'users' => $users
+			],
+			['title' => 'Login']
+		);
+	}
+
+	/**
+	 * @throws ExpiredException
+	 */
+	public function magicLogin(UserToken $userToken)
+	{
+		if (!$userToken->used) {
+			$userToken->used = 1;
+			$userToken->update();
+
+			Application::$APP->login($userToken->user, '/');
+		}
+
+		throw new ExpiredException('this login token has expired');
 	}
 
 	/** this the method responsible for handling the login attempts
@@ -294,6 +324,17 @@ class AuthController extends Controller
 
 	public function logoutMessage()
 	{
+		$users = unserialize($_COOKIE['user'] ?? null);
+		/** remove current user from the saved users unless he wanted to save */
+		foreach ($users as $key => $value) {
+			$userToken = new UserToken();
+			$userToken->getOneBy('token', $value);
+			if ($userToken->id && $userToken->user->getId() == Application::$APP->session->get('user_tmp'))
+				unset($users[$key]);
+		}
+
+		Application::$APP->cookie->setCookie('user', serialize($users), time() + (3600 * 24 * 30));
+
 		return render('messages/logout', [], ['title' => 'you are logged out']);
 	}
 
@@ -304,13 +345,19 @@ class AuthController extends Controller
 	{
 		$userId = Application::$APP->session->get('user_tmp');
 
-		$token = New UserToken();
-		$token->getOneBy('user', $userId);
-		$users = unserialize($_COOKIE['user'] ?? null);
-		if (!$users) {
-			$users = array($token->token);
+		if ($userId) {
+			$token = new UserToken();
+			$token->getOneBy('user', $userId);
+			$users = unserialize($_COOKIE['user'] ?? null);
+			if (!$users)
+				$users = array($token->token);
+			else
+				array_push($users, $token->token);
+
 			Application::$APP->cookie->setCookie('user', serialize($users), time() + (3600 * 24 * 30));
+			Application::$APP->session->unset('user_tmp');
 		}
+		redirect('/');
 
 		return $userId;
 	}

@@ -18,4 +18,17 @@
 <h1>
     <a href="<?=Application::path('auth.restore')?>">restore password</a>
 </h1>
-
+<?php if(!empty($users)):?>
+<h1>login to saved accounts</h1>
+<?php
+    /** @var array $users */
+    foreach ($users as $user): ?>
+        <div>
+            <h3>
+                <a href="<?=route('auth.magic.login', $user->token)?>">
+                    <?=$user->user->name?>
+                </a>
+            </h3>
+        </div>
+    <?php endforeach;
+endif;

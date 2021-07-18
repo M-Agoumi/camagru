@@ -24,6 +24,7 @@ Router::post('/contactus', [DefaultController::class, 'contactUs']);
 /** Auth Controller routes */
 Router::get('/login', [AuthController::class, 'login'])->name("auth.login");
 Router::post('/login', [AuthController::class, 'auth'])->name('auth.auth');
+Router::magic('/magic-login/{token}', [AuthController::class, 'magicLogin'])->name('auth.magic.login');
 
 Router::get('/signup', [AuthController::class, 'signup'])->name('auth.signup');
 Router::post('/signup', [AuthController::class, 'verifyEmail'])->name('auth.verifyEmail');
