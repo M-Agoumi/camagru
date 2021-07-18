@@ -15,8 +15,8 @@ class AdminMiddleware extends BaseMiddleware
 	public function execute()
 	{
 		$roles = new Roles();
-		$roles = $roles->getOneBy('user', Application::$APP->user->getId());
-		if (!$roles)
+		$roles->getOneBy('user', Application::$APP->user->getId());
+		if (!$roles->getId())
 			throw new NotFoundException();
 	}
 }
