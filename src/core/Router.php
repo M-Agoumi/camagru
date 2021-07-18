@@ -14,6 +14,7 @@
 namespace core;
 
 use controller\Controller;
+use core\Exception\ExpiredException;
 use core\Exception\NotFoundException;
 use ReflectionClass;
 
@@ -50,10 +51,16 @@ class Router
 	 */
 	public static function get($path, $callback): Router
 	{
-		return self::setRoute('get', $path, $callback);
+		return self::registerRoute('get', $path, $callback);
 	}
 
-	private static function setRoute(string $method, $path, $callback)
+	/**
+	 * @param string $method
+	 * @param $path
+	 * @param $callback
+	 * @return Router|null
+	 */
+	private static function registerRoute(string $method, $path, $callback): ?Router
 	{
 		$router = Application::$APP->router;
 
@@ -79,12 +86,12 @@ class Router
 	 */
 	public static function post($path, $callback): Router
 	{
-		return self::setRoute('post', $path, $callback);
+		return self::registerRoute('post', $path, $callback);
 	}
 
 	public static function magic($path, $callback): Router
 	{
-		return self::setRoute('magic', $path, $callback);
+		return self::registerRoute('magic', $path, $callback);
 	}
 
 	public function name(string $name)
@@ -187,7 +194,7 @@ class Router
 
 		$reflector = new ReflectionClass($callback[0]);
 		foreach ($reflector->getMethod($callback[1])->getParameters() as $param) {
-			$modelName =  $param->name;
+			$modelName = $param->name;
 
 			$modelType = $param->getClass()->name ?? NULL;
 			array_push($params, $this->injectClassOrModule($modelType, $modelName, $callback));
@@ -202,6 +209,7 @@ class Router
 	 * @param $callback
 	 * @return mixed
 	 * @throws NotFoundException
+	 * @throws ExpiredException
 	 */
 	protected function injectClassOrModule($type, $name, $callback)
 	{
@@ -222,11 +230,15 @@ class Router
 				if ($name == $primaryKey)
 					$primaryKey = $param->primaryKey();
 
-				if (isset($callback[3]))
+				if (isset($callback[3])) {
 					$param = $param::findOne([$primaryKey => $callback[3]], $relations);
 
-				if (!$param)
-					throw new NotFoundException();
+					if (!$param->getId())
+						if (strpos($callback[2], 'token') !== false)
+							throw new ExpiredException('Invalid token');
+						else
+							throw new NotFoundException();
+				}
 			} else {
 				if (isset($callback[3])) {
 					$param = $callback[3];
