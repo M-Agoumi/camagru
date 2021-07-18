@@ -32,8 +32,10 @@ class Response
 	 * @param string $url
 	 * @return bool
 	 */
-	public function redirect(string $url): bool
+	public function redirect(string $url = null): bool
 	{
+		if (!$url)
+			$url = Application::$APP->request->getPath();
 		header('Location: '. $url);
 		die('you are being redicted');
 		return false;
