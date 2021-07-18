@@ -17,8 +17,8 @@ use controller\Controller;
 use core\Db\Database;
 use core\Db\DbModel;
 use Exception;
-use models\core\languages;
-use models\core\preferences;
+use models\core\Languages;
+use models\core\Preferences;
 use models\User;
 
 /**
@@ -36,10 +36,11 @@ class Application
 	public ?Response $response = null;
 	public ?controller $controller = null;
 	public ?Session $session = null;
-	public ?preferences $preferences = null;
+	public ?Preferences $preferences = null;
 	public ?DbModel $user;
 	public ?View $view;
 	public ?Helper $helper = null;
+	public ?Cookie $cookie = null;
 	public array $MainLang = [];
 	protected array $fallbackLang = [];
 
@@ -56,13 +57,14 @@ class Application
 		$this->userCLass = self::getEnvValue('userClass') ?? 'User';
 		$this->request = New Request();
 		$this->response = New Response();
-		$this->session = New Session();
-		$this->router = New Router($this->request, $this->response);
 		$this->db = New Database($this->getDatabaseConfig());
+		$this->session = New Session();
+		$this->user = self::getUser();
+		$this->router = New Router($this->request, $this->response);
 		$this->view = New View();
 		$this->helper = New Helper();
-		$this->user = self::getUser();
-		$this->preferences = $this->user ? preferences::getPerf($this->user->getId()) : null;
+		$this->cookie = New Cookie();
+		$this->preferences = $this->user ? Preferences::getPerf($this->user->getId()) : null;
 		$lang = $this->setLang();
 		$this->MainLang = $lang[0];
 		$this->fallbackLang = $lang[1];
@@ -94,11 +96,13 @@ class Application
 
 		$properties = $rc->getProperties();
 		foreach ($properties as $property) {
-			if ($instance == $property->name)
+			if ($instance == $property->name) {
+				unset($rc);
 				return true;
+			}
 		}
-
 		unset($rc);
+
 		return false;
 	}
 
@@ -111,25 +115,37 @@ class Application
 	    	$output = $this->router->resolve();
 	    	if (is_string($output))
                 echo $output;
+	    	elseif(is_bool($output))
+			    echo render('/messages/default', ['title' => 'empty page', 'value' => $output]);
 	    	else
 	    		var_dump($output);
-        }catch (Exception $e) {
-//	    	echo "<pre>";
-//	    	var_dump($e);
-//		    print_r($e->getTraceAsString());
-//		    $file = $e->getFile();
-//		    $lines = file($file);//file in to an array
-//		    $line = $e->getLine();
-//		    echo "<br>code:<br>" . ($line - 1) . "\t" .
-//			    $lines[$line - 1] . "<br>$line\t" .
-//			    $lines[$line ] . "<br>" . ($line + 1) . "\t" .
-//			    $lines[$line + 1];
-//		    echo "<br><br>on file " . $file . " line " . $line;
-//	    	echo "</pre>";
+        } catch (Exception $e) {
+	    	$clear = ob_get_clean();
+	    	$message = '';
+	    	if ($e->getCode() != 404) {
+	    		ob_start();
+		        echo "<pre>";
+		        var_dump($e);
+			    print_r($e->getTraceAsString());
+			    $file = $e->getFile();
+			    $lines = file($file); //file in to an array
+			    $line = $e->getLine();
+			    echo "<br>code:<br>" . ($line - 1) . "\t" .
+				    $lines[$line - 1] . "<br>$line\t" .
+				    $lines[$line ] . "<br>" . ($line + 1) . "\t" .
+				    $lines[$line + 1];
+			    echo "<br><br>on file " . $file . " line " . $line;
+		        echo "</pre>";
+		        $message = ob_get_clean();
+		    }
 	        $this->response->setStatusCode($e->getCode());
-	        if ($this->getDotEnv()['env'] != 'dev')
-	            echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
-	        else
+	        if ($this->getDotEnv()['env'] != 'dev') {
+	        	$codeView = 'error/__' . $e->getCode();
+	        	if (file_exists(Application::$ROOT_DIR . '/views/error/' . $codeView))
+	                echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
+	        	else
+	        		echo $this->view->renderView('error/__500', [], ['title' => '500 Internal Server Error']);
+	        } else
 	        	echo $this->view->renderView('error/__error', ['e' => $e], ['title' => $e->getCode()]);
         }
 	}
@@ -204,8 +220,8 @@ class Application
 		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_fb') . '.lang.php');
 	    } else {
 	    	/** not in session check database */
-		    if ($this->preferences) {
-		    	$language = languages::getLang($this->preferences->language)->language;
+		    if ($this->preferences && $this->preferences->id) {
+		    	$language = Languages::getLang($this->preferences->language)->language;
 		    	Application::$APP->session->set('lang_main', $language);
 			    array_push($lang, include self::$ROOT_DIR . '/translation/' . $language. '.lang.php');
 			    if ($lang != $config['fallback_language']) {
@@ -243,12 +259,14 @@ class Application
 		$this->response->redirect($ref);
 	}
 	
-	public static function logout()
+	public static function logout(string $redirect = '/')
 	{
 		$token = Application::$APP->request->getBody() ?? '';
+		Application::$APP->session->set('user_tmp', Application::$APP->user->getId());
 		Application::$APP->user = NULL;
 		Application::$APP->session->remove('user');
+		Application::$APP->cookie->unsetCookie('user_tk');
 
-		Application::$APP->response->redirect('/');
+		Application::$APP->response->redirect($redirect);
 	}
 }
