@@ -16,12 +16,13 @@ class View
 	 */
 	public function renderView(string $view, array $params = [], array $layParams = [])
 	{
-		/** todo pass params to the layout too */
-		$layout = $this->layoutContent($layParams);
+		$template = $this->layoutContent($layParams);
 		$view = $this->renderOnlyView($view, $params);
+
 		/** since the title is present in every page I thought about putting here */
-		$layout = str_replace('{{ title }}', $layoutParams['title'] ?? Application::getEnvValue('appName'), $layout);
-		return str_replace('{{ body }}', $view, $layout);
+		$template = str_replace('{{ title }}', $layoutParams['title'] ??
+							Application::getEnvValue('appName'), $template);
+		return str_replace('{{ body }}', $view, $template);
 	}
 
 	/**
@@ -41,17 +42,11 @@ class View
 
 	public function layoutContent(array $params = [])
 	{
-//        foreach ($params as $key => $param) {
-//            $$key = $param;
-//        }
-//        if (!isset($title))
-//            $title = Application::$APP->getEnvValue('appName') ?? 'Please Add a default title to .env as appName';
 		$layout = Application::$APP->controller->layout ?? 'main';
 		ob_start();
-		include_once Application::$ROOT_DIR . "/views/layout/$layout.layout.php";
+		include Application::$ROOT_DIR . "/views/layout/$layout.layout.php";
 		$output = ob_get_clean();
 		foreach ($params as $key => $param) {
-//            echo '{{' .$key . "}} => " . $param . "<br>";
 			$output = str_replace('{{ ' . $key . ' }}', $param, $output);
 			$output = str_replace('{{' . $key . '}}', $param, $output);
 		}
@@ -69,11 +64,13 @@ class View
 			$$key = $param;
 		}
 		ob_start();
+
 		$viewFile = Application::$ROOT_DIR . "/views/$view.blade.php";
 		if (file_exists($viewFile))
-			include_once $viewFile;
+			include $viewFile;
 		else
 			echo "the view <b>$view</b> is not found";
+
 		return ob_get_clean();
 	}
 
