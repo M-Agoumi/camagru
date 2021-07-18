@@ -53,7 +53,18 @@ abstract class DbModel extends Model
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
-		return $statement->execute();
+		$done = $statement->execute();
+
+		/** let's get our saved record id */
+	    $statement = self::prepare("SELECT LAST_INSERT_ID()");
+	    $statement->execute();
+	    $record = $statement->fetch(0);
+	    if ($record) {
+			$this->{$this->primaryKey()} = $record[0];
+			$this->created_at = date('Y-m-d H:i:s', time());
+	    }
+
+		return $done;
 	}
 
 	/**
@@ -88,6 +99,8 @@ abstract class DbModel extends Model
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
+		$this->updated_at = date('Y-m-d H:i:s', time());
+
 		return $statement->execute();
 	}
 
@@ -112,19 +125,21 @@ abstract class DbModel extends Model
 
         if ($object){
         	$data = $statement->fetch(2);
-        	if (method_exists($this, 'relationships')) {
-	            $relations = $this->relationships();
-	            foreach ($relations as $key => $value) {
-	                $model = new $value;
-	                $model->loadData($model->getOneBy($data[$key],'',false));
-	                $data[$key] = $model;
+        	if ($data) {
+		        if (method_exists($this, 'relationships')) {
+			        $relations = $this->relationships();
+			        foreach ($relations as $key => $value) {
+				        $model = new $value;
+				        $model->loadData($model->getOneBy($data[$key], '', false));
+				        $data[$key] = $model;
+			        }
 		        }
+
+		        $this->loadData($data);
 	        }
-
-        	$this->loadData($data);
-
             return $statement->fetchObject();
         }
+
         return $statement->fetch(2);
     }
 	
@@ -141,15 +156,19 @@ abstract class DbModel extends Model
 
 		$data = $stmt->fetch(2);
 
-		foreach ($relations as $key => $value) {
-			$model = new $value;
-			$model->loadData($model->getOneBy($data[$key],'',false));
-			$data[$key] = $model;
-
-		}
 		$class = static::class;
 		$class = new $class;
-		$class->loaddata($data);
+
+		if ($data) {
+			foreach ($relations as $key => $value) {
+				$model = new $value;
+				$model->loadData($model->getOneBy($data[$key], '', false));
+				$data[$key] = $model;
+
+			}
+
+			$class->loaddata($data);
+		}
 
 		return $class;
 	}
@@ -211,5 +230,10 @@ abstract class DbModel extends Model
 	public static function prepare(string $sql)
 	{
 		return Application::$APP->db->pdo->prepare($sql);
+	}
+
+	public function __toString()
+	{
+		return (string)$this->getId();
 	}
 }
