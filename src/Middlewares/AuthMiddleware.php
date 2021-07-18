@@ -5,7 +5,7 @@ namespace Middlewares;
 
 
 use core\Application;
-use core\Exception\ForbiddenException;
+use core\Exception\ExpiredException;
 use core\Middleware\BaseMiddleware;
 
 class AuthMiddleware extends BaseMiddleware
@@ -15,14 +15,13 @@ class AuthMiddleware extends BaseMiddleware
 	    parent::__construct($action);
     }
 
-    /**
-     * @throws ForbiddenException
-     */
+	/**
+	 * check if user is logged in otherwise redirect to home page
+	 */
     public function execute()
     {
         if (Application::isGuest()) {
             if (empty($this->action) || in_array(Application::$APP->controller->action, $this->action)) {
-                // throw new ForbiddenException();
 				Application::$APP->response->redirect('/');
             }
         }
