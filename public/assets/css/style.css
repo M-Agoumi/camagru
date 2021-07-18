@@ -800,7 +800,7 @@ input[type=submit]:hover {
 
 
 
-.alert a{
+.alert span{
 
 	float: right;
 
@@ -822,6 +822,7 @@ input[type=submit]:hover {
 
 	right: -21px;
 
+	cursor: pointer;
 }
 
 
