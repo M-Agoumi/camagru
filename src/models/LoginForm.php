@@ -12,6 +12,7 @@ use core\Application;
 
 class LoginForm extends Model
 {
+	public string $id = '';
 	public string $username = '';
 	public string $password = '';
 	
