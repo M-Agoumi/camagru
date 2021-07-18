@@ -21,7 +21,7 @@ class mg0001_creating_user_table
 
 		$db->pdo->exec("CREATE TABLE users(
 							id INT AUTO_INCREMENT PRIMARY KEY,
-							email VARCHAR(255) NOT NULL, /* todo add unique */
+							email VARCHAR(255) NOT NULL UNIQUE,
 							name VARCHAR(255),
 							username VARCHAR(255),
 							password VARCHAR(255),

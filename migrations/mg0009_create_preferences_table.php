@@ -32,7 +32,6 @@ class mg0009_create_preferences_table
 
 	public function down()
 	{
-
 		$this->db->pdo->exec("DROP TABLE IF EXISTS preferences");
 	}
 

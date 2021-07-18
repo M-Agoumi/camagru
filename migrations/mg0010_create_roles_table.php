@@ -53,7 +53,6 @@ class mg0010_create_roles_table
 
 	public function down()
 	{
-
 		$this->db->pdo->exec("DROP TABLE IF EXISTS roles");
 	}
 }

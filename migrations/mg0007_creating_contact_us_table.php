@@ -37,7 +37,6 @@ class mg0007_creating_contact_us_table
 
 	public function down()
 	{
-
 		$this->db->pdo->exec("DROP TABLE IF EXISTS contact_us");
 	}
 }

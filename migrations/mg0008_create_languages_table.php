@@ -26,7 +26,6 @@ class mg0008_create_languages_table
 
 	public function down()
 	{
-
 		$this->db->pdo->exec("DROP TABLE IF EXISTS languages");
 	}
 }

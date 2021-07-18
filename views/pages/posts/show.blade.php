@@ -11,30 +11,6 @@ use models\Comments;
     <div class="usernameInfo">
         <p><?=$post->highlightHashtag($post->comment)?></p>
 		<?php
-		/** todo place this one somewhere better :D */
-		function humanTiming($time): string
-		{
-
-			$time = time() - $time; // to get the time since that moment
-			$time = ($time < 1) ? 1 : $time;
-			$tokens = array(
-				31536000 => 'year',
-				2592000 => 'month',
-				604800 => 'week',
-				86400 => 'day',
-				3600 => 'hour',
-				60 => 'minute',
-				1 => 'second'
-			);
-
-			foreach ($tokens as $unit => $text) {
-				if ($time < $unit) continue;
-				$numberOfUnits = floor($time / $unit);
-				return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '');
-			}
-			return "0";
-		}
-
 		/** get author name */
 		$author = $post->author;
 
@@ -87,7 +63,7 @@ use models\Comments;
 				</div>
         </span>
 <?php
-	        if (Application::$APP->user && Application::$APP->user->id == $post->author):
+	        if (Application::$APP->user && Application::$APP->user->id == $post->author->id):
 	        ?>
         <span>edit post</span>
 <?php endif; ?>

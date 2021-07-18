@@ -5,7 +5,7 @@ namespace controller;
 
 
 use core\Application;
-use core\Exception\ForbiddenException;
+use core\Exception\ExpiredException;
 
 use core\Request;
 use models\Likes;
@@ -20,7 +20,7 @@ class PostController extends Controller
 	 */
 	public function show(Post $post)
 	{
-		return $this->render('pages/posts/show', ['post' => $post], ['title' => $post->title]);
+		return render('pages/posts/show', ['post' => $post], ['title' => $post->title]);
 	}
 
 	public function like(Post $post, Likes $likes,  Request $request): string
@@ -34,7 +34,6 @@ class PostController extends Controller
 						]);
 
 		if ($liked) {
-
 			if ($liked->status) {
 				$liked->status = 0;
 				$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
@@ -89,6 +88,6 @@ class PostController extends Controller
 			return json_encode($usersLikes);
 		}
 
-		throw New ForbiddenException();
+		throw New ExpiredException();
 	}
 }
