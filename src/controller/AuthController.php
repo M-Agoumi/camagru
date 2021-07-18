@@ -14,10 +14,13 @@
 namespace controller;
 
 use core\Application;
+use core\Exception\ExpiredException;
 use core\Request;
 use DateTime;
 use Middlewares\AuthMiddleware;
 use Middlewares\GuestMiddleware;
+use models\core\UserToken;
+use models\EmailToken;
 use models\LoginForm;
 use models\Password_reset;
 use models\User;
@@ -32,7 +35,7 @@ class AuthController extends Controller
 	public function __construct()
 	{
 		$this->registerMiddleware(New AuthMiddleware(['updatePassword']));
-		$this->registerMiddleware(New GuestMiddleware(['restore', 'signup']));
+		$this->registerMiddleware(New GuestMiddleware(['restore', 'signup', 'logoutMessage']));
 	}
 
     /** render login form view
@@ -45,7 +48,7 @@ class AuthController extends Controller
 			return Application::$APP->response->redirect('/');
 		$this->setLayout('auth');
 
-		return $this->render('login', ['user' => New User()], ['title' => 'Login']);
+		return render('login', ['user' => New User()], ['title' => 'Login']);
 	}
 
 	/** this the method responsible for handling the login attempts
@@ -61,7 +64,7 @@ class AuthController extends Controller
 		$loginForm->loadData($request->getBody());
 
 		if (!($loginForm->validate() && $loginForm->login($_GET['ref'] ?? '/')))
-			return $this->render('login', ['user' => $loginForm]);
+			return render('login', ['user' => $loginForm]);
 		exit(1);
 	}
 
@@ -71,70 +74,95 @@ class AuthController extends Controller
 	 */
 	public function signup()
 	{
-		return $this->render('register', ['user' => New User], ['title' => 'Signup']);
+		return render('register', ['user' => New User], ['title' => 'Signup']);
 	}
 
-	/** todo save the email to the database or session and send verification code on mail
-	 * then render the view where the user can enter his verification code
+	/** render the view where the user can enter his information
 	 * @route('post' => '/signup')
 	 * @param Request $request
-	 * @param User $user
+	 * @param EmailToken $email
 	 * @return false|string|string[]
 	 */
 
-	public function verifyEmail(Request $request, User $user)
+	public function verifyEmail(Request $request, EmailToken $email)
 	{
 		$body = $request->getBody();
 		if (!empty($body['email'])) {
-			$user->email = $body['email'];
-			$user->validate();
+			/** get info from the user */
+			$email->email = $body['email'];
+			$email->token = 999;
+			$email->validate();
 
-			if (empty($user->errors['email'])) {
-				$_SESSION['user_email'] = $body['email'];
-				$_SESSION['email_code'] = rand(100000, 999999);
-				return $this->render('messages/register_email');
+			if (empty($email->errors)) {
+				/** check if the email is already on our records */
+				$tmp = $email->getOneBy('email', $email->email, 0);
+				//Generate a random string.
+				$token = openssl_random_pseudo_bytes(16);
+				//Convert the binary data into hexadecimal representation.
+				$email->token = bin2hex($token);
+
+				if (!$tmp)
+					$email->save();
+				else {
+					$email->id = $tmp['id'];
+					$email->update();
+				}
+
+				$data = ['verifyEmail', ['port' => $_SERVER['SERVER_PORT'], 'token' => $email->token]];
+				if ($this->mail($email->email, 'Verify Your Email', $data))
+					return render('messages/register_email', ['email' => $email->email]);
+				else
+					return render('messages/register_email_failed');
 			}
 		}
 
-		return $this->render('register', ['user' => $user], ['title' => 'Signup']);
+		return Application::$APP->response->redirect('/signup');
 	}
 
 	/** get the verification code sent to the user email if it's valid
-     * give him the form to complete his registration
-     * @route('post' => '/register_step_2')
+	 * give him the form to complete his registration
+	 * @route('post' => '/register_step_2')
 	 * @param Request $request
+	 * @param User $user
 	 * @return false|string|string[]
+	 * @throws ExpiredException
 	 */
 
-	public function register(Request $request, User $user)
+	public function register(EmailToken $email)
 	{
-		$verification = intval($request->getBody()['verification'] ?? 0);
+		$user = New User();
 
-		$code = $_SESSION['email_code'] ?? 0;
-		if ($verification === $code && $code) {
-			if (!$user->getOneBy('email', $_SESSION['user_email']))
-				return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);
-			else {
+		if (!$email->used) {
+			$userExist = $user->getOneBy('email', $email->email, 0);
+			$email->used = 1;
+			$email->update();
+
+			if (!$userExist) {
+				Application::$APP->session->set('user_email', $email->email);
+				return $this->render('forms/register', ['email' => $email->email, 'user' => $user]);
+			} else {
+				$message = 'Email already assigned to another account,<a href="';
+				$message .= route('auth.login') . '">login</a> or <a href="';
+				$message .= route('auth.restore') . '">reset</a> your password';
+
 				Application::$APP->session->setFlash(
 					'error',
-					'Email already assigned to another account, login or reset your password'
+					$message
 				);
 				Application::$APP->response->redirect(Application::path('auth.signup'));
 				die('wait you are being redirected to a new page');
 			}
 		}
 
-		return $this->render('messages/register_email', [
-			'email' => $_SESSION['user_email'],
-			'error' => 'Wrong Verification Code'
-		]);
+		throw new ExpiredException('This Token Has Expired', 400);
 	}
 
-    /** saving user to the database todo change return type from string to view
-     * @route('post' => '/registration')
-     * @param Request $request
-     * @return false|string|string[]
-     */
+	/** saving user to the database
+	 * @route('post' => '/registration')
+	 * @param Request $request
+	 * @param User $user
+	 * @return false|string|string[]
+	 */
     public function insertUser(Request $request, User $user)
 	{
 		$user->loadData($request->getBody());
@@ -145,7 +173,7 @@ class AuthController extends Controller
 			return Application::$APP->response->redirect('/');
 		}
 
-		return $this->render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);
+		return render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);
 	}
 
 	/**
@@ -165,9 +193,9 @@ class AuthController extends Controller
 			if ($password->validate()) {
 				$user = New User();
 
-				$user = $user->getOneBy('email', $password->email);
+				$user->getOneBy('email', $password->email);
 
-				if ($user) {
+				if ($user->id) {
 					$data = ['restorePassword', ['port' => $_SERVER['SERVER_PORT'], 'token' => $password->token]];
 					if ($this->mail($password->email, 'Restore your password', $data)){
 						$pass = New Password_reset();
@@ -181,18 +209,18 @@ class AuthController extends Controller
 					}
 				}
 
-				return $this->render('messages/restore_message',
+				return render('messages/restore_message',
 					['email' => $request->getBody()['email'] ?? ''],
 					['title' => 'Restore Password']
 				);
 			}
 		}
 
-    	return $this->render('messages/restore_password', ['password' => $password], ['title' => 'Restore Password']);
+    	return render('messages/restore_password', ['password' => $password], ['title' => 'Restore Password']);
 	}
 
 	/**
-	 * @param $token
+	 * @param Password_reset $password_reset
 	 * @return false|string|string[]|void
 	 * @throws \Exception
 	 */
@@ -220,7 +248,7 @@ class AuthController extends Controller
 		}
 
 
-		return $this->render('messages/expired_token');
+		return render('messages/expired_token');
 	}
 
 	/**
@@ -253,7 +281,7 @@ class AuthController extends Controller
 		}
 
 		Application::$APP->session->setFlash('system', '1');
-		return $this->render('messages/setPassword', ['user' => $user]);
+		return render('messages/setPassword', ['user' => $user]);
 	}
 
 	/*
@@ -261,6 +289,29 @@ class AuthController extends Controller
 	 */
 	public function logout()
 	{
-		Application::logout();
+		Application::logout(route('app.logoutMessage'));
+	}
+
+	public function logoutMessage()
+	{
+		return render('messages/logout', [], ['title' => 'you are logged out']);
+	}
+
+	/** todo more work here please
+	 * @return mixed|null
+	 */
+	public function logoutSaveMe()
+	{
+		$userId = Application::$APP->session->get('user_tmp');
+
+		$token = New UserToken();
+		$token->getOneBy('user', $userId);
+		$users = unserialize($_COOKIE['user'] ?? null);
+		if (!$users) {
+			$users = array($token->token);
+			Application::$APP->cookie->setCookie('user', serialize($users), time() + (3600 * 24 * 30));
+		}
+
+		return $userId;
 	}
 }
