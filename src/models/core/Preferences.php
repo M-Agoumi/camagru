@@ -6,7 +6,7 @@ namespace models\core;
 
 use core\Db\DbModel;
 
-class preferences extends DBModel
+class Preferences extends DBModel
 {
 
 	public ?int $id = null;

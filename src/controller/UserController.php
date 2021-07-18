@@ -7,8 +7,8 @@ namespace controller;
 use core\Application;
 use core\Request;
 use Middlewares\AuthMiddleware;
-use models\core\languages;
-use models\core\preferences;
+use models\core\Languages;
+use models\core\Preferences;
 use models\User;
 
 class UserController extends Controller
@@ -26,7 +26,7 @@ class UserController extends Controller
 				return $this->render('pages/profile/myProfile', ['user' => $user],
 							['title' => Application::$APP->user->name . " - Profile"]);
 
-		return $this->render('pages/profile/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
+		return render('pages/profile/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
 	}
 
 	/**
@@ -43,7 +43,7 @@ class UserController extends Controller
 
 	public function edit()
 	{
-		return $this->render('pages/profile/updateProfile', ['user' => Application::$APP->user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+		return render('pages/profile/updateProfile', ['user' => Application::$APP->user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
 	}
 
 	public function update(Request $request)
@@ -63,7 +63,7 @@ class UserController extends Controller
 			return Application::$APP->response->redirect(Application::path('user.profile'));
 		}
 
-		return $this->render('pages/profile/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+		return render('pages/profile/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
 	}
 
 	public function UpdatePassword(Request $request)
@@ -101,27 +101,21 @@ class UserController extends Controller
 		}
 		$user->password = '';
 
-		return $this->render('pages/profile/updatePassword', ['user' => $user]);
+		return render('pages/profile/updatePassword', ['user' => $user]);
 	}
 
 
 	public function preferences(Request $request)
 	{
-		$pref = New preferences();
+		$pref = New Preferences();
 		$user = Application::$APP->user->getId();
 
-		$tmp = $pref->getOneBy('user', $user, 0);
-		if ($tmp)
-			$pref->loadData($tmp);
+		$pref->getOneBy('user', $user);
 
 		if ($request->isPost()) {
 			$pref->loadData($request->getBody());
 
-			$userPref = $pref->getOneBy('user', $user);
-
-			if ($userPref) {
-				$pref->id = $userPref->id;
-
+			if ($pref->id) {
 				if ($pref->validate() && $pref->update()){
 					Application::$APP->session->set('lang_main', (languages::getLang($pref->language))->language);
 					Application::$APP->session->set('lang_fb', (languages::getLang($pref->language))->language);
@@ -139,7 +133,7 @@ class UserController extends Controller
 			}
 		}
 
-		return $this->render('pages/profile/preferences', ['pref' => $pref], ['title' => 'test']);
+		return render('pages/profile/preferences', ['pref' => $pref], ['title' => 'test']);
 	}
 
 	public function getName()

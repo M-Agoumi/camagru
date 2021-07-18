@@ -5,7 +5,7 @@ namespace models\core;
 
 use core\Db\DbModel;
 
-class languages extends DBModel
+class Languages extends DBModel
 {
 
 	public ?int $id = null;
