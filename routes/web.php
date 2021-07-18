@@ -25,11 +25,9 @@ Router::post('/contactus', [DefaultController::class, 'contactUs']);
 Router::get('/login', [AuthController::class, 'login'])->name("auth.login");
 Router::post('/login', [AuthController::class, 'auth'])->name('auth.auth');
 
-Router::post('/logout', [AuthController::class, 'logout'])->name('app.logout');
-
 Router::get('/signup', [AuthController::class, 'signup'])->name('auth.signup');
 Router::post('/signup', [AuthController::class, 'verifyEmail'])->name('auth.verifyEmail');
-Router::post('/register_step_2', [AuthController::class, 'register'])->name('auth.register');
+Router::magic('/verify-email/{token}', [AuthController::class, 'register'])->name('auth.register');
 Router::post('/registration', [AuthController::class, 'insertUser'])->name('auth.insertUser');
 
 Router::get('/restore_password', [AuthController::class, 'restore']);
@@ -37,6 +35,10 @@ Router::post('/restore_password', [AuthController::class, 'restore'])->name('aut
 Router::magic("/verify-token/{token}", [AuthController::class, 'checkToken']);
 Router::get("/set_new_password", [AuthController::class, 'updatePassword'])->name('auth.updatePassword');
 Router::post("/set_new_password", [AuthController::class, 'updatePassword']);
+
+Router::post('/logout', [AuthController::class, 'logout'])->name('app.logout');
+Router::get('/logout-message', [AuthController::class, 'logoutMessage'])->name('app.logoutMessage');
+Router::get('/logout-save-me', [AuthController::class, 'logoutSaveMe'])->name('app.logout.save');
 
 /** User Controller routes */
 Router::magic('/user/{username}', [UserController::class, 'index']);
@@ -68,13 +70,15 @@ Router::get('/dashboard', [DashboardController::class, 'index']);
 
 /** debug routes */
 Router::get('/dev/code', function (){return $_SESSION['email_code'] ?? 'no code found';});
-Router::get('/mailer', function (){return file_get_contents(Application::$ROOT_DIR. '/var/mail.tmp') ?? 'no mail found';});
 Router::get('/session', function() {var_dump($_SESSION);});
 Router::get('/unset_session', function() {session_destroy();});
 Router::magic('/user/{id}', [DefaultController::class, 'user']);
-Router::get('/dev/set-password', [DefaultController::class, 'password']);
-Router::post('/dev/set-password', [DefaultController::class, 'password']);
+Router::get('/dev/set-password', [TestController::class, 'password']);
+Router::post('/dev/set-password', [TestController::class, 'password']);
 Router::magic('/dev/link/{var}', [TestController::class, 'linkVar']);
 Router::get('/canvas', [TestController::class, 'imageCanvas']);
-Router::get('/test', [TestController::class, 'mailTest']);
-Router::get('/autowire', [TestController::class, 'autowire']);
+Router::get('/mailer', [TestController::class, 'mailTest']);
+Router::get('/autowire', [TestController::class, 'autoWire']);
+Router::magic('/abah/{id}', [TestController::class, 'autoFetch']);
+Router::get('/phpinfo', [TestController::class, 'phpinfo']);
+Router::get('/cookie', [TestController::class, 'cookie']);
