@@ -56,8 +56,8 @@
     </div>
     <div class="btn-save">
         <form method="post">
-			<?php \core\Application::$APP->session->generateCsrf();?>
-            <input type="hidden" name="__csrf" value="<?=\core\Application::$APP->session->getCsrf()?>">
+			<?php use core\Application;Application::$APP->session->generateCsrf();?>
+            <input type="hidden" name="__csrf" value="<?=Application::$APP->session->getCsrf()?>">
             <input type="hidden" name='picture' id="inputPicture">
             <input type="submit" value="save">
         </form>

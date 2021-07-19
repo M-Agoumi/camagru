@@ -1,12 +1,12 @@
 <?php
 
-use core\Application;
-use models\Comments;
+use core\Application;use core\Form\Form;use models\Comments;use models\Likes;use models\Post;
 
-/** @var $post \models\Post */
+/** @var $post Post */
 ?>
 <div class="center">
-    <h1 class="usernameTitle"><?=$post->title?> <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
+    <h1 class="usernameTitle"><?=$post->title?>
+        <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
     <img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
     <div class="usernameInfo">
         <p><?=$post->highlightHashtag($post->comment)?></p>
@@ -15,7 +15,7 @@ use models\Comments;
 		$author = $post->author;
 
 		/** get likes */
-		$likes = New \models\Likes();
+		$likes = New Likes();
 
 		$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
 		if (Application::$APP->user)
@@ -25,7 +25,8 @@ use models\Comments;
 
 		//    echo $post->author;
 		?>
-        <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span class="authorName"><?=$author->name?></span></p>
+        <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span
+                    class="authorName"><?=$author->name?></span></p>
     </div>
     <div class="filters">
     <span class="origin">
@@ -74,7 +75,7 @@ use models\Comments;
             <div>
 				<?php
 	            $comment = New Comments();
-	            $form = \core\Form\Form::begin(
+	            $form = Form::begin(
 		            '/api/post/comment/' . $post->slug, 'POST', '',
 		            'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"'
 	            );

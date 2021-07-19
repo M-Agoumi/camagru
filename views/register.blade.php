@@ -1,5 +1,5 @@
 <?php
-	use core\Form\Form;
+use core\Form\Form;
 /** @var $user User */
 ?>
 <title><?=$title ?? ''?></title>
