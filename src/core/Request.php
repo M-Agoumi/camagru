@@ -166,4 +166,23 @@ class Request
 
 		return (substr($path, $position + 1));
 	}
+
+	/**
+	 * get user ip address
+	 * picture    varchar(255) NULL ,
+	ip_adress  varchar(45) NULL ,
+	 * @return mixed
+	 */
+	public function getUserIpAddress(){
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+			//ip from share internet
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			//ip pass from proxy
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}else{
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
+	}
 }

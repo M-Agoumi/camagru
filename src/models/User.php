@@ -31,6 +31,8 @@ class User extends DbModel
 	public ?string $email = null;
 	public ?string $password = null;
 	public ?int $status = self::STATUS_INACTIVE;
+	public ?string $picture = null;
+	public ?string $ip_address = null;
 	public bool $pass = false;
 
 
@@ -41,7 +43,7 @@ class User extends DbModel
 
 	public function attributes(): array
 	{
-		return ['name', 'username', 'email', 'password', 'status'];
+		return ['name', 'username', 'email', 'password', 'status', 'ip_address', 'picture'];
 	}
 	
 	/**

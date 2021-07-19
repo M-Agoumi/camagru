@@ -15,6 +15,7 @@ namespace controller;
 
 use core\Application;
 use core\Middleware\BaseMiddleware;
+use core\Middleware\FirewallMiddleware;
 
 /**
  * Class Controller
@@ -45,6 +46,8 @@ abstract class Controller
      */
     public function getMiddlewares(): array
     {
+    	array_push($this->middlewares, New FirewallMiddleware());
+
         return $this->middlewares;
     }
 

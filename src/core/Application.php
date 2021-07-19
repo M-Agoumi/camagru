@@ -76,7 +76,11 @@ class Application
 		$primaryValue = self::$APP->session->get('user');
 		if ($primaryValue) {
 			$primaryKey = self::$APP->userCLass::primaryKey();
-			return self::$APP->userCLass::findOne([$primaryKey =>  $primaryValue]);
+			$user = self::$APP->userCLass::findOne([$primaryKey =>  $primaryValue]);
+			$user->ip_address = Application::$APP->request->getUserIpAddress();
+			$user->update();
+
+			return $user;
 		}
 
 		return NULL;
