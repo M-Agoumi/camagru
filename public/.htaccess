@@ -1,0 +1,4 @@
+<IfModule mod_rewrite.c>
+    DirectoryIndex /index.php
+    FallbackResource /index.php
+</IfModule>
