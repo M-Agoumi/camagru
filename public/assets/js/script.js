@@ -138,13 +138,12 @@ function showLikes(post) {
 }
 
 /** add a new comment */
-
-var UserName = 'name';
-getUserName();
+let UserName = 'name';
 
 function addComment(e, slug) {
     e.preventDefault();
 
+    getUserName();
     const form = document.getElementById('addCommentForm');
 
     const xhr = new XMLHttpRequest();
