@@ -1,7 +1,4 @@
 <?php
-use core\Application;
-use core\Form\Form;
-use models\User;
 ?>
 <h1>test</h1>
 <img src="/uploads/diwali_sweets.jpg" id="image" height="400"/>
@@ -15,8 +12,7 @@ use models\User;
 
     let image = new Image();
 
-    function magic()
-    {
+    function magic() {
         canvas.width = 400;
         canvas.height = 400;
         ctx.drawImage(image, 0, 0);

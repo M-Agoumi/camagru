@@ -134,10 +134,10 @@ class Router
 	public function resolve()
 	{
 		$callback = $this->getCallbackOrFail();
-
+		
 		if (is_string($callback))
 			return $this->renderView($callback);
-
+		
 		if (is_array($callback))
 			return $this->execArrayCallback($callback);
 

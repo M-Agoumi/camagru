@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+    db:
+        image: mysql:8.0
+        container_name: camagru-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./docker/mysql:/docker-entrypoint-initdb.d
+        networks:
+            - camagru
+    apache:
+        build:
+            context: ./
+            dockerfile: ./docker/apache/Dockerfile
+        container_name: apache
+        restart: unless-stopped
+        working_dir: /var/www/camagru
+        volumes:
+            - ./:/var/www/camagru
+        ports:
+            - 8000:80
+        networks:
+            - camagru
+networks:
+    camagru:
+        driver: bridge

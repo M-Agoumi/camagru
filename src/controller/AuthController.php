@@ -51,7 +51,7 @@ class AuthController extends Controller
 		$savedUsers = unserialize(Application::$APP->cookie->get('user'));
 
 		$users = array();
-		foreach ($savedUsers as $savedUser) {
+		foreach ((array)$savedUsers as $savedUser) {
 			$token = new UserToken();
 			$token->getOneBy('token', $savedUser);
 			if ($token->id)

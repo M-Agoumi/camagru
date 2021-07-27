@@ -32,11 +32,9 @@ $start = microtime(true);
 ini_set('session.cookie_httponly', 1);
 
 /**
- * set session path to our local app directory
+ * set session path to our local app directory in case of permissions issues
  */
-ini_set('session.save_path', '../runtime/session');
-// session_save_path("0;666;../runtime/");
-umask(0);
+// ini_set('session.save_path', '../runtime/session');
 
 /**
  * Getting global setting from the env file
@@ -44,10 +42,15 @@ umask(0);
  */
 
 $config = parse_ini_file(__DIR__ . "/../.env");
-if (isset($config['env']) && $config['env'] === 'dev')
+if (isset($config['env']) && $config['env'] === 'dev'){
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL ^ E_DEPRECATED);
-else
+} else {
+	ini_set('display_errors', 0);
+	ini_set('display_startup_errors', 0);
 	error_reporting(0);
+}
 
 /**
  * require our autoloader
@@ -58,6 +61,11 @@ require_once "../__autoload.php";
 use core\Application;
 
 /**
+ * creating a new instance of the Application class
+ */
+$app = new Application(dirname(__DIR__));
+
+/**
  * register shutdown function
  */
 
@@ -65,23 +73,17 @@ function shutdown($start)
 {
 	$time_elapsed_secs = microtime(true) - $start;
 	$load = sys_getloadavg();
-
+	
 	if (Application::$APP::$ENV['env'] == 'dev') {
 		echo '<script>';
-			echo 'console.log("execution time ' . round($time_elapsed_secs, 3) . 's");' . PHP_EOL;
-			echo 'console.log("Peak memory: ' . round(memory_get_peak_usage() / 1024) . 'KB");';
-			echo 'console.log("CPU Usage: ' . $load[0] . '%");';
+		echo 'console.log("execution time ' . round($time_elapsed_secs, 3) . 's");' . PHP_EOL;
+		echo 'console.log("Peak memory: ' . round(memory_get_peak_usage() / 1024) . 'KB");';
+		echo 'console.log("CPU Usage: ' . $load[0] . '%");';
 		echo '</script>', PHP_EOL;
 	}
 }
 
 register_shutdown_function('shutdown', $start);
-
-/**
- * creating a new instance of the Application class
- */
-
-$app = new Application(dirname(__DIR__));
 
 /**
  * run our application
