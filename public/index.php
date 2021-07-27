@@ -34,7 +34,8 @@ ini_set('session.cookie_httponly', 1);
 /**
  * set session path to our local app directory in case of permissions issues
  */
-// ini_set('session.save_path', '../runtime/session');
+ini_set('session.save_path', '../runtime/session');
+
 
 /**
  * Getting global setting from the env file
