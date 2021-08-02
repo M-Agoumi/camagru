@@ -65,9 +65,17 @@ abstract class Controller
         $this->middlewares[] = $middleware;
     }
 
-	public function mailer(string $to, string $subject, string $body): bool
+	public function mailer(
+		string $to,
+		string $subject,
+		string $body,
+		string $from = 'From: Admin <admin@camagru.com>'): bool
 	{
-		if (mail($to, $subject, $body))
+		$headers = $from . "\r\n" .
+			'Reply-To: reply@camagru.io' . "\r\n" .
+			'X-Mailer: PHP/' . phpversion();
+
+		if (mail($to, $subject, $body, $headers))
 			return true;
 
 		return false;
