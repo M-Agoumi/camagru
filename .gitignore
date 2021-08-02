@@ -1,3 +1,4 @@
 .idea
+.env
 public/uploads/image*
 public/test.php
