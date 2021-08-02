@@ -25,7 +25,8 @@ services:
         volumes:
             - ./:/var/www/camagru
         ports:
-            - 8000:80
+            - "8000:80"
+            - "2525:2525"
         networks:
             - camagru
 networks:
