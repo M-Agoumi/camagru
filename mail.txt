@@ -1,0 +1,17 @@
+Cc: example@edmdesigner.com
+	Subject: This is an HTML email
+	From: developer@example.com
+	Content-Type: text/html; charset="utf8"
+
+
+	html>
+	<body>
+	<div style="
+		background-color:
+		#abcdef; width: 300px;
+		height: 300px;
+		">
+	</div>
+	You can add any valid email HTML here.
+	</body>
+	</html>
