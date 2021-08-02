@@ -58,7 +58,7 @@ class Cookie
 	{
 		if ($expires === 0)
 			$expires = time() + 3600;
-		setcookie($key, $value, ['expires' => $expires, 'path' => '/', 'httponly' => TRUE]);
+		setcookie($key, $value, ['expires' => $expires, 'path' => '/', 'httponly' => TRUE, 'secure' => true]);
 	}
 
 	public function unsetCookie(string $key)

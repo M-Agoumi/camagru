@@ -36,7 +36,6 @@ ini_set('session.cookie_httponly', 1);
  */
 // ini_set('session.save_path', '../runtime/session');
 
-
 /**
  * Getting global setting from the env file
  * enable error reporting if the env is dev
@@ -75,7 +74,7 @@ function shutdown($start)
 	$time_elapsed_secs = microtime(true) - $start;
 	$load = sys_getloadavg();
 	
-	if (Application::$APP::$ENV['env'] == 'dev') {
+	if (Application::$ENV['env'] == 'dev') {
 		echo '<script>';
 		echo 'console.log("execution time ' . round($time_elapsed_secs, 3) . 's");' . PHP_EOL;
 		echo 'console.log("Peak memory: ' . round(memory_get_peak_usage() / 1024) . 'KB");';
