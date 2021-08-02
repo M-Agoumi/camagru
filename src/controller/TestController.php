@@ -26,7 +26,9 @@ class TestController extends Controller
 
 	public function imageCanvas(User $user)
 	{
-		return render('test', ['user' => $user]);
+		Application::$APP->controller->layout = 'auth';
+
+		return render('test');
 	}
 
 	public function mailTest(): bool
