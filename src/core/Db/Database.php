@@ -23,16 +23,16 @@ class Database
 	
 	public function __construct(array $config)
 	{
-		$dsn = $config['DB_DSN'] ?? 'mysql:host=localhost;port=3306;dbname=camagru';
+		$dsn = $config['DB_DSN'] ?? 'mysql:host=127.0.0.1;port=3306;dbname=camagru';
 		$db_user = $config['DB_USER'] ?? '';
 		$db_password = $config['DB_PASSWORD'] ?? '';
 
 		try {
 			$this->pdo = New PDO($dsn, $db_user, $db_password);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		} catch(PDOException  $e){
+		} catch(PDOException $e){
 			APPLICATION::$APP->response->setStatusCode(500);
-			if (Application::$APP::$ENV['env'] == 'dev')	
+			if (Application::$ENV['env'] == 'dev')
 				 die ($e->getMessage() . PHP_EOL); // todo handle this one nicely (add a backtrack)
 			else
 				echo APPLICATION::$APP->view->renderView('error/__500', [ // todo this is not working
