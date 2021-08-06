@@ -31,7 +31,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN debconf-set-selections <<< "postfix postfix/mailname string admin@camagru.io"
 RUN debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 RUN apt install -y postfix mailutils
-RUN echo "${smtp} ${username}:${username}" > /etc/postfix/sasl_passwd
+RUN echo "${smtp} ${username}:${password}" > /etc/postfix/sasl_passwd
 RUN chmod 600 /etc/postfix/sasl_passwd
 RUN postmap /etc/postfix/sasl_passwd
 RUN service postfix restart
