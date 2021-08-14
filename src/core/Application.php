@@ -69,7 +69,10 @@ class Application
 		$this->MainLang = $lang[0];
 		$this->fallbackLang = $lang[1];
 	}
-	
+
+	/** get logged user info and update his ip address
+	 * @return null
+	 */
 	private static function getUser()
 	{
 		/** @var  $this->userClass User */
@@ -94,7 +97,11 @@ class Application
 		return !self::$APP->user;
 	}
 
-	public static function isAppProperty($instance)
+	/** is the instance we're looking for exist in the App?
+	 * @param $instance
+	 * @return bool
+	 */
+	public static function isAppProperty($instance): bool
 	{
 		$rc = new \ReflectionClass(Application::class);
 
@@ -184,8 +191,8 @@ class Application
      * @param $attr
      * @return string|null env value if it exists
      */
-    public static function getEnvValue($attr)
-	{
+    public static function getEnvValue($attr): ?string
+    {
 		return self::$ENV[$attr] ?? null;
 	}
 
@@ -244,16 +251,21 @@ class Application
 
         return $lang;
     }
-	
+
 	/**
 	 * @param string $name
+	 * @param null $var
 	 * @return string
 	 */
 	public static function path(string $name, $var = null): string
     {
     	return self::$APP->router->path($name, $var);
     }
-	
+
+	/** save our logged user to the session
+	 * @param DbModel $user
+	 * @param string $ref
+	 */
 	public function login(DbModel $user, string $ref)
 	{
 		$this->user = $user;
@@ -262,7 +274,10 @@ class Application
 		$this->session->set('user', $primaryValue);
 		$this->response->redirect($ref);
 	}
-	
+
+	/**
+	 * @param string $redirect to the last page the user was in
+	 */
 	public static function logout(string $redirect = '/')
 	{
 		$token = Application::$APP->request->getBody() ?? '';

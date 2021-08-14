@@ -13,6 +13,7 @@
 
 namespace core\Db;
 use core\Application;
+use Exception;
 use \PDO as PDO;
 use \PDOException;
 
@@ -53,16 +54,24 @@ class Database
 		$newMigrations = [];
 		$files = scandir(Application::$ROOT_DIR.'/migrations');
 		$toApplyMigrations = array_diff($files, $appliedMigrations);
-		foreach ($toApplyMigrations as $migration) {
-			if ($migration == '.' || $migration == '..')
-				continue ;
-			require_once Application::$ROOT_DIR. "/migrations//".$migration;
-			$className = pathinfo($migration, PATHINFO_FILENAME);
-			$instance = NEW $className();
-			$this->log("Applying migration $migration");
-			$instance->up();
-			$this->log("Applied migration $migration");
-			$newMigrations[] = $migration;
+		try {
+			foreach ($toApplyMigrations as $migration) {
+				if ($migration == '.' || $migration == '..')
+					continue ;
+				require_once Application::$ROOT_DIR. "/migrations//".$migration;
+				$className = pathinfo($migration, PATHINFO_FILENAME);
+				$instance = NEW $className();
+				$this->log("Applying migration $migration");
+				$instance->up();
+				$this->log("Applied migration $migration");
+				$newMigrations[] = $migration;
+			}
+		} catch (Exception $e) {
+			if (!empty($newMigrations))
+				$this->saveMigrations($newMigrations);
+			echo "applying migration failed after " . $newMigrations[count($newMigrations) - 1] . PHP_EOL;
+			print_r($e);
+			echo PHP_EOL;
 		}
 
 		if (!empty($newMigrations)) 

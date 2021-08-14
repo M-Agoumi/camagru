@@ -10,7 +10,7 @@ namespace core;
 
 class Session
 {
-	/** string to make sure we dont override any other session variable */
+	/** string to make sure we don't override any other session variable */
 	private const SALT = 'ankhs';
 	private const FLASH_KEY = 'flash_messages_' . self::SALT;
 	
@@ -86,6 +86,7 @@ class Session
 		for ($i = 0, $l = count($haystack); $i < $l; ++$i) {
 			if (in_array($needle, $haystack[$i])) return $i;
 		}
+
 		return false;
 	}
 	/**
@@ -101,6 +102,7 @@ class Session
 			$_SESSION['__CSRF'] = array_values($_SESSION['__CSRF']);
 			return true;
 		}
+
 		return false;
 	}
 
@@ -117,6 +119,7 @@ class Session
 			}
 			$i++;
 		}
+
 		return false;
 	}
 	

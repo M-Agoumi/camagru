@@ -12,7 +12,7 @@ class View
 	 * @param $view string name of the view we want to compile with the template
 	 * @param array $params
 	 * @param array $layParams
-	 * @return false|string|string[]
+	 * @return string|string[]
 	 */
 	public function renderView(string $view, array $params = [], array $layParams = [])
 	{
@@ -88,8 +88,11 @@ class View
 	{
 		$protocol = Application::getEnvValue('secure') ? 'https://' : 'http://';
 		$appUrl = Application::getEnvValue('appURL');
-		$appPort = Request::port();
+		$appPort = Application::$APP->request->port();
 
-		return $protocol . $appUrl . ":" . $appPort . "/" . $link;
+		$asset = $protocol . $appUrl;
+		$asset .= $appPort ?? ":" . $appPort;
+
+		return $asset . "/" . $link;
 	}
 }

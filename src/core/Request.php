@@ -34,9 +34,12 @@ class Request
 		return substr($path, 0, $position);
 	}
 
-	public function port()
+	/** get server port [default 80 but in case of dev env, the default is 8000]
+	 * @return ?string
+	 */
+	public function port(): ?string
 	{
-		return $_SERVER['SERVER_PORT'];
+		return $_SERVER['SERVER_PORT'] == '80' ? false : (string)$_SERVER['SERVER_PORT'];
 	}
 
 	/**
@@ -66,7 +69,6 @@ class Request
 	/**
 	 * handle the data coming from a form
 	 * and check for csrf token if its validation is enabled in env
-	 * todo add more filters for more security
 	 * @return array
 	 */
 	public function getBody(): array
@@ -76,8 +78,8 @@ class Request
 			if (Application::getEnvValue('csrfVerification')) {
 				if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
 					if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
-						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
-					contact an admin");
+						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go
+						please contact an admin");
 				} else {
 					die("Form submitted without CSRF token");
 				}
@@ -90,8 +92,8 @@ class Request
 			if (Application::getEnvValue('csrfVerification')) {
 				if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
 					if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
-						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go please
-					contact an admin");
+						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
+						please contact an admin");
 				} else {
 					die("Form submitted without CSRF token");
 				}
@@ -170,7 +172,7 @@ class Request
 	/**
 	 * get user ip address
 	 * picture    varchar(255) NULL ,
-	ip_adress  varchar(45) NULL ,
+	 * ip_address  varchar(45) NULL ,
 	 * @return mixed
 	 */
 	public function getUserIpAddress(){
@@ -180,9 +182,9 @@ class Request
 		}elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
 			//ip pass from proxy
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		}else{
+		}else
 			$ip = $_SERVER['REMOTE_ADDR'];
-		}
+
 		return $ip;
 	}
 }

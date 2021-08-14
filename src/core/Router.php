@@ -29,8 +29,8 @@ class Router
 
 	/**
 	 * Router constructor.
-	 * save an instance of request and response  from our application
-	 * so we can call them with $this whenever we need them
+	 * save an instance of request and response  from our application, so we can call them with $this whenever we need
+	 * them
 	 * @param Request $request
 	 * @param Response $response
 	 */
@@ -118,7 +118,6 @@ class Router
 				return $this->paths[$name];
 		}
 
-
 		/** todo throw and exception  */
 		die("there is no path with the name $name");
 	}
@@ -180,12 +179,13 @@ class Router
 		unset($callback[2], $callback[3]);
 
 		return call_user_func_array($callback, $params);
-//		if (sizeof($callback) === 3)
-//			return $controller->{$callback[1]}($callback[2], $this->request);
 	}
 
 	/**
-	 *
+	 * @param $callback
+	 * @return array
+	 * @throws ExpiredException
+	 * @throws NotFoundException
 	 * @throws \ReflectionException
 	 */
 	protected function injectDependencies($callback): array
@@ -213,8 +213,6 @@ class Router
 	 */
 	protected function injectClassOrModule($type, $name, $callback)
 	{
-		$param = null;
-
 		if (Application::isAppProperty($name) && $name != 'user') {
 			$param = Application::$APP->$name;
 		} else {

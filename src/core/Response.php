@@ -27,17 +27,16 @@ class Response
 			$code = (int)$code;
 		http_response_code($code);
 	}
-	
+
 	/**
-	 * @param string $url
-	 * @return bool
+	 * @param string|null $url
+	 * @return void
 	 */
-	public function redirect(string $url = null): bool
+	public function redirect(string $url = null)
 	{
 		if (!$url)
 			$url = Application::$APP->request->getPath();
 		header('Location: '. $url);
 		die('you are being redicted');
-		return false;
 	}
 }

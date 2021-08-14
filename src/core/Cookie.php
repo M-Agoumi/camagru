@@ -44,9 +44,7 @@ class Cookie
 					Application::$APP->response->redirect();
 				}
 			}
-//			$this->unsetCookie('user_tk');
 		}
-		// $this->destroyCookies();
 	}
 
 	private function isCookiesEnabled(): bool

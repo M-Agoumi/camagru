@@ -97,11 +97,8 @@
         } elseif ($arguments[0] == 'migrate') {
 	        if (isset($arguments[1]) && $arguments[1] == 'down'){
 	            $action = 1;
-	            if (isset($arguments[2]))
-	                $migrationsNumber = $arguments[2];
-	            else
-	                $migrationsNumber = 0;
-                echo "Reverting last ";
+		        $migrationsNumber = $arguments[2] ?? 0;
+		        echo "Reverting last ";
                 echo  !$migrationsNumber ? "all" : $migrationsNumber;
                 echo " migration(s)" . PHP_EOL;
             } else {

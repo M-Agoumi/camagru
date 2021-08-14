@@ -19,16 +19,19 @@ class mg0001_creating_user_table
 	{
 		$db = Application::$APP->db;
 
-		$db->pdo->exec("CREATE TABLE users(
-							id INT AUTO_INCREMENT PRIMARY KEY,
-							email VARCHAR(255) NOT NULL UNIQUE,
-							name VARCHAR(255),
-							username VARCHAR(255),
-							password VARCHAR(255),
-							status TINYINT NOT NULL DEFAULT 0,
-							created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-							updated_at TIMESTAMP NULL 
-						) ENGINE=INNODB");
+		$db->pdo->exec("CREATE TABLE `users` (
+							  `id` int NOT NULL AUTO_INCREMENT,
+							  `email` varchar(255) NOT NULL,
+							  `name` varchar(255) DEFAULT NULL,
+							  `username` varchar(255) DEFAULT NULL,
+							  `password` varchar(255) DEFAULT NULL,
+							  `status` tinyint NOT NULL DEFAULT '0',
+							  `picture` varchar(255) DEFAULT NULL,
+							  `ip_address` varchar(45) DEFAULT NULL,
+							  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+							  `updated_at` timestamp NULL DEFAULT NULL,
+							  PRIMARY KEY (`id`)
+						) ENGINE=InnoDB");
 	}
 
 	public function down()

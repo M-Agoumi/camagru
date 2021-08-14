@@ -65,26 +65,19 @@ abstract class Controller
         $this->middlewares[] = $middleware;
     }
 
-	public function mailer(
-		string $to,
-		string $subject,
-		string $body,
-		string $from = 'From: Admin <admin@camagru.com>'): bool
+	public function mailer(string $to, string $subject, string $body, string $headers): bool
 	{
-		$headers = $from . "\r\n" .
-			'Reply-To: reply@camagru.io' . "\r\n" .
-			'X-Mailer: PHP/' . phpversion();
-
 		if (mail($to, $subject, $body, $headers))
 			return true;
 
 		return false;
 	}
 
-    public function mail($to, $subject ,$content):bool
+    public function mail($to, $subject ,$content, string $from = 'admin@camagru.io'):bool
     {
-	    $headers = 'From: webmaster@yourdot.com' . "\r\n" .
-		    'Reply-To: agoumihunter@gmail.com' . "\r\n" .
+	    $headers = 'Content-type: text/html; charset=iso-8859-1' . "\r\n" .
+		    'From: ' . $from . "\r\n" .
+		    'Reply-To: reply@camagru.io' . "\r\n" .
 		    'X-Mailer: PHP/' . phpversion();
 
     	if (is_array($content)) {

@@ -33,7 +33,7 @@ class TestController extends Controller
 
 	public function mailTest(): bool
 	{
-		return ($this->mailer('agoumihunter@gmail.com', 'testing', 'this is a huge fat test'));
+		return ($this->mail('agoumihunter@gmail.com', 'testing', ['test', ['receiver' => 'Agoumi']]));
 	}
 
 	public function autoWire(): ?Post
@@ -41,6 +41,8 @@ class TestController extends Controller
 		$post = new Post();
 
 		$post->getOneBy(1);
+		echo '<pre>';
+
 		return $post;
 	}
 

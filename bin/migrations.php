@@ -21,18 +21,12 @@ if (!isset($console))
 
 /**
  * Getting global setting from the env file
- * enable error reporting if the env is dev
+ * enable error reporting
  */
 
 $config = parse_ini_file(__DIR__ ."/../.env");
-//if (isset($config['env']) && $config['env'] === 'dev')
-//	error_reporting(E_ALL ^ E_DEPRECATED);
-//else
-//	error_reporting(0);
+
 error_reporting(E_ERROR | E_PARSE);
-/**
- * require our app class the heart of our application
- */
 /**
  * require our autoloader
  */
@@ -51,11 +45,6 @@ use core\Application;
  */
 
 $app = New Application(dirname(__DIR__));
-
-/**
- * require the routes of our application
- */
-
 
 /**
  * run our application
