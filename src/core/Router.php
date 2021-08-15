@@ -153,6 +153,10 @@ class Router
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
 
+		$newPath = str_replace(Application::getEnvValue('url'), '', $path);
+		$newPath = !empty($newPath) ? $newPath : '/';
+		$callback = $this->routes[$method][$newPath] ?? false;
+
 		if ($callback === false)
 			$callback = $this->request->magicPath();
 
