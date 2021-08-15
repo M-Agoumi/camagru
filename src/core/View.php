@@ -91,7 +91,7 @@ class View
 		$appPort = Application::$APP->request->port();
 
 		$asset = $protocol . $appUrl;
-		$asset .= $appPort ?? ":" . $appPort;
+		$asset .= $appPort ? ":" . $appPort : '';
 
 		return $asset . "/" . $link;
 	}
