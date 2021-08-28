@@ -155,10 +155,9 @@ class Router
 
 		$newPath = str_replace(Application::getEnvValue('url'), '', $path);
 		$newPath = !empty($newPath) ? $newPath : '/';
-		$callback = $this->routes[$method][$newPath] ?? false;
 
-		if ($callback === false)
-			$callback = $this->request->magicPath();
+		$callback = $callback ?: $this->routes[$method][$newPath] ?? false;
+		$callback = $callback ?: $this->request->magicPath();
 
 		if ($callback === false)
 			throw new NotFoundException();

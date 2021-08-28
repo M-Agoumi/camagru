@@ -27,8 +27,8 @@
 
 	/** check if script is run as a cli */
 	if (PHP_SAPI !== 'cli') {
-    		echo 'bin/console must be run as a CLI application';
-    		exit(1);
+		echo 'bin/console must be run as a CLI application';
+		exit(1);
 	}
 
 	if ($argc == 1) {
