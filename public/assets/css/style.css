@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+@import url('/assets/css/css2.css');
 
 :root {
 
@@ -31,6 +31,7 @@ html, body {
 	scrollbar-width: none;
 
 	font-family: 'Play', sans-serif;
+
 
 }
 

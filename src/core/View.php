@@ -50,6 +50,7 @@ class View
 			$output = str_replace('{{ ' . $key . ' }}', $param, $output);
 			$output = str_replace('{{' . $key . '}}', $param, $output);
 		}
+		
 		return $output;
 	}
 
