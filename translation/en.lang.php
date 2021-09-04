@@ -14,7 +14,7 @@
 
 /**
  * this is a language dictionary for multi languages
- * this is file is the main language or you can call it the fallback in case of any error
+ * this is file is the main language, or you can call it the fallback in case of any error
  */
 
 
@@ -32,6 +32,7 @@ return array(
     'camera' => 'camera',
     'login' => 'Login',
     'register' =>'Register',
+    'profile' => 'Profile',
 
     /** error messages[form validation][models/Model.php] */
 

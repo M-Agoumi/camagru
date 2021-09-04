@@ -15,12 +15,13 @@ namespace models;
 
 use core\Application;
 use core\Db\DbModel;
+use core\Db\Paginator;
 
 /**
  * Class Model
  */
 
-abstract class Model
+abstract class Model extends Paginator
 {
     public const RULE_REQUIRED = 'required';
     public const RULE_EMAIL = 'email';

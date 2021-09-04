@@ -83,3 +83,5 @@ Router::get('/autowire', [TestController::class, 'autoWire']);
 Router::magic('/abah/{id}', [TestController::class, 'autoFetch']);
 Router::get('/phpinfo', [TestController::class, 'phpinfo']);
 Router::get('/cookie', [TestController::class, 'cookie']);
+Router::get('/pagination', [TestController::class, 'pagination']);
+Router::get('/view', [TestController::class, 'viewEngine']);
