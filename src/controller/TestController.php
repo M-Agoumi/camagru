@@ -102,4 +102,21 @@ class TestController extends Controller
 
 		return Application::$APP->view->renderContent('test', ['title' => 'test'], );
 	}
+
+	/**
+	 * ongoing..
+	 */
+	public function pagination(): string
+	{
+		$posts = new Post();
+
+		$posts->paginate();
+		var_dump($posts);
+		return '';
+	}
+
+	public function viewEngine()
+	{
+		return render('dev/engine_test');
+	}
 }
