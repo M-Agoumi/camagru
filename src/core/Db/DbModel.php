@@ -143,7 +143,7 @@ abstract class DbModel extends Model
         return $statement->fetch(2);
     }
 	
-	public static function findOne(array $where, array $relations = [])
+	public static function findOne(array $where, array $relations = []): DbModel
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
@@ -157,7 +157,7 @@ abstract class DbModel extends Model
 		$data = $stmt->fetch(2);
 
 		$class = static::class;
-		$class = new $class;
+		$class = new $class();
 
 		if ($data) {
 			foreach ($relations as $key => $value) {
@@ -207,18 +207,20 @@ abstract class DbModel extends Model
 	 * @param array $where
 	 * @return int
 	 */
-	public function getCount(array $where):int
+	public function getCount(array $where = []):int
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
 		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
-		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
+		$stmt = !empty($where) ?    self::prepare("SELECT * FROM $tableName WHERE ". $sql) :
+									self::prepare("SELECT * FROM $tableName");
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}
 		$stmt->execute();
+		$this->totalRecords = $stmt->rowCount();
 
-		return $stmt->rowCount();
+		return $this->totalRecords;
 	}
     /**
      * this method is just to keep the code clean
