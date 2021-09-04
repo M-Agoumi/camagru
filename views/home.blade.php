@@ -5,7 +5,7 @@ use core\Application;use models\Post;
  * @var $test
  */
 ?>
-<title><?=$title?></title>
+<title>{{ title }}</title>
 <h1><?=Application::$APP->lang('home')?> <?= $test ?></h1>
 <?php
 /** @var $postModule Post */
