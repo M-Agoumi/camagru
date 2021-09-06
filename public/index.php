@@ -41,6 +41,10 @@ ini_set('session.cookie_httponly', 1);
  * enable error reporting if the env is dev
  */
 
+// check if the .env exist
+if (!file_exists(__DIR__ . "/../.env"))
+	die('.env file not found, please set it up first (use the .env.example template)');
+
 $config = parse_ini_file(__DIR__ . "/../.env");
 if (isset($config['env']) && $config['env'] === 'dev'){
 	ini_set('display_errors', 1);
