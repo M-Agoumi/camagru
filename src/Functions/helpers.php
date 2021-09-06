@@ -9,12 +9,12 @@ use core\View;
  */
 function asset($asset): string
 {
-	return View::asset($asset);
+	return Application::$APP->view->asset($asset);
 }
 
-function render(string $view, array $params = [], array $layParams = [])
+function render(string $view, array $params = [])
 {
-	return Application::$APP->view->renderView($view, $params, $layParams);
+	return Application::$APP->view->renderView($view, $params);
 }
 
 function route($path, $var = null): string
