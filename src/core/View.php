@@ -111,7 +111,32 @@ class View
 		}
 
 		/** merge layout with the view and return the result */
-		return $this->layoutContentMerge($layout, $content);
+		$content = $this->layoutContentMerge($layout, $content);
+
+		/** get include files */
+		$content = $this->getIncludeFiles($content);
+
+		/** return our final masterpiece */
+		return $content;
+	}
+
+	private function getIncludeFiles(string $content): string
+	{
+		preg_match_all('(@include( *)\(.*?\))', $content, $matches);
+		foreach ($matches[0] as $match) {
+			preg_match('(\(.*\))', $match, $file);
+			$includeFile = $this->rootDir . 'views/' .str_replace(['("', "('", '")', "')"], '', $file[0]);
+
+			/** check if file exists */
+			if (!file_exists($includeFile))
+				die("We tried to include the following file from while rendering your page: " . $file[0] .
+					"\nbut the file doesn't exist\n");
+
+			/** set the file content instead of the include statement */
+			$content = str_replace($match, '<?php include("' . $includeFile . '") ?>', $content);
+		}
+
+		return $content;
 	}
 
 	private function addBackSlash(string $string): string
