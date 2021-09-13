@@ -39,7 +39,7 @@ class DefaultController extends Controller
 			'postModule' => New Post()
 		];
 
-		return render('home', $params, ['title' => 'Home']);
+		return render('home', $params);
 	}
 
 	/** contact us page
