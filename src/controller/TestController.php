@@ -117,6 +117,6 @@ class TestController extends Controller
 
 	public function viewEngine()
 	{
-		return render('dev/engine_test', ['test' => '<h1>test is not working</h1>']);
+		return render('dev/engine_test', ['test' => 3]);
 	}
 }

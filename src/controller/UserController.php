@@ -23,14 +23,14 @@ class UserController extends Controller
 	{
 		if (!Application::isGuest())
 			if ($user->username === Application::$APP->user->username)
-				return $this->render('pages/profile/myProfile', ['user' => $user],
-							['title' => Application::$APP->user->name . " - Profile"]);
+				return $this->render('pages/profile/myProfile', ['user' => $user,
+					'title' => Application::$APP->user->name . " - Profile"]);
 
-		return render('pages/profile/profile', ['user' => $user], ['title' => $user->name . " - Profile"]);
+		return render('pages/profile/profile', ['user' => $user, 'title' => $user->name . " - Profile"]);
 	}
 
 	/**
-	 * show profile if user is logged otherwise redirect to login
+	 * show profile if user is logged otherwise redirect to log in
 	 */
 
 	public function myProfile()

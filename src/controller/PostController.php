@@ -20,7 +20,7 @@ class PostController extends Controller
 	 */
 	public function show(Post $post)
 	{
-		return render('pages/posts/show', ['post' => $post], ['title' => $post->title]);
+		return render('pages/posts/show', ['post' => $post, 'title' => $post->title]);
 	}
 
 	public function like(Post $post, Likes $likes,  Request $request): string

@@ -8,7 +8,7 @@
      * @var $test
      */
     ?>
-    {{--test--}}
+    {{-- test--}}
     <h1><?=Application::$APP->lang('home')?> {{ test }}</h1>
     <?php
     /** @var $postModule Post */

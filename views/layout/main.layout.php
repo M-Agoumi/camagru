@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="wrapper">
-	<?php include "__header.php" ?>
+	@include ('layout/__header.php')
 	<main class="page-body">
 		<div class="container">
 			<?php if (Application::$APP->session->getFlash('success')): ?>
@@ -31,7 +31,7 @@
 		</div>
 	</main>
 </div>
-<?php include "__footer.php" ?>
+@include("layout/__footer.php")
 <script src="<?= asset("assets/js/script.js") ?>"></script>
 </body>
 </html>
