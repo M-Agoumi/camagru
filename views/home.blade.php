@@ -1,19 +1,8 @@
 @layout('main')
 @section('title'){{ title }}@endsection
 @section('content')
-    <?php
-    use core\Application;use models\Post;
-    /**
-     * @var $title
-     * @var $test
-     */
-    ?>
     {{-- test--}}
-    <h1><?=Application::$APP->lang('home')?> {{ test }}</h1>
-    <?php
-    /** @var $postModule Post */
-    $posts = $postModule->findAll();
-    ?>
+    <h1><?=lang('home')?> {{ test }}</h1>
     <div class="masonry-container">
         <!-- =============================================== -->
         <div class="gal-one">
@@ -29,10 +18,10 @@
                                         $tags = $postModule->hashtag($post['comment']);
                                         if ($tags):
                                         ?>
-                                        <span class="tag-icon">
-                                            <img class="tag-icon-img" src="/uploads/tag-icon.svg" alt=""/>
-                                        </span>
-                                        <span class="tags-list"><?=$postModule->hashtag($post['comment']) ?></span>
+	                                        <span class="tag-icon">
+	                                            <img class="tag-icon-img" src="/uploads/tag-icon.svg" alt=""/>
+	                                        </span>
+	                                        <span class="tags-list"><?=$postModule->hashtag($post['comment']) ?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>

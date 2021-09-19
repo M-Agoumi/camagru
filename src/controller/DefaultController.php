@@ -30,13 +30,13 @@ class DefaultController extends Controller
 	/** home view to be modified
 	 * @return string
 	 */
-	public function index(): string
+	public function index(Post $post): string
 	{
 		$params = [
-			'name' => "Magoumi",
 			'title' => "Home",
 			'test' => 'yahaaa',
-			'postModule' => New Post()
+			'postModule' => $post,
+			'posts' => $post->findAll()
 		];
 
 		return render('home', $params);
