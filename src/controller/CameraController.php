@@ -56,17 +56,13 @@ class CameraController extends Controller
 
 		/** generate slug */
 		if ($post->title)
-			$post->slug = str_replace(' ', '-', $post->title) . '-'. uniqid();
+			$post->slug = $this->slugify($post->title) . '-' . uniqid();
 		elseif ($post->comment)
 			$post->slug = str_replace(' ', '-', substr($post->comment, 0, 10));
 		else
 			$post->slug = str_replace('.', '-', uniqid('post-', true));
 
-		/** check if user logged in */
-		if (Application::isGuest())
-			$post->author = 1; /** anonymous */
-		else
-			$post->author = Application::$APP->user->id;
+		$post->author = Application::$APP->user;
 
 		$post->status = 0;
 

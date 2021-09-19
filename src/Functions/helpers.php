@@ -27,6 +27,11 @@ function redirect($path = null)
 	Application::$APP->response->redirect($path);
 }
 
+function lang(string $string):string
+{
+	return Application::$APP->lang($string);
+}
+
 /** convert from timestamp to human readable time
  * @param $time
  * @return string

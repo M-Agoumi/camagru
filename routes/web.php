@@ -82,6 +82,9 @@ Router::get('/mailer', [TestController::class, 'mailTest']);
 Router::get('/autowire', [TestController::class, 'autoWire']);
 Router::magic('/abah/{id}', [TestController::class, 'autoFetch']);
 Router::get('/phpinfo', [TestController::class, 'phpinfo']);
-Router::get('/cookie', [TestController::class, 'cookie']);
 Router::get('/pagination', [TestController::class, 'pagination']);
 Router::get('/view', [TestController::class, 'viewEngine']);
+Router::get('/logchecker', function (){
+	return Application::isGuest();
+});
+Router::get('/mailview', [TestController::class, 'emailView']);
