@@ -79,11 +79,11 @@ function shutdown($start)
 	$load = sys_getloadavg();
 	
 	if (Application::$ENV['env'] == 'dev') {
-		echo '<script>';
-		echo 'console.log("execution time ' . round($time_elapsed_secs, 3) . 's");' . PHP_EOL;
-		echo 'console.log("Peak memory: ' . round(memory_get_peak_usage() / 1024) . 'KB");';
-		echo 'console.log("CPU Usage: ' . $load[0] . '%");';
-		echo '</script>', PHP_EOL;
+//		echo '<script>';
+//		echo 'console.log("execution time ' . round($time_elapsed_secs, 3) . 's");' . PHP_EOL;
+//		echo 'console.log("Peak memory: ' . round(memory_get_peak_usage() / 1024) . 'KB");';
+//		echo 'console.log("CPU Usage: ' . $load[0] . '%");';
+//		echo '</script>', PHP_EOL;
 	}
 }
 
