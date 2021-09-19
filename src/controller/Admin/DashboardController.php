@@ -8,6 +8,6 @@ class DashboardController extends BaseController
 {
 	public function index():string
 	{
-		return 'welcome on admin dashboard';
+		return 'welcome to admin dashboard';
 	}
 }
