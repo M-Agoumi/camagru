@@ -22,6 +22,7 @@
 	                                            <img class="tag-icon-img" src="/uploads/tag-icon.svg" alt=""/>
 	                                        </span>
 	                                        <span class="tags-list"><?=$postModule->hashtag($post['comment']) ?></span>
+
                                         <?php endif; ?>
                                     </div>
                                 </div>
