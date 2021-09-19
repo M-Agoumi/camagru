@@ -1,8 +1,7 @@
 @layout('main')
 @section('title'){{ title }}@endsection
 @section('content')
-    {{-- test--}}
-    <h1><?=lang('home')?> {{ test }}</h1>
+    <h1><?=lang('home')?></h1>
     <div class="masonry-container">
         <!-- =============================================== -->
         <div class="gal-one">

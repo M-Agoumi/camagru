@@ -34,7 +34,6 @@ class DefaultController extends Controller
 	{
 		$params = [
 			'title' => "Home",
-			'test' => 'yahaaa',
 			'postModule' => $post,
 			'posts' => $post->findAll()
 		];
