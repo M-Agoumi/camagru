@@ -35,7 +35,7 @@ class DefaultController extends Controller
 		$params = [
 			'title' => "Home",
 			'postModule' => $post,
-			'posts' => $post->findAll()
+			'posts' => $post->paginate()
 		];
 
 		return render('home', $params);

@@ -176,9 +176,10 @@ abstract class DbModel extends Model
 	/** get all records of a specific entity
 	 * @return mixed
 	 */
-	public function findAll(){
+	public function findAll(string $limit = ''){
 		$tableName = static::tableName();
-		$stmt = self::prepare("SELECT * FROM $tableName;");
+		$limit = !empty($limit) ? 'limit ' . $limit : '';
+		$stmt = self::prepare("SELECT * FROM $tableName " . $limit . ';');
 		$stmt->execute();
 
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -188,13 +189,14 @@ abstract class DbModel extends Model
 	 * @param array $where
 	 * @return array
 	 */
-	public function findAllBy(array $where)
+	public function findAllBy(array $where, string $limit = '')
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
 		$primary = static::primaryKey();
 		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
-		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql . " ORDER BY " . $primary ." DESC");
+		$limit = !empty($limit) ? 'limit ' . $limit : '';
+		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql . " ORDER BY " . $primary ." DESC " . $limit);
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}
