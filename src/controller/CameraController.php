@@ -18,7 +18,7 @@ class CameraController extends Controller
 
 	public function index()
 	{
-		return $this->render('pages/camera', [], ['title' => 'Camera']);
+		return $this->render('pages/camera', ['title' => 'Camera']);
 	}
 
 	public function save(Request $request)

@@ -60,9 +60,9 @@ class AuthController extends Controller
 
 		return render('login', [
 				'user' => New User(),
-				'users' => $users
-			],
-			['title' => 'Login']
+				'users' => $users,
+				'title' => 'Login'
+			]
 		);
 	}
 
@@ -152,8 +152,7 @@ class AuthController extends Controller
 	/** get the verification code sent to the user email if it's valid
 	 * give him the form to complete his registration
 	 * @route('post' => '/register_step_2')
-	 * @param Request $request
-	 * @param User $user
+	 * @param EmailToken $email
 	 * @return false|string|string[]
 	 * @throws ExpiredException
 	 */
