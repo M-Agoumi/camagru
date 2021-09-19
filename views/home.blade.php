@@ -35,7 +35,7 @@
             <?php endforeach; ?>
         </div>
         <!-- =============================================== -->
-	    <div style="color: #000000">
+	    <div style="color: #000000; text-align: center">
 		    pages:
 		    <?php foreach($postModule->pages() as $page): ?>
 				<?php if (is_array($page)): ?>
