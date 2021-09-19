@@ -62,6 +62,10 @@ class Post extends DbModel
 		return ['author' => User::class];
 	}
 
+	/** extract hashtags from the comment and return them as array
+	 * @param string $comment
+	 * @return string]
+	 */
 	public function hashtag(string $comment)
 	{
 		$hashtags = '';
@@ -72,11 +76,16 @@ class Post extends DbModel
 		foreach ($m as $tag) {
 			$hashtags .= "<a href='/hashtag/$tag'>$tag</a>,\n";
 		}
+
 		return rtrim($hashtags, ',');
 	}
 
+	/**
+	 * @param string $comment
+	 * @return array|mixed|string|string[]
+	 */
 	public function highlightHashtag(string $comment){
-		/** we do it the old fashion way C way */
+		/** we do it the old fashion way, C way */
 		$i = 0; /** our increment  */
 		$newComment = $comment; /** where we save our changes */
 
@@ -96,6 +105,11 @@ class Post extends DbModel
 		return $newComment;
 	}
 
+	/**
+	 * @param string $comment
+	 * @param int $i
+	 * @return int
+	 */
 	private function getHashtag(string $comment, int $i): int
 	{
 		while ($i < strlen($comment)) {
@@ -112,6 +126,12 @@ class Post extends DbModel
 		return $i;
 	}
 
+	/**
+	 * @param string $comment
+	 * @param int $from
+	 * @param int $to
+	 * @return string
+	 */
 	private function printRange(string $comment, int $from, int $to): string
 	{
 		$hashtag = '';
@@ -121,8 +141,4 @@ class Post extends DbModel
 
 		return $hashtag;
 	}
-	/**
-	 * ($comment[$i] > 'Z' && $comment[$i] < 'A') ||
-	($comment[$i] > '0' && $comment[$i] < '9')
-	 */
 }
