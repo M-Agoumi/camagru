@@ -86,23 +86,6 @@ class TestController extends Controller
 		return render('pages/dev/resetPassword', ['user' => $user]);
 	}
 
-	public function cookie()
-	{
-//		$userToken = New UserToken();
-//
-//		$userToken->setUser(2);
-//
-//		$token = openssl_random_pseudo_bytes(64);
-//		//Convert the binary data into hexadecimal representation.
-//		$userToken->token = bin2hex($token);
-//		$userToken->used = 0;
-//		echo 'one<br>';
-//		$userToken->save();
-//		echo 'two<br>';
-
-		return Application::$APP->view->renderContent('test', ['title' => 'test'], );
-	}
-
 	/**
 	 * ongoing..
 	 */
@@ -118,5 +101,10 @@ class TestController extends Controller
 	public function viewEngine()
 	{
 		return render('dev/engine_test', ['test' => 3]);
+	}
+
+	public function emailView()
+	{
+		return render('mails/restorePassword', ['port' => 8000, 'token' => 'test123123123123']);
 	}
 }
