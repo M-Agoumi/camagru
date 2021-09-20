@@ -10,6 +10,7 @@ abstract class Paginator
 	{
 		/** @var $articlesNum int elements by page */
 		$articlesNum = $config['articles'] ?? 10;
+		$order = strtoupper($config['order']) ?? 'asc';
 		$this->totalRecords = $this->getCount();
 		$this->currentPage = intval($_GET['page'] ?? 1);
 		$limit = ($this->currentPage - 1) * $articlesNum;
@@ -18,7 +19,7 @@ abstract class Paginator
 		$this->limit = $limit;
 		$this->articlesByPage = $articlesNum;
 
-		return $this->findAll($limit);
+		return $this->findAll($limit, $order);
 	}
 
 	public function pages()

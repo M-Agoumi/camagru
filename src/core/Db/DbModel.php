@@ -176,10 +176,11 @@ abstract class DbModel extends Model
 	/** get all records of a specific entity
 	 * @return mixed
 	 */
-	public function findAll(string $limit = ''){
+	public function findAll(string $limit = '', string $order = 'ASC'){
 		$tableName = static::tableName();
 		$limit = !empty($limit) ? 'limit ' . $limit : '';
-		$stmt = self::prepare("SELECT * FROM $tableName " . $limit . ';');
+		$primary = static::primaryKey();
+		$stmt = self::prepare("SELECT * FROM $tableName ORDER BY " . $primary . " " . $order . " " . $limit . ';');
 		$stmt->execute();
 
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
