@@ -1,7 +1,7 @@
 @import url('/assets/css/css2.css');
 
 :root {
-
+	/* 3d83ea */
 	--mainColor: #fe0000;
 
 	--subColor: #565656;
@@ -425,6 +425,10 @@ body::-webkit-scrollbar {
 
  */
 
+ nav {
+	 padding: 0 0;
+	 margin: 0 0;
+ }
 
 
 nav .nav {
@@ -464,6 +468,8 @@ nav li {
 	font-weight: 400;
 
 	font-size: 1.2rem;
+
+	/* padding: .5rem; */
 
 }
 
@@ -536,6 +542,131 @@ nav .active {
     clip-path: circle(1250px at 90% -30%);
 
 } */
+
+/* START PROFILE PAGE STYLING */
+
+.my-profile {
+	width: 100%;
+}
+
+.my-profile .profile-cover {
+	width: 100%;
+	height: 20vh;
+	background-color: var(--mainColor);
+	/* margin: 0; */
+	/* padding: 0; */
+}
+
+.my-profile .profile-logo {
+	width: 200px;
+	height: 200px;
+	background-color: #EEE;
+	border: 3px solid --mainColor;
+	transform: translate(40%, -50%);
+	border-radius: 50%;
+}
+
+.my-profile .profile-user-info {
+	width: 300px;
+	padding: 1rem .5rem;
+	background-color: #EEE;
+	transform: translate(120%, -100%);
+}
+
+.my-profile .profile-user-info > p:first-of-type {
+	color: var(--mainColor);
+	font-weight: bold;
+}
+
+.my-profile .profile-user-info > p:nth-of-type(2) {
+	color: var(--subColor);
+}
+
+.my-profile .profile-parent {
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	flex-wrap: wrap;
+}
+
+.my-profile .profile-parent .profile-info {
+	width: calc(40% - 20px);
+	/* background-color: #CCC; */
+}
+
+.my-profile .profile-parent .profile-info .user-info {
+	padding: 1.2rem .8rem;
+	background-color: var(--mainColor);
+	color: #FFF;
+	border-radius: 10px;
+	margin-bottom: 1rem;
+	/* font-weight: bold; */
+}
+.my-profile .profile-parent .profile-info .user-info > p {
+	font-size: 1.1rem;
+	font-weight: 500;
+}
+
+.my-profile .profile-parent .profile-info .user-info i {
+	padding-right: 1rem;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.my-profile .profile-parent .profile-info .buttons {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.my-profile .profile-parent .profile-info .buttons > a:first-of-type {
+	width: calc(50% - 10px);
+	background-color: var(--mainColor);
+	color: #FFF;
+}
+
+.my-profile .profile-parent .profile-info .buttons > a:nth-of-type(2) {
+	width: 50%;
+	background-color: #FFF;
+	color: var(--mainColor);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.my-profile .profile-parent .profile-info .buttons > a {
+	padding: .8rem 0;
+	text-align: center;
+	border-radius: 5px;
+	text-decoration: none;
+	text-transform: capitalize;
+	font-weight: bold;
+}
+
+.my-profile .profile-parent .profile-posts {
+	width: 58%;
+	background-color: #EEE;
+	padding: 1rem;
+	height: 250px;
+	overflow-y: auto;
+}
+
+.my-profile .profile-parent .profile-posts h3 {
+	text-align: center;
+	font-weight: bold;
+	color: var(--subColor);
+	text-transform: capitalize;
+	letter-spacing: 2px;
+}
+
+.my-profile .profile-parent .profile-posts > .post {
+	width: 100%;
+	height: 200px;
+	border: 1px solid var(--mainColor);
+	margin-bottom: .5rem;
+}
+
+
+/* END PROFILE PAGE STYLING */
 
 
 
