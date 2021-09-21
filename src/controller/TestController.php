@@ -93,8 +93,9 @@ class TestController extends Controller
 	{
 		$posts = new Post();
 
-		$posts->paginate();
-		var_dump($posts);
+		$paginatedPosts = $posts->paginate(['articles' => 5]);
+		echo "<pre>";
+		var_dump($posts, $paginatedPosts);
 		return '';
 	}
 

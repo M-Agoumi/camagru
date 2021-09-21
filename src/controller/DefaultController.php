@@ -27,16 +27,19 @@ use models\User;
 class DefaultController extends Controller
 {
 
-	/** home view to be modified
+	/** fetch posts from the latest to the older
+	 * @param Post $post injectDependencies to use its methods
 	 * @return string
 	 */
 	public function index(Post $post): string
 	{
 		$params = [
 			'title' => "Home",
-			'test' => 'yahaaa',
 			'postModule' => $post,
-			'posts' => $post->findAll()
+			'posts' => $post->paginate([
+				'order' => 'DESC',
+				'articles' => 10
+			])
 		];
 
 		return render('home', $params);

@@ -1,8 +1,7 @@
 @layout('main')
 @section('title'){{ title }}@endsection
 @section('content')
-    {{-- test--}}
-    <h1><?=lang('home')?> {{ test }}</h1>
+    <h1><?=lang('home')?></h1>
     <div class="masonry-container">
         <!-- =============================================== -->
         <div class="gal-one">
@@ -36,5 +35,15 @@
             <?php endforeach; ?>
         </div>
         <!-- =============================================== -->
+	    <div style="color: #000000; text-align: center">
+		    pages:
+		    <?php foreach($postModule->pages() as $page): ?>
+				<?php if (is_array($page)): ?>
+					<a href="?page={{ page['active'] }}" class="active" style="color: #FF0000;text-decoration: underline">{{ page['active'] }}</a>
+				<?php else: ?>
+		            <a href="?page={{ page }}" style="color: #ff4e00">{{ page }}</a>
+	            <?php endif;?>
+		    <?php endforeach; ?>
+	    </div>
     </div>
 @endsection
