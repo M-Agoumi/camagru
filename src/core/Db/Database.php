@@ -119,7 +119,7 @@ class Database
      */
 	protected function log($message)
 	{
-		echo '[' . date('Y-m-d H:i:s') . '] - ' . $message . PHP_EOL;
+		echo RED . '[' . date('Y-m-d H:i:s') . ']' . RESET . ' - ' . YELLOW . $message . RESET . PHP_EOL;
 	}
 
     public function downMigrations(int $migrationsNumber)
