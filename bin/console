@@ -1,12 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+use core\CLI\CLIApplication;
+
 /** our constants variables */
 
 /** colors */
-
-use core\CLI\CLIApplication;
-
 CONST RESET = "\e[0m";
 CONST RED = "\e[31m";
 CONST GREEN = "\e[32m";
