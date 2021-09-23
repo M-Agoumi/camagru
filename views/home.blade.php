@@ -7,28 +7,27 @@
         <div class="gal-one">
             <?php foreach ($posts as $post): ?>
                 <div class="panel">
-                    <a href="/post/<?=$post['slug']?>">
+                    <a href="/post/{{ post['slug'] }}">
                         <div class="panel-wrapper">
                             <div class="panel-overlay">
                                 <div class="panel-text">
-                                    <div class="panel-title"><?=$post['title']?></div>
+                                    <div class="panel-title">{{ post['title'] }}</div>
                                     <div class="panel-tags">
                                         <?php
-                                        $tags = $postModule->hashtag($post['comment']);
-                                        if ($tags):
+                                            $tags = $postModule->hashtag($post['comment']);
                                         ?>
+                                        @if ($tags):
 	                                        <span class="tag-icon">
 	                                            <img class="tag-icon-img" src="/uploads/tag-icon.svg" alt=""/>
 	                                        </span>
 	                                        <span class="tags-list"><?=$postModule->hashtag($post['comment']) ?></span>
-
-                                        <?php endif; ?>
+                                        @endif
                                     </div>
                                 </div>
                                 <img class="panel-gradient" src="/uploads/base-gradient.png" alt=""/>
                                 <img class="panel-vingette" src="/uploads/darken-gradient.png" alt=""/>
                             </div>
-                            <img class="panel-img" src="<?= '/uploads/' . $post['picture']?>" alt=""/>
+                            <img class="panel-img" src="/uploads/{{ post['picture'] }}" alt=""/>
                         </div>
                     </a>
                 </div>
