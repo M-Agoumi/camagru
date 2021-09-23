@@ -32,9 +32,9 @@ class mg0001_creating_user_table
 							  `updated_at` timestamp NULL DEFAULT NULL,
 							  PRIMARY KEY (`id`)
 						) ENGINE=InnoDB;
-						
-					 	insert into users values(1, 'agoumihunter@gmail.com', 'mohamed agoumi', 'FtMerio', '$2y$10$bErdSKIzSYiN0OEB5hq8geC7rPBgs.XOwxwTdVICmSWnn0hEkPJH.', 0, NULL, NULL, ' 2021-08-14 21:23:26', NULL);
-						insert into users value (2,'lovtech99@gmail.com','anas agoumi','blackhuthunter','$2y$10$icxzU3Ftzf69LwrKC99lJOfEsggkTn.UQQXrm0KOkIc/BVISj.mJq',0,NULL,NULL,'2021-08-14 20:31:05',NULL)
+						--password:password
+					 	insert into users values(1, 'agoumihunter@gmail.com', 'mohamed agoumi', 'FtMerio', '$2y$10\$OsC49A1k8o8PmY1XqMUdLupqeUwRr3/VBi8LlAILtnF3qNvDKBm2O', 0, NULL, NULL, ' 2021-08-14 21:23:26', NULL);
+						insert into users value (2,'lovtech99@gmail.com','anas agoumi','blackhuthunter','$2y$10\$OsC49A1k8o8PmY1XqMUdLupqeUwRr3/VBi8LlAILtnF3qNvDKBm2O',0,NULL,NULL,'2021-08-14 20:31:05',NULL)
 						");
 
 	}
