@@ -30,7 +30,7 @@ class View
 	{
 		/** retrieve the original file */
 		$hash = md5_file($this->rootDir . 'views/' . str_replace('.', '/', $view ) . '.blade.php');
-		$file = $this->rootDir . 'var/cache/blade/' . $view . '.endl.' . $hash . '.php';
+		$file = $this->rootDir . 'var/cache/blade/' . str_replace('/', '.', $view ) . '.endl.' . $hash . '.php';
 
 		if (file_exists($file)) {
 			foreach ($params as $key => $param) {

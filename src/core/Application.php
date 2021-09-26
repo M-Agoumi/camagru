@@ -127,7 +127,7 @@ class Application
 	    	if (is_string($output))
                 echo $output;
 	    	elseif(is_bool($output))
-			    echo render('/messages/default', ['title' => 'empty page', 'value' => $output]);
+			    echo render('messages.default', ['title' => 'empty page', 'value' => $output]);
 	    	else
 	    		var_dump($output);
         } catch (Exception $e) {
