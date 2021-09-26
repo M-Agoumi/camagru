@@ -26,18 +26,19 @@ class BaseCommands extends \core\CLI\BaseCommand implements \core\CLI\BaseComman
 	public function down(): string
 	{
 		$downFile = CLIApplication::$app->root . 'var/cache/maintenance_on';
-		$allowed = '';
+		$allowed = ['127.0.0.1'];
 
 		/** check if server is already down */
-		if (file_exists($downFile))
-			$allowed = unserialize(trim(file_get_contents($downFile)));
-
-		if (isset(CLIApplication::$app->argv[1]) && $allowed == '')
-			$allowed = serialize(array_slice(CLIApplication::$app->argv, 1));
-		else if (isset(CLIApplication::$app->argv[1]) && $allowed != '') {
-			$allowed = array_merge($allowed, array_slice(CLIApplication::$app->argv, 1));
-			$allowed = serialize($allowed);
+		if (file_exists($downFile)) {
+			$existedAllowed = unserialize(trim(file_get_contents($downFile)));
+			if ($existedAllowed)
+				$allowed = array_merge($allowed, $existedAllowed);
 		}
+
+		if (isset(CLIApplication::$app->argv[1]))
+			$allowed = array_merge($allowed, array_slice(CLIApplication::$app->argv, 1));
+
+		$allowed = serialize($allowed);
 
 		$fd = fopen($downFile, "w");
 
