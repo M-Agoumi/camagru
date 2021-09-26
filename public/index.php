@@ -32,6 +32,21 @@ $start = microtime(true);
 ini_set('session.cookie_httponly', 1);
 
 /**
+ * check if maintenance mode is on
+ */
+if (file_exists("../var/cache/maintenance_on")) {
+	$allowed = unserialize(trim(file_get_contents("../var/cache/maintenance_on")));
+
+	if (!in_array($_SERVER['REMOTE_ADDR'], $allowed) && $_SERVER['REMOTE_ADDR'] != '127.0.0.1') {
+		include("../views/error/maintenance.html");
+		exit(0);
+	}
+	echo '<h1 style="font-size: 34px;color: red; background-color: #FFF;padding: 15px; text-align: center">
+			Maintenance Mode Is On
+		</h1>';
+}
+
+/**
  * set session path to our local app directory in case of permissions issues
  */
 // ini_set('session.save_path', '../runtime/session');

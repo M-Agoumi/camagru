@@ -2,6 +2,7 @@
 
 namespace core\CLI;
 
+use core\CLI\Commands\BaseCommands;
 use core\CLI\Commands\Cache;
 use core\CLI\Commands\Make;
 use core\CLI\Commands\Migrate;
@@ -15,6 +16,7 @@ class CLIApplication
 	public array $argv;
 	public string $root;
 	public array $commands;
+	public bool $quite = false;
 
 	/** saving our important values for our commands
 	 * @param string $root
@@ -46,6 +48,15 @@ class CLIApplication
 		$command = explode(':', $this->argv[0]);
 		$command = array_map('strtolower', $command);
 
+		/** check for quite mode */
+		if (in_array('-q', $this->argv) || in_array('--quite', $this->argv)) {
+			$this->quite = true;
+		}
+
+		/** check if the command is a base command */
+		if (in_array($command[0], $this->baseCommands()))
+			return $this->runBaseCommand($command[0]);
+
 		if (isset($this->commands[$command[0]])) {
 			if (isset($command[1])) {
 				/** run command */
@@ -55,7 +66,7 @@ class CLIApplication
 				if (is_callable(array($CommandInstance, $command[1]))){
 					$output = $CommandInstance->{$command[1]}($this->argv);
 
-					return is_string($output) ? $output : '';
+					return !$this->quite ? is_string($output) ? $output : '' : '';
 				} else {
 					$message = RED . $command[1] . RESET . " doesn't exist in " . BLUE . $command[0] . RESET . PHP_EOL;
 					$message .= 'Available commands:' . PHP_EOL;
@@ -104,6 +115,21 @@ class CLIApplication
 		];
 	}
 
+	/**
+	 * base commands
+	 */
+	private function baseCommands():array
+	{
+		return [
+			'--help',
+			'-h',
+			'--version',
+			'-v',
+			'up',
+			'down'
+		];
+	}
+
 
 	/** display the help instruction of the application
 	 * @return string
@@ -115,8 +141,25 @@ class CLIApplication
 		$message .= CYAN . 'Options:' . RESET . PHP_EOL;
 		$message .= "  -h, --help\t\tDisplay this help message" . PHP_EOL;
 		$message .= "  -q, --quite\t\tDo not out put any messages" . PHP_EOL;
-		$message .= "  -v, --version\t\tDisplay this application version" .PHP_EOL . PHP_EOL;
+		$message .= "  -v, --version\t\tDisplay this application version" .PHP_EOL;
+		$message .= "  down\t\t\tPut the server in maintenance mode". PHP_EOL;
+		$message .= "       \t\t\tAccepts allowed IPs to access the Application[console down ip1 ip2 ip3]" . PHP_EOL;
+		$message .= "  up\t\t\tDisable maintenance mode and restore the Application online" . PHP_EOL . PHP_EOL;
 
 		return $message;
+	}
+
+	private function runBaseCommand($command)
+	{
+		$base = New BaseCommands();
+
+		if ($command == '-v' || $command == '--version')
+			return $base->version();
+		else if ($command == '-h' || $command == '--help')
+			return $this->helper();
+		elseif ($command == 'down')
+			return $base->down();
+		elseif ($command == 'up')
+			return $base->up();
 	}
 }
