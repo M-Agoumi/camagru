@@ -19,13 +19,19 @@ services:
         build:
             context: ./
             dockerfile: ./docker/apache/Dockerfile
+            args:
+              - smtp=${smtp}
+              - smtpPort=${smtpPort}
+              - username=${username}
+              - password=${password}
+              - mail=${mail}
         container_name: apache
         restart: unless-stopped
         working_dir: /var/www/camagru
         volumes:
             - ./:/var/www/camagru
         ports:
-            - "8000:80"
+            - "80:80"
             - "2525:2525"
         networks:
             - camagru

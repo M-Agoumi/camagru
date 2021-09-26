@@ -1,5 +1,12 @@
 FROM ubuntu
 
+## set our build arguments
+ARG smtp
+ARG smtpPort
+ARG username
+ARG password
+ARG mail
+
 ## set default timezone for zdate so it won't wait for input from user
 ENV TZ=Africa/Casablanca
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
