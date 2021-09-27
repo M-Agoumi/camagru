@@ -56,20 +56,19 @@ class PostCommentController extends Controller
 				$preferences = new Preferences();
 				$preferences->getOneBy('user', $post->author->id);
 
-				if ($preferences->commentsMail != '0') {
-					/** fill email data */
-					$authorEmail = $post->author->email;
-					$emailSubject = Application::$APP->user->username . " commented on your post";
-					$emailContent = ['postComment', [
-						'name' => Application::$APP->user->username,
-						'postUrl' => Application::getEnvValue('appProtocol') . Application::getEnvValue('appURL') . '/post/' . $postTmp->slug
-					]];
-					$fromEmail = 'notification@camagru.io';
-				}
-
 				if ($comment->save()) {
-					if ($preferences->commentsMail != '0')
+					if ($preferences->commentsMail != '0') {
+						/** fill email data */
+						$authorEmail = $post->author->email;
+						$emailSubject = Application::$APP->user->username . " commented on your post";
+						$emailContent = ['postComment', [
+							'name' => Application::$APP->user->username,
+							'postUrl' => Application::getEnvValue('appProtocol') . Application::getEnvValue('appURL') . '/post/' . $postTmp->slug
+						]];
+						$fromEmail = 'notification@camagru.io';
+
 						$this->mail($authorEmail, $emailSubject, $emailContent, $fromEmail);
+					}
 
 					return "1";
 				} else
