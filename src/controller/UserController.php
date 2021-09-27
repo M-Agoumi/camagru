@@ -43,7 +43,10 @@ class UserController extends Controller
 
 	public function edit()
 	{
-		return render('pages/profile/updateProfile', ['user' => Application::$APP->user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+		return render('pages/profile/updateProfile', [
+			'user' => Application::$APP->user,
+			'title' => Application::$APP->user->name . " - Edit Profile"
+		]);
 	}
 
 	public function update(Request $request)
@@ -63,7 +66,10 @@ class UserController extends Controller
 			return Application::$APP->response->redirect(Application::path('user.profile'));
 		}
 
-		return render('pages/profile/updateProfile', ['user' => $user], ['title' => Application::$APP->user->name . " - Edit Profile"]);
+		return render('pages/profile/updateProfile', [
+			'user' => $user,
+			'title' => Application::$APP->user->name . " - Edit Profile"
+		]);
 	}
 
 	public function UpdatePassword(Request $request)
@@ -101,7 +107,7 @@ class UserController extends Controller
 		}
 		$user->password = '';
 
-		return render('pages/profile/updatePassword', ['user' => $user]);
+		return render('pages/profile/updatePassword', ['user' => $user, 'title' => 'Update Password']);
 	}
 
 
@@ -133,7 +139,7 @@ class UserController extends Controller
 			}
 		}
 
-		return render('pages/profile/preferences', ['pref' => $pref], ['title' => 'test']);
+		return render('pages/profile/preferences', ['pref' => $pref, 'title' => 'Preferences'] );
 	}
 
 	public function getName()

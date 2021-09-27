@@ -23,16 +23,17 @@
 	</div>
 	<div class="row">
 	    <div class="col-25">
-	        <label for="password">New password</label>
+	        <label for="password">Retype new password</label>
 	    </div>
 	    <div class="col-75">
-	        <input type="password" class="" id="retypePassword" name="retypePassword" placeholder="Repeat New Password">
+	        <input type="password" class="" id="retypePassword" name="retypePassword" placeholder="Retype New Password">
 	        <div class="invalid-feedback">
 				<?= $user->getFirstError('retypePassword'); ?>
 	        </div>
 	    </div>
 	</div>
 	<?php
-	echo $form->submit('update');
-	$form::end();
+		echo $form->submit('update');
+		$form::end();
+	?>
 @endsection

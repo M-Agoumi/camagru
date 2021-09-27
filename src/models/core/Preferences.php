@@ -12,6 +12,7 @@ class Preferences extends DBModel
 	public ?int $id = null;
 	public ?int $user = null;
 	public ?int $language = null;
+	public ?int $commentsMail = null;
 
 	public function tableName(): string
 	{
@@ -20,7 +21,7 @@ class Preferences extends DBModel
 
 	public function attributes(): array
 	{
-		return ['user', 'language'];
+		return ['user', 'language', 'commentsMail'];
 	}
 
 	public function primaryKey(): string

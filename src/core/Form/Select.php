@@ -74,11 +74,24 @@ class Select
 				$string .= ">" . $option[$this->attribute] . "</option>" . PHP_EOL;
 			}
 		} else {
-			foreach ($elements as $element) {
-				$string .= "<option value='" . $element[0] . "'>" . $element[1] . "</option>" . PHP_EOL;
+			foreach ($elements as $value => $element) {
+				if ($this->model->{$this->attribute} == $value)
+					$string .= "<option value='" . $value . "' selected='selected'>" . $element . "</option>" . PHP_EOL;
+				else
+					$string .= "<option value='" . $value . "'>" . $element . "</option>" . PHP_EOL;
 			}
 		}
 
 		return $string;
+	}
+
+	/**
+	 * @param string $label
+	 */
+	public function setLabel(string $label)
+	{
+		$this->label = $label;
+
+		return $this;
 	}
 }

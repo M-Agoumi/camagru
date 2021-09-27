@@ -15,11 +15,12 @@ class mg0009_create_preferences_table
 	public function up()
 	{
 		$this->db->pdo->exec("CREATE TABLE IF NOT EXISTS `preferences` (
-								`id`       int NOT NULL AUTO_INCREMENT ,
-								`user`     int NOT NULL ,
-								`language` int NOT NULL ,
-								`created_at` timestamp NOT NULL ,
-					            `updated_at` timestamp NULL ,
+								`id`       		int NOT NULL AUTO_INCREMENT ,
+								`user`     		int NOT NULL ,
+								`language` 		int NULL ,
+								`commentsMail`	int NULL,
+								`created_at` 	timestamp NOT NULL ,
+					            `updated_at` 	timestamp NULL ,
 								
 								PRIMARY KEY (`id`),
 								KEY `fkIdx_102` (`language`),
