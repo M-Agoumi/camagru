@@ -1,3 +1,21 @@
+function read_cookie(key)
+{
+    var result;
+    return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
+}
+
+function hideCookieMessageIfCookiesAreActive()
+{
+    let cookies = read_cookie('cookies_active');
+    if (cookies != 1){
+        document.getElementById('cookies_not_allowed').style.display = "block";
+    }
+}
+
+window.onload = function() {
+    hideCookieMessageIfCookiesAreActive();
+};
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
