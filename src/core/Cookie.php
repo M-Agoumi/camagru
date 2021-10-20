@@ -11,28 +11,24 @@ class Cookie
 {
 	public function __construct()
 	{
-		if (!$this->isCookiesEnabled()) {
-			if (Application::$APP->session->getFlash('system'))
-				Application::$APP->session->setFlash(
-					'error',
-					'this site needs access to cookies to function normally, <b>please enable Cookies</b>'
-				);
-			else
-				Application::$APP->session->setFlash('system', '1');
-		}
+		/** set test cookie */
+		setcookie('cookies_active', '1',['path' => '/', 'httponly' => false, 'secure' => false]);
+
 		/** check if user is logged save him in cookies */
 		$userToken = New UserToken();
 		if (!Application::isGuest()) {
-			$userToken->getOneBy('user', Application::$APP->user->getId());
-			if (!$userToken->id){
-				/** not token is saved generate one */
-				$userToken = $this->generateToken();
-				$userToken->save();
-			} elseif ($userToken->used) {
-				$userToken = $this->generateToken($userToken->id);
-				$userToken->update();
+			if (!$this->get('user_tk')) {
+				$userToken->getOneBy('user', Application::$APP->user->getId());
+				if (!$userToken->id){
+					/** not token is saved generate one */
+					$userToken = $this->generateToken();
+					$userToken->save();
+				} elseif ($userToken->used) {
+					$userToken = $this->generateToken($userToken->id);
+					$userToken->update();
+				}
+				$this->set('user_tk', $userToken->token, time() + (31556926));
 			}
-			$this->setCookie('user_tk', $userToken->token, time() + (31556926));
 		} else {
 			$token = $_COOKIE['user_tk'] ?? NULL;
 			if ($token) {
@@ -47,16 +43,11 @@ class Cookie
 		}
 	}
 
-	private function isCookiesEnabled(): bool
-	{
-		return count($_COOKIE) >= 1;
-	}
-
-	public function setCookie(string $key, string $value, int $expires = null)
+	public function set(string $key, string $value, int $expires = null): bool
 	{
 		if ($expires === 0)
 			$expires = time() + 3600;
-		setcookie($key, $value, ['expires' => $expires, 'path' => '/', 'httponly' => TRUE, 'secure' => true]);
+		return (setcookie($key, $value, ['expires' => $expires, 'path' => '/', 'httponly' => TRUE, 'secure' => false]));
 	}
 
 	public function unsetCookie(string $key)
@@ -66,7 +57,7 @@ class Cookie
 
 	public function get(string $key)
 	{
-		return $_COOKIE[$key] ?? NULL;
+		return $_COOKIE[$key] ?? false;
 	}
 
 	private function destroyCookies()
