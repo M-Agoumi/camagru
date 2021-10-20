@@ -81,6 +81,7 @@ abstract class Model extends Paginator
                 // max? check the strlen()
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max'])
                     $this->addErrorForRules($attribute, self::RULE_MAX, $rule);
+
 				// is it unique? let's check our records
                 if ($ruleName === self::RULE_UNIQUE) {
                 	/** @var $className DbModel */
@@ -90,7 +91,7 @@ abstract class Model extends Paginator
 					$className  = new $className();
 					$className->getOneBy($uniqueAttr, $value);
 
-                	if ($this->$attribute == $className->$attribute)
+                	if (($this->$attribute == $className->$attribute) && $this->{$primaryKey} != $className->{$primaryKey})
                 		$this->addErrorForRules($attribute, self::RULE_UNIQUE, ['field' => ucfirst($attribute)]);
                 }
             }

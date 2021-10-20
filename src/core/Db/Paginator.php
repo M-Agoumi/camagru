@@ -12,7 +12,7 @@ abstract class Paginator
 		$articlesNum = $config['articles'] ?? 10;
 		$order = strtoupper($config['order']) ?? 'asc';
 		$this->totalRecords = $this->getCount();
-		$this->currentPage = intval($_GET['page'] ?? 1);
+		$this->currentPage = intval($_GET['page'] ?? $_POST['page'] ?? 1);
 		$limit = ($this->currentPage - 1) * $articlesNum;
 		$limit = $limit < 0 ? 0 : $limit;
 		$limit = "$limit, " . ($articlesNum);

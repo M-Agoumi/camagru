@@ -324,17 +324,18 @@ class AuthController extends Controller
 	public function logoutMessage()
 	{
 		$users = unserialize($_COOKIE['user'] ?? null);
+
 		/** remove current user from the saved users unless he wanted to save */
-		foreach ($users as $key => $value) {
+		foreach ((array)$users as $key => $value) {
 			$userToken = new UserToken();
 			$userToken->getOneBy('token', $value);
 			if ($userToken->id && $userToken->user->getId() == Application::$APP->session->get('user_tmp'))
 				unset($users[$key]);
 		}
 
-		Application::$APP->cookie->setCookie('user', serialize($users), time() + (3600 * 24 * 30));
+		Application::$APP->cookie->set('user', serialize($users), time() + (3600 * 24 * 30));
 
-		return render('messages/logout', [], ['title' => 'you are logged out']);
+		return render('messages/logout', ['title' => 'you are logged out']);
 	}
 
 	/** todo more work here please
@@ -353,7 +354,7 @@ class AuthController extends Controller
 			else
 				array_push($users, $token->token);
 
-			Application::$APP->cookie->setCookie('user', serialize($users), time() + (3600 * 24 * 30));
+			Application::$APP->cookie->set('user', serialize($users), time() + (3600 * 24 * 30));
 			Application::$APP->session->unset('user_tmp');
 		}
 		redirect('/');
