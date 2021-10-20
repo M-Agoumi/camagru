@@ -18,6 +18,13 @@ namespace core;
  */
 class Request
 {
+
+	public function __construct()
+	{
+		/** get whitelisted cors */
+		$this->cors();
+	}
+
 	/**
 	 * @return string the current path of the application
 	 */
@@ -186,5 +193,14 @@ class Request
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 		return $ip;
+	}
+
+	private function cors()
+	{
+		$interface = Application::$APP->interface;
+		$config = Application::getConfig('cors');
+
+		$config = implode(', ', $config[$interface] ?? []);
+		header('Access-Control-Allow-Origin: ' . $config);
 	}
 }
