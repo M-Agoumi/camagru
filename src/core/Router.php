@@ -26,6 +26,7 @@ class Router
 	public array $routes = [];
 	protected array $paths = [];
 	protected string $tmp;
+	private string $interface;
 
 	/**
 	 * Router constructor.
@@ -34,10 +35,11 @@ class Router
 	 * @param Request $request
 	 * @param Response $response
 	 */
-	public function __construct(Request $request, Response $response)
+	public function __construct(Request $request, Response $response, string $interface = 'web')
 	{
 		$this->request = $request;
 		$this->response = $response;
+		$this->interface = $interface;
 	}
 
 	/**
@@ -64,7 +66,6 @@ class Router
 	{
 		$router = Application::$APP->router;
 
-		$path = strtolower($path);
 		if (!isset($router->routes[$method][$path]))
 			$router->routes[$method][$path] = $callback;
 		else
@@ -133,7 +134,7 @@ class Router
 	public function resolve()
 	{
 		$callback = $this->getCallbackOrFail();
-		
+
 		if (is_string($callback))
 			return $this->renderView($callback);
 		
@@ -146,9 +147,17 @@ class Router
 		return "Method [$callback[1]] is not found in [" . get_class($callback[0]) . ']';
 	}
 
+	/**
+	 * @throws NotFoundException
+	 */
 	public function getCallbackOrFail()
 	{
 		$this->getRoutes();
+
+		/** check if there is any register routes in the app otherwise show default page */
+		if (empty($this->routes))
+			die (render('defaults.firstRun'));
+
 		$path = strtolower($this->request->getPath());
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
@@ -165,6 +174,11 @@ class Router
 		return $callback;
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 * @throws NotFoundException
+	 * @throws ExpiredException
+	 */
 	protected function execArrayCallback($callback)
 	{
 		/** @var Controller $controller */
@@ -177,6 +191,9 @@ class Router
 		}
 
 		$callback[0] = $controller;
+
+		if (!method_exists($callback[0], $callback[1]))
+			die('method [' . $callback[1] . '] not found in class [' . get_class($callback[0]) . ']');
 
 		$params = $this->injectDependencies($callback);
 		unset($callback[2], $callback[3]);
@@ -259,6 +276,6 @@ class Router
 
 	private function getRoutes()
 	{
-		include Application::$ROOT_DIR . "/routes/web.php";
+		include Application::$ROOT_DIR . "/routes/" . $this->interface . ".php";
 	}
 }

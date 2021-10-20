@@ -35,6 +35,26 @@ services:
             - "2525:2525"
         networks:
             - camagru
+    api:
+        build:
+            context: ./
+            dockerfile: ./docker/api/Dockerfile
+            args:
+                - smtp=${smtp}
+                - smtpPort=${smtpPort}
+                - username=${username}
+                - password=${password}
+                - mail=${mail}
+        container_name: api
+        restart: unless-stopped
+        working_dir: /var/www/camagru
+        volumes:
+            - ./:/var/www/camagru
+        ports:
+            - "8080:80"
+            - "2530:2525"
+        networks:
+            - camagru
 networks:
     camagru:
         driver: bridge
