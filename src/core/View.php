@@ -25,8 +25,8 @@ class View
 	private function getCacheContent(string $view, $params): ?string
 	{
 		/** retrieve the original file */
-		$hash = md5_file($this->rootDir . 'views/' . str_replace('.', '/', $view ) . '.blade.php');
-		$file = $this->rootDir . 'var/cache/blade/' . str_replace('/', '.', $view ) . '.endl.' . $hash . '.php';
+		$hash = md5_file($this->rootDir . 'views/' . str_replace('.', '/', $view ) . '.gaster.php');
+		$file = $this->rootDir . 'var/cache/gaster/' . str_replace('/', '.', $view ) . '.endl.' . $hash . '.php';
 
 		if (file_exists($file)) {
 			foreach ($params as $key => $param) {
@@ -45,7 +45,7 @@ class View
 	private function setCacheContent(string $view, $params)
 	{
 		$view = str_replace('.', '/', $view);
-		$file = $this->rootDir . 'views/' . $view . '.blade.php';
+		$file = $this->rootDir . 'views/' . $view . '.gaster.php';
 
 		/** load view from the file */
 		if (file_exists($file))
@@ -195,7 +195,7 @@ class View
 			/** fetch the yield section from our content */
 			preg_match("(@section\((['\"])" . $yieldName . "(['\"])\)([\s\S]*?)@endsection)", $content, $match);
 
-			/** remove blade section declaration from the text */
+			/** remove gaster section declaration from the text */
 			$match = preg_replace('(@section\(([\'"])' . $yieldName . '([\'"])\))', '', $match[0] ?? '');
 			$match = preg_replace('(@endsection)', '', $match);
 			$match = trim($match);
@@ -209,22 +209,22 @@ class View
 
 	private function cacheContent($view, $content)
 	{
-		$originalFile = $this->rootDir . 'views/' . $view[1] . '.blade.php';
+		$originalFile = $this->rootDir . 'views/' . $view[1] . '.gaster.php';
 		$view = str_replace('/', '.', $view[1]);
 		$originalHash = md5_file($originalFile);
 
 		/** delete any left cache file of this view */
-		foreach (new DirectoryIterator($this->rootDir . 'var/cache/blade') as $file) {
+		foreach (new DirectoryIterator($this->rootDir . 'var/cache/gaster') as $file) {
 			if ($file->isFile()) {
 				$fileName = $file->getFilename();
 				if (substr($fileName, 0, strlen($view . ".endl")) === $view . ".endl") {
-					unlink($this->rootDir . 'var/cache/blade/'. $fileName);
+					unlink($this->rootDir . 'var/cache/gaster/'. $fileName);
 				}
 			}
 		}
 
 		/** create cache file */
-		$cacheFileName = $this->rootDir . 'var/cache/blade/' . $view . '.endl.' . $originalHash . '.php';
+		$cacheFileName = $this->rootDir . 'var/cache/gaster/' . $view . '.endl.' . $originalHash . '.php';
 		$cachedFile = fopen($cacheFileName, "w");
 
 		/** write content to the file */

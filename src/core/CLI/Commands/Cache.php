@@ -21,7 +21,7 @@ class Cache extends BaseCommand implements BaseCommandInterface
 	 */
 	public function clear(array $params = []): string
 	{
-		$path = CLIApplication::$app->root . 'var/cache/blade';
+		$path = CLIApplication::$app->root . 'var/cache/gaster';
 		$files = new DirectoryIterator($path);
 
 		/** delete template engine cache files */

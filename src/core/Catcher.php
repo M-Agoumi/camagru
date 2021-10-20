@@ -46,7 +46,7 @@ class Catcher
 
 		if ($this->app->getDotEnv()['env'] != 'dev') {
 			$codeView = 'error/__' . $e->getCode();
-			if (file_exists(Application::$ROOT_DIR . '/views/' . $codeView . '.blade.php'))
+			if (file_exists(Application::$ROOT_DIR . '/views/' . $codeView . '.gaster.php'))
 				echo $this->app->view->renderView('error/__' . $e->getCode(), ['e' => $e, 'title' => $e->getCode()]);
 			else
 				echo $this->app->view->renderView('error/__500', ['title' => '500 Internal Server Error']);
