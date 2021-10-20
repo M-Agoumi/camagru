@@ -11,13 +11,9 @@ class View
 
 	public ?string $rootDir = null;
 
-	public function __construct()
-	{
-		$this->rootDir = Application::$ROOT_DIR . '/';
-	}
-
 	public function renderView(string $view, $params = [])
 	{
+		$this->rootDir = Application::$ROOT_DIR . '/';
 		$content = $this->getCacheContent($view, $params);
 
 		if (!$content)

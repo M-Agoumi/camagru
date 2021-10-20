@@ -44,7 +44,7 @@ function applyFilters() {
 // clear all filters
 function clearFilters()
 {
-    if (canvas.style.filter == 'none')
+    if (canvas.style.filter === 'none')
         applyFilters();
     else
         canvas.style.filter = 'none';

@@ -86,6 +86,9 @@ class User extends DbModel
         $this->email = $email;
     }
 
+	/** hash password before saving
+	 * @return bool
+	 */
 	public function save(): bool
 	{
 		$this->status = self::STATUS_INACTIVE;
@@ -93,10 +96,14 @@ class User extends DbModel
 	    return parent::save();
 	}
 
+	/** hash password before updating
+	 * @return bool
+	 */
 	public function update(): bool
 	{
 		if ($this->pass)
 			$this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
 		return parent::update();
 	}
 

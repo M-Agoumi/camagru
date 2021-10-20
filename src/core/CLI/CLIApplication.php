@@ -140,7 +140,7 @@ class CLIApplication
 		$message .= '  bin/console [options] [arguments]' . PHP_EOL . PHP_EOL;
 		$message .= CYAN . 'Options:' . RESET . PHP_EOL;
 		$message .= "  -h, --help\t\tDisplay this help message" . PHP_EOL;
-		$message .= "  -q, --quite\t\tDo not out put any messages" . PHP_EOL;
+		$message .= "  -q, --quite\t\tDo not output any messages" . PHP_EOL;
 		$message .= "  -v, --version\t\tDisplay this application version" .PHP_EOL;
 		$message .= "  down\t\t\tPut the server in maintenance mode". PHP_EOL;
 		$message .= "       \t\t\tAccepts allowed IPs to access the Application[console down ip1 ip2 ip3]" . PHP_EOL;
@@ -149,7 +149,7 @@ class CLIApplication
 		return $message;
 	}
 
-	private function runBaseCommand($command)
+	private function runBaseCommand($command): string
 	{
 		$base = New BaseCommands();
 
@@ -161,5 +161,7 @@ class CLIApplication
 			return $base->down();
 		elseif ($command == 'up')
 			return $base->up();
+
+		return '';
 	}
 }

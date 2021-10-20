@@ -117,4 +117,9 @@ abstract class Controller
 
 		return $text;
 	}
+
+	protected function json($value)
+	{
+		return json_encode($value);
+	}
 }

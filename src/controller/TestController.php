@@ -36,14 +36,9 @@ class TestController extends Controller
 		return ($this->mail('agoumihunter@gmail.com', 'testing', ['test', ['receiver' => 'Agoumi']]));
 	}
 
-	public function autoWire(): ?Post
+	public function autoWire(User $user)
 	{
-		$post = new Post();
-
-		$post->getOneBy(1);
-		echo '<pre>';
-
-		return $post;
+		return $user;
 	}
 
 	public function autoFetch(User $user)
@@ -53,7 +48,7 @@ class TestController extends Controller
 
 	public function phpinfo()
 	{
-		return Application::$APP->view->renderContent(phpinfo());
+		var_dump(phpinfo());
 	}
 
 	/** a security breach to update password to any account cause im done with resetting my password everyday :)
@@ -61,10 +56,8 @@ class TestController extends Controller
 	 * @param Request $request
 	 * @return false|string|string[]
 	 */
-	public function password(Request $request)
+	public function password(Request $request, User $user)
 	{
-		$user = new User();
-
 		if ($request->isPost()) {
 			$user->loadData($request->getBody());
 

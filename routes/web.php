@@ -16,6 +16,9 @@ use core\Application;
  * all the routes of our application
  */
 
+/** error pages */
+Router::get('/javascript-disabled', 'error.__noJavascript');
+
 /** default Controller routes */
 Router::get('/', [DefaultController::class, 'index'])->name('home.index');
 Router::get('/contactus', [DefaultController::class, 'contactUs'])->name('contact.us');
@@ -65,13 +68,14 @@ Router::magic('/post/like/{id}', [PostController::class, 'like'])->name('post.li
 Router::magic('/api/post/likes/{id}', [PostController::class, 'showLikes']); /** post fetch like */
 Router::magic('/api/post/comment/{slug}', [PostCommentController::class, 'add']); /** post add comments */
 Router::post('/api/user/name', [UserController::class, 'getName']); /** get logged user name */
+Router::get('/api/maincolor', function() {return '#FFF';});
 
 /** Admin dashboard routes */
 Router::get('/dashboard', [DashboardController::class, 'index']);
 
 /** debug routes */
 Router::get('/dev/code', function (){return $_SESSION['email_code'] ?? 'no code found';});
-Router::get('/session', function() {var_dump($_SESSION);});
+Router::get('/session', function() {echo "<pre>"; var_dump($_SESSION); return '';});
 Router::get('/unset_session', function() {session_destroy();});
 Router::magic('/user/{id}', [DefaultController::class, 'user']);
 Router::get('/dev/set-password', [TestController::class, 'password']);
@@ -84,7 +88,12 @@ Router::magic('/abah/{id}', [TestController::class, 'autoFetch']);
 Router::get('/phpinfo', [TestController::class, 'phpinfo']);
 Router::get('/pagination', [TestController::class, 'pagination']);
 Router::get('/view', [TestController::class, 'viewEngine']);
-Router::get('/logchecker', function (){
+Router::get('/loginChecker', function (){
 	return Application::isGuest();
 });
 Router::get('/mailview', [TestController::class, 'emailView']);
+Router::get('/setcookie', function (){
+	return Application::$APP->cookie->set('test', '1', time() + (86400 * 30), "/");
+});
+
+

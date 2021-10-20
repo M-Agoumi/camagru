@@ -1,8 +1,10 @@
 @import url('/assets/css/css2.css');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
 	/* 3d83ea */
-	--mainColor: #fe0000;
+	/* --mainColor: #fe0000; */
+	--mainColor: #167EDE;
 
 	--subColor: #565656;
 
@@ -30,7 +32,7 @@ html, body {
 
 	scrollbar-width: none;
 
-	font-family: 'Play', sans-serif;
+	font-family: 'Poppins', sans-serif;
 
 
 }
@@ -545,126 +547,173 @@ nav .active {
 
 /* START PROFILE PAGE STYLING */
 
-.my-profile {
+.profile-page {
 	width: 100%;
 }
 
-.my-profile .profile-cover {
+.profile-page .profile-header {
 	width: 100%;
-	height: 20vh;
-	background-color: var(--mainColor);
-	/* margin: 0; */
-	/* padding: 0; */
-}
-
-.my-profile .profile-logo {
-	width: 200px;
+	background-color: #BCBCBC;
 	height: 200px;
-	background-color: #EEE;
-	border: 3px solid --mainColor;
-	transform: translate(40%, -50%);
-	border-radius: 50%;
-}
-
-.my-profile .profile-user-info {
-	width: 300px;
-	padding: 1rem .5rem;
-	background-color: #EEE;
-	transform: translate(120%, -100%);
-}
-
-.my-profile .profile-user-info > p:first-of-type {
-	color: var(--mainColor);
-	font-weight: bold;
-}
-
-.my-profile .profile-user-info > p:nth-of-type(2) {
-	color: var(--subColor);
-}
-
-.my-profile .profile-parent {
 	display: flex;
-	justify-content: space-between;
-	align-items: start;
 	flex-wrap: wrap;
-}
-
-.my-profile .profile-parent .profile-info {
-	width: calc(40% - 20px);
-	/* background-color: #CCC; */
-}
-
-.my-profile .profile-parent .profile-info .user-info {
-	padding: 1.2rem .8rem;
-	background-color: var(--mainColor);
-	color: #FFF;
-	border-radius: 10px;
-	margin-bottom: 1rem;
-	/* font-weight: bold; */
-}
-.my-profile .profile-parent .profile-info .user-info > p {
-	font-size: 1.1rem;
-	font-weight: 500;
-}
-
-.my-profile .profile-parent .profile-info .user-info i {
-	padding-right: 1rem;
-	font-size: 1.2rem;
-	font-weight: bold;
-}
-
-.my-profile .profile-parent .profile-info .buttons {
-	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	justify-content: center;
 	align-items: center;
+}
+
+.profile-page .profile-header .profile-header-logo {
+	width: 30%;
+	height: 100%;
+	position: relative;
+}
+
+.profile-page .profile-header .profile-header-logo > img {
+	width: 100px;
+	position: absolute;
+	top: 50%;
+	left: 10%;
+	transform: translateY(-50%);
+}
+
+.profile-page .profile-header .profile-header-cover {
+	width: 70%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.profile-page .profile-header .profile-header-cover input {
+	width: 200px;
+	padding: 5px;
+	visibility:hidden;
+}
+
+.profile-page .profile-header .profile-header-cover i {
+	font-size: 1.5rem;
+	color: #5E5E5E;
+	margin-right: .5rem;
+}
+
+.profile-page .profile-header .profile-header-cover label {
+	font-size: 1.5rem;
+	color: #5E5E5E;
+	cursor: pointer;
+}
+
+.profile-page .profile-body {
+	height: 80vh;
+	width: 75%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
 	flex-wrap: wrap;
 }
 
-.my-profile .profile-parent .profile-info .buttons > a:first-of-type {
-	width: calc(50% - 10px);
-	background-color: var(--mainColor);
-	color: #FFF;
+.profile-page .profile-body-info {
+	width: 40%;
+	color: #000;
 }
 
-.my-profile .profile-parent .profile-info .buttons > a:nth-of-type(2) {
-	width: 50%;
-	background-color: #FFF;
-	color: var(--mainColor);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+.profile-page .profile-body-info h4 {
+	font-size: 2.4rem;
+	margin-bottom: 1rem;
+	font-weight: 400;
 }
 
-.my-profile .profile-parent .profile-info .buttons > a {
-	padding: .8rem 0;
+.profile-page .profile-body-info .pf {
+	display: block;
+	margin-bottom: .9rem;
+}
+
+.profile-page .profile-body-info .pf:last-of-type {
+	margin-bottom: 2rem;
+}
+
+.profile-page .profile-body-info .pf > img {
+	width: 15px;
+	margin-right: .6rem;
+}
+
+.profile-page .profile-body-info .profile-body-info-buttons {
+	width: 90%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.profile-page .profile-body-info .profile-body-info-buttons a {
+	width: 180px;
+	padding: .9rem 0;
 	text-align: center;
-	border-radius: 5px;
 	text-decoration: none;
-	text-transform: capitalize;
-	font-weight: bold;
+	border-radius: 8px;
 }
 
-.my-profile .profile-parent .profile-posts {
-	width: 58%;
-	background-color: #EEE;
-	padding: 1rem;
-	height: 250px;
+.profile-page .profile-body-info .profile-body-info-buttons a:first-of-type {
+	color: #FFF;
+	background-color: var(--mainColor);
+	border: 1px solid var(--mainColor);
+}
+
+.profile-page .profile-body-info .profile-body-info-buttons a:nth-of-type(2) {
+	color: var(--mainColor);
+	background-color: #FFF;
+	border: 2.5px solid var(--mainColor);
+}
+
+.profile-page .profile-body-posts {
+	width: 60%;
+	padding-top: 2rem;
+	color: #000;
+	
+}
+
+.profile-page .profile-body-posts .profile-posts {
+	height: 650px;
 	overflow-y: auto;
 }
 
-.my-profile .profile-parent .profile-posts h3 {
+.profile-page .profile-body-posts .profile-posts .profile-post {
+	margin-bottom: 1.5rem;
+}
+
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header .profile-post-info-logo {
+	display: flex;
+	align-items: center;
+}
+
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header .profile-post-info-logo img {
+	width: 60px;
+	margin-right: .5rem;
+}
+
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header .profile-post-info-logo .pf-info h5 {
+	margin-bottom: 0 !important;
+	margin-top: 0 !important;
+	font-weight: 400;
+	font-size: 1.1rem;
+}
+
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header .pf-menu {
+	width: 40px;
 	text-align: center;
-	font-weight: bold;
-	color: var(--subColor);
-	text-transform: capitalize;
-	letter-spacing: 2px;
 }
 
-.my-profile .profile-parent .profile-posts > .post {
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-statu p {
+	font-size: 1.2rem;
+}
+
+.profile-page .profile-body-posts .profile-posts .profile-post .profile-post-image img {
 	width: 100%;
-	height: 200px;
-	border: 1px solid var(--mainColor);
-	margin-bottom: .5rem;
+	height: 480px;
+	object-fit: 100%;
 }
-
 
 /* END PROFILE PAGE STYLING */
 
@@ -1051,7 +1100,13 @@ input[type=submit]:hover {
 
 }
 
-
+.picture .emotes{
+	height: 100px;
+	z-index: 5;
+	position: absolute;
+	top: 0px;
+	left: 264px;
+}
 
 .camera_container .picture .pic-btn {
 
