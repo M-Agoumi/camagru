@@ -1100,7 +1100,13 @@ input[type=submit]:hover {
 
 }
 
-
+.picture .emotes{
+	height: 100px;
+	z-index: 5;
+	position: absolute;
+	top: 0px;
+	left: 264px;
+}
 
 .camera_container .picture .pic-btn {
 
