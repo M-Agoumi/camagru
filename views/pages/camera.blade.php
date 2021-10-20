@@ -12,7 +12,13 @@
 
 	    </div>
 	    <div class="picture" id="picture">
-	        <canvas id="canvas" width="650" height="460"></canvas>
+		    <div id="image" style="position:relative; height: 490px; width: 650px; overflow: scroll">
+	            <canvas id="canvas" width="650" height="460"></canvas>
+		    </div>
+		    <div style="height: 200px; overflow: hidden">
+			    <img src="/assets/img/hat.png" width="100" onclick="addImage(this.src)"/>
+			    <img src="/assets/img/moustache.png" width="100" onclick="addImage(this.src)"/>
+		    </div>
 	        <div class="pic-btn">
 	            <div class="capture confirm" onclick="save()">confirm image</div>
 	            <div class="capture retake" onclick="getWebCam()">Retake</div>
@@ -68,5 +74,16 @@
 	</div>
 
 	<script src="/assets/js/camera.js"></script>
+	<script>
+        /** add pictures to the canvas **/
+
+        function addImage(imgLink) {
+            var img = document.createElement("img");
+            img.className  = "emotes";
+            img.src = imgLink;
+            var src = document.getElementById("image");
+            src.appendChild(img);
+        }
+	</script>
 @endsection
 
