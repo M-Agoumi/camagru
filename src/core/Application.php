@@ -7,7 +7,7 @@
 /*   By: magoumi <magoumi@student.1337.ma>             +#+      +#++:      +#++:        +#+         */
 /*                                                    +#+         +#+        +#+      +#+           */
 /*   Created: 2021/03/17 09:11:16 by magoumi         #+#  #+#    #+# #+#    #+#     #+#             */
-/*   Updated: 2021/03/17 09:11:16 by magoumi      ####### ########   ########      ###.ma           */
+/*   Updated: 2021/10/20 02:04:52 by magoumi      ####### ########   ########      ###.ma           */
 /*                                                                                                  */
 /* ************************************************************************************************ */
 
@@ -19,7 +19,6 @@ use core\Db\DbModel;
 use Exception;
 use models\core\Languages;
 use models\core\Preferences;
-use models\User;
 
 /**
  * Class Application don't forget to include your user class
@@ -41,26 +40,30 @@ class Application
 	public ?View $view;
 	public ?Helper $helper = null;
 	public ?Cookie $cookie = null;
+	public ?Catcher $catcher = null;
 	public array $MainLang = [];
 	protected array $fallbackLang = [];
+	public string $interface;
 
 	/**
 	 * Application constructor.
 	 * @param $rootPath string the root path of our application
 	 */
 
-	public function __construct(string $rootPath)
+	public function __construct(string $rootPath, string $appInterface = 'web')
 	{
 		self::$ROOT_DIR = $rootPath;
 		self::$APP = $this;
 		self::$ENV = $this->getDotEnv();
-		$this->userCLass = self::getEnvValue('userClass') ?? 'User';
+		$this->catcher = New Catcher();
+		$this->interface = $appInterface;
+		$this->userCLass = self::getEnvValue('userClass') ?? 'models\User';
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->db = New Database($this->getDatabaseConfig());
 		$this->session = New Session();
 		$this->user = self::getUser();
-		$this->router = New Router($this->request, $this->response);
+		$this->router = New Router($this->request, $this->response, $appInterface);
 		$this->view = New View();
 		$this->helper = New Helper();
 		$this->cookie = New Cookie();
@@ -97,24 +100,13 @@ class Application
 		return !self::$APP->user;
 	}
 
-	/** is the instance we're looking for exist in the App?
+	/** is the instance we're looking for exists in the App?
 	 * @param $instance
 	 * @return bool
 	 */
 	public static function isAppProperty($instance): bool
 	{
-		$rc = new \ReflectionClass(Application::class);
-
-		$properties = $rc->getProperties();
-		foreach ($properties as $property) {
-			if ($instance == $property->name) {
-				unset($rc);
-				return true;
-			}
-		}
-		unset($rc);
-
-		return false;
+		return (property_exists(Application::class, $instance));
 	}
 
 	/**
@@ -131,57 +123,15 @@ class Application
 	    	else
 	    		var_dump($output);
         } catch (Exception $e) {
-	    	$clear = ob_get_clean();
-	    	$message = '';
-	    	if ($e->getCode() != 404) {
-	    		ob_start();
-		        echo "<pre>";
-		        var_dump($e);
-			    print_r($e->getTraceAsString());
-			    $file = $e->getFile();
-			    $lines = file($file); //file in to an array
-			    $line = $e->getLine();
-			    echo "<br>code:<br>" . ($line - 1) . "\t" .
-				    $lines[$line - 1] . "<br>$line\t" .
-				    $lines[$line ] . "<br>" . ($line + 1) . "\t" .
-				    $lines[$line + 1];
-			    echo "<br><br>on file " . $file . " line " . $line;
-		        echo "</pre>";
-		        $message = ob_get_clean();
-		    }
-	        $this->response->setStatusCode($e->getCode());
-	        if ($this->getDotEnv()['env'] != 'dev') {
-	        	$codeView = 'error/__' . $e->getCode();
-	        	if (file_exists(Application::$ROOT_DIR . '/views/error/' . $codeView))
-	                echo $this->view->renderView('error/__' . $e->getCode(), ['e' => $e], ['title' => $e->getCode()]);
-	        	else
-	        		echo $this->view->renderView('error/__500', [], ['title' => '500 Internal Server Error']);
-	        } else
-	        	echo $this->view->renderView('error/__error', ['e' => $e], ['title' => $e->getCode()]);
+	    	$this->catcher->catch($e);
         }
-	}
-
-	/**
-	 * @return Controller|null
-	 */
-	public function getController(): ?Controller
-	{
-		return $this->controller;
-	}
-
-	/**
-	 * @param Controller|null $controller
-	 */
-	public function setController(?Controller $controller): void
-	{
-		$this->controller = $controller;
 	}
 
     /**
      * get the setting in .env file
      * @return array
      */
-	private function getDotEnv() : array
+	public function getDotEnv() : array
 	{
 		return file_exists(self::$ROOT_DIR . "/.env") ?
 				parse_ini_file(self::$ROOT_DIR . "/.env") : [];
@@ -200,12 +150,19 @@ class Application
      * read database config file or return null
      * @return array|false
      */
-    public function getDatabaseConfig()
+    private function getDatabaseConfig()
 	{
-		return file_exists(self::$ROOT_DIR . "/config/db.conf") ?
-				parse_ini_file(self::$ROOT_DIR . "/config/db.conf") : [];
+		return self::getConfig('db');
 	}
 
+	/**
+	 * get configs from config file
+	 */
+	public static function getConfig(string $file)
+	{
+		return file_exists(self::$ROOT_DIR . "/config/" . $file . ".conf") ?
+			parse_ini_file(self::$ROOT_DIR . "/config/" . $file . ".conf", true) : [];
+	}
 
     /**
      * @param string $key
@@ -280,7 +237,7 @@ class Application
 	 */
 	public static function logout(string $redirect = '/')
 	{
-		$token = Application::$APP->request->getBody() ?? '';
+		Application::$APP->request->getBody();
 		Application::$APP->session->set('user_tmp', Application::$APP->user->getId());
 		Application::$APP->user = NULL;
 		Application::$APP->session->remove('user');
