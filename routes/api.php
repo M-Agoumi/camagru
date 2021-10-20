@@ -1,7 +1,8 @@
 <?php
 
-use controller\DefaultController;
+use controller\ApiController;
 use core\Application;
+use core\Router;
 
 $app = Application::$APP;
 
@@ -9,5 +10,4 @@ $app = Application::$APP;
 * all the routes of our application
 */
 
-/** default Controller routes */
-$app->router->get('/', [DefaultController::class, 'api'])->name('home.index');
+Router::post('posts', [ApiController::class, 'posts']);
