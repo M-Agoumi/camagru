@@ -201,7 +201,7 @@ class MakeEntity
 
 	private function propertiesToString(array $entityComponents): string
 	{
-		$string = 'protected ?int $entityID = null' . "\n\t";
+		$string = 'protected ?int $entityID = null;' . "\n\t";
 		foreach ($entityComponents as $component)
 		{
 			$string .= "protected ?" . $component[1] . " $" . $component[0] . " = NULL;";

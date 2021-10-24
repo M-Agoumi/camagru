@@ -26,22 +26,6 @@ class {{ class_name }} extends DbModel
 	{{ table_name }}
 
 	/**
-	 * @return string
-	 */
-	public function primaryKey(): string
-	{
-		return 'entityID';
-	}
-
-	/**
-	 * @return int|null
-	 */
-	public function getId(): ?int
-	{
-		return $this->entityID;
-	}
-
-	/**
 	 * @return array[]
 	 */
 	public function rules(): array
