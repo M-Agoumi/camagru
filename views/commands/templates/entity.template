@@ -1,0 +1,53 @@
+<?php
+/* ************************************************************************************************ */
+/*                                                                                                  */
+/*                                                        :::   ::::::::   ::::::::  :::::::::::    */
+/*   {{ file_name }}:+:+:  :+:    :+: :+:    :+: :+:     :+:     */
+/*                                                      +:+         +:+        +:+        +:+       */
+/*   By: magoumi <magoumi@student.1337.ma>             +#+      +#++:      +#++:        +#+         */
+/*                                                    +#+         +#+        +#+      +#+           */
+/*   Created: {{ date_time }} by magoumi         #+#  #+#    #+# #+#    #+#     #+#             */
+/*   Updated: {{ date_time }} by magoumi      ####### ########   ########      ###.ma           */
+/*                                                                                                  */
+/* ************************************************************************************************ */
+
+namespace   models;
+
+/**
+ * Class {{ class_name }}
+ */
+
+use core\Db\DbModel;
+
+class {{ class_name }} extends DbModel
+{
+	{{ class_properties }}
+
+	{{ table_name }}
+
+	/**
+	 * @return string
+	 */
+	public function primaryKey(): string
+	{
+		return 'entityID';
+	}
+
+	/**
+	 * @return int|null
+	 */
+	public function getId(): ?int
+	{
+		return $this->entityID;
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function rules(): array
+	{
+		return [
+		    {{ rules }}
+		];
+	}
+}
