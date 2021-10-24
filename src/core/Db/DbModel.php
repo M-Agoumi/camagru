@@ -18,24 +18,41 @@ use models\Model;
 use PDO;
 use PDOStatement;
 use ReflectionClass;
+use ReflectionProperty;
 
 abstract class DbModel extends Model
 {
     public ?string $created_at = null;
     public ?string $updated_at = null;
-	private static DbModel $dbModel;
 
+	/**
+	 * @var string $tableName on the database
+	 */
 	protected static string $tableName = '';
 
-	abstract public function attributes(): array;
-	
-	abstract public function primaryKey(): string;
+	/**
+	 * @var string $primaryKey of the table
+	 */
+	protected static string $primaryKey = 'entityID';
 
-	abstract public function getId(): ?int;
+	/**
+	 * framework properties that aren't database table attributes
+	 */
+	private static array $privateProperties = ['primaryKey', 'tableName', 'nonAttributes', 'protected' , 'errors'];
 
-	public function __construct()
+	/**
+	 * child properties that aren't database table attributes
+	 */
+	protected static array $nonAttributes = [];
+
+	/**
+	 * @var array $protected properties from public shows like api
+	 */
+	protected static array $protected = [];
+
+	public function getId(): ?int
 	{
-		self::$dbModel = $this;
+		return $this->{$this->primaryKey()};
 	}
 
 	/**
@@ -58,6 +75,32 @@ abstract class DbModel extends Model
 		return lcfirst((new ReflectionClass($this))->getShortName());
 	}
 
+	/**
+	 * get table primary key
+	 */
+	public static function primaryKey(): string
+	{
+		return static::$primaryKey;
+	}
+
+	/**
+	 * get class attributes (properties)
+	 */
+	protected static function attributes(): array
+	{
+		$attributes = [];
+		$reflection = new ReflectionClass(static::class);
+		/** @var $atts ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED */
+		$atts = $reflection->getProperties();
+		foreach ($atts as $att)
+		{
+			if (!in_array($att->name, static::$privateProperties) && !in_array($att->name, static::$nonAttributes))
+				$attributes[] = $att->name;
+		}
+
+		return $attributes;
+	}
+
     /**
      * save method to insert data of a specific model to it's table
      * @return bool
@@ -66,7 +109,7 @@ abstract class DbModel extends Model
     {
 		$tableName = $this->tableName();
 		$attributes = $this->attributes();
-		array_push($attributes, 'created_at');
+
 		$params = array_map(fn($m) => ":$m", $attributes);
 		$statement = self::prepare(
 			"INSERT INTO $tableName (". implode(", ", $attributes) . ") value (
@@ -264,8 +307,39 @@ abstract class DbModel extends Model
 		return Application::$APP->db->pdo->prepare($sql);
 	}
 
+
+	/**
+	 * @return string
+	 */
 	public function __toString()
 	{
 		return (string)$this->getId();
+	}
+
+	/**
+	 * @param $name
+	 * @param $arguments
+	 * @return void
+	 * @property string $name
+	 */
+	public function __call($name, $arguments)
+	{
+		if (substr($name, 0, 3 ) === "get")
+		{
+			$name = lcfirst(ltrim($name, 'get'));
+			if (isset($this->$name))
+				return $this->$name;
+
+			die('property ' . $name . ' does not exist in ' . get_class($this));
+		}
+
+		if (substr($name, 0, 3 ) === "set")
+		{
+			$name = lcfirst(ltrim($name, 'set'));
+			$this->$name = $arguments[0];
+			return ;
+		}
+
+		throw new \BadMethodCallException('method ' . $name . ' does not exist in class ' . get_class($this));
 	}
 }
