@@ -128,7 +128,9 @@ class Make extends BaseCommand implements BaseCommandInterface
 		self::$command = $command;
 		$helperMessage = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage .= self::printCommand('controller') . "make a controller (accepts controller";
-		$helperMessage .= " name as an argument)[make:controller name]";
+		$helperMessage .= " name as an argument)[make:controller name]". PHP_EOL;
+		$helperMessage .= self::printCommand('entity'). "make an entity(module) (accept entity name as an";
+		$helperMessage .= "argument)[make:entity name]";
 
 		return $helperMessage;
 	}
