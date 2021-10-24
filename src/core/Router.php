@@ -213,9 +213,9 @@ class Router
 		$params = [];
 
 		$reflector = new ReflectionClass($callback[0]);
+
 		foreach ($reflector->getMethod($callback[1])->getParameters() as $param) {
 			$modelName = $param->name;
-
 			$modelType = $param->getClass()->name ?? NULL;
 			array_push($params, $this->injectClassOrModule($modelType, $modelName, $callback));
 		}

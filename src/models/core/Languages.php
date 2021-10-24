@@ -22,11 +22,6 @@ class Languages extends DBModel
 		];
 	}
 
-	public function tableName(): string
-	{
-		return 'languages';
-	}
-
 	public function attributes(): array
 	{
 		return ['user', 'language'];

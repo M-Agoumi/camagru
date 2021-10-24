@@ -8,6 +8,7 @@ use core\Request;
 use core\View;
 use Middlewares\DevMiddleware;
 use models\core\UserToken;
+use models\Likes;
 use models\Post;
 use models\Roles;
 use models\User;
@@ -100,5 +101,15 @@ class TestController extends Controller
 	public function emailView()
 	{
 		return render('mails/restorePassword', ['port' => 8000, 'token' => 'test123123123123']);
+	}
+
+	public function dbTest()
+	{
+		$user = new Likes();
+
+//		$user->getOneBy(1);
+		$like = Likes::findOne(['id' => 1]);
+
+		return $user;
 	}
 }

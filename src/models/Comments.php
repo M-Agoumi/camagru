@@ -15,11 +15,6 @@ class Comments extends DbModel
 	public ?string $content = null;
 	public int $status = 0;
 
-	public function tableName(): string
-	{
-		return "comments";
-	}
-
 	public function attributes(): array
 	{
 		return ['post', 'user', 'content', 'status'];
@@ -51,7 +46,7 @@ class Comments extends DbModel
 	{
 		$user = New User();
 
-		$user->loadData($user->getOneBy($id, NULL, 0));
+		$user->getOneBy($id);
 
 		return $user;
 	}

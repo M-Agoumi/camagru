@@ -11,10 +11,7 @@ class BannedIP extends \core\Db\DbModel
 	public ?int $status = null;
 	public ?string $comment = null;
 
-	public function tableName(): string
-	{
-		return 'banned_ip';
-	}
+	protected static string $tableName = 'banned_ip';
 
 	public function attributes(): array
 	{

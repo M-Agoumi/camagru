@@ -17,11 +17,6 @@ class Roles extends \core\Db\DbModel
 	public ?User $updated_by = null;
 
 
-	public function tableName(): string
-	{
-		return "roles";
-	}
-
 	public function attributes(): array
 	{
 		return ['user', 'super_admin', 'users', 'posts', 'comments', 'likes', 'promote', 'updated_by'];

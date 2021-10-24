@@ -17,14 +17,7 @@ class Post extends DbModel
 	public ?int $status = null;
 	public ?User $author = null;
 
-
-	/**
-	 * @return string
-	 */
-	public function tableName(): string
-	{
-		return 'posts';
-	}
+	protected static string $tableName = 'posts';
 
 	/**
 	 * @return array
@@ -66,7 +59,7 @@ class Post extends DbModel
 	 * @param string $comment
 	 * @return string]
 	 */
-	public function hashtag(string $comment)
+	public function hashtag(string $comment): string
 	{
 		$hashtags = '';
 		$tags = preg_match_all("/#(\w+)/", $comment, $m);

@@ -11,11 +11,6 @@ class EmailToken extends \core\Db\DbModel
 	public ?string $token = '';
 	public int $used = 0;
 
-	public function tableName(): string
-	{
-		return 'emailToken';
-	}
-
 	public function attributes(): array
 	{
 		return ['email', 'token', 'used'];

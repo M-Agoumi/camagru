@@ -14,11 +14,6 @@ class Preferences extends DBModel
 	public ?int $language = null;
 	public ?int $commentsMail = null;
 
-	public function tableName(): string
-	{
-		return 'preferences';
-	}
-
 	public function attributes(): array
 	{
 		return ['user', 'language', 'commentsMail'];

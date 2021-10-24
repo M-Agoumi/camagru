@@ -14,7 +14,6 @@
 namespace   models;
 /**
  * Class User
- * @var $ROOT_DIR ~/Desktop/School/camagru
  */
 
 use core\Db\DbModel;
@@ -35,11 +34,10 @@ class User extends DbModel
 	public ?string $ip_address = null;
 	public bool $pass = false;
 
-
-	public function tableName(): string
-	{
-		return 'users';
-	}
+	/**
+	 * @var string table name in the database
+	 */
+	protected static string $tableName = 'users';
 
 	public function attributes(): array
 	{
@@ -93,6 +91,7 @@ class User extends DbModel
 	{
 		$this->status = self::STATUS_INACTIVE;
 		$this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
 	    return parent::save();
 	}
 
@@ -121,8 +120,4 @@ class User extends DbModel
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
         ];
     }
-
-	/**
-	 * @return array[]
-	 */
 }

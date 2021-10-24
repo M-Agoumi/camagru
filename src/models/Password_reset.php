@@ -13,13 +13,6 @@ class Password_reset extends DbModel
 	public ?string $token = null;
 	public ?int $used = null;
 
-	/**
-	 * @return string
-	 */
-	public function tableName(): string
-	{
-		return "password_reset";
-	}
 
 	/**
 	 * @return array

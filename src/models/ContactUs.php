@@ -18,10 +18,11 @@ class ContactUs extends DbModel
 	public ?int $parentId = null;
 	public ?int $status = null;
 
-	public function tableName(): string
-	{
-		return 'contact_us';
-	}
+	/**
+	 * @var string table name in the database
+	 */
+	protected static string $tableName = "contact_us";
+
 
 	public function attributes(): array
 	{

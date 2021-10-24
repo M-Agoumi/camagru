@@ -16,11 +16,6 @@ class Likes extends DbModel
 	public int $type = 0;
 
 
-	public function tableName(): string
-	{
-		return "likes";
-	}
-
 	public function attributes(): array
 	{
 		return [

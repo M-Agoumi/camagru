@@ -17,19 +17,46 @@ use core\Application;
 use models\Model;
 use PDO;
 use PDOStatement;
+use ReflectionClass;
 
 abstract class DbModel extends Model
 {
     public ?string $created_at = null;
     public ?string $updated_at = null;
+	private static DbModel $dbModel;
 
-	abstract public function tableName(): string;
+	protected static string $tableName = '';
 
 	abstract public function attributes(): array;
 	
 	abstract public function primaryKey(): string;
 
 	abstract public function getId(): ?int;
+
+	public function __construct()
+	{
+		self::$dbModel = $this;
+	}
+
+	/**
+	 * get table name
+	 */
+	protected function tableName(): string
+	{
+		$static = !(isset($this) && get_class($this) == __CLASS__);
+
+		if ($static) {
+			if (static::$tableName != '')
+				return lcfirst(static::$tableName);
+
+			return (lcfirst((new ReflectionClass(static::class))->getShortName()));
+		}
+
+		if ($this->tableName != '')
+			return $this->tableName;
+
+		return lcfirst((new ReflectionClass($this))->getShortName());
+	}
 
     /**
      * save method to insert data of a specific model to it's table
