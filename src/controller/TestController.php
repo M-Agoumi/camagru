@@ -7,6 +7,7 @@ use core\Application;
 use core\Request;
 use core\View;
 use Middlewares\DevMiddleware;
+use models\Client;
 use models\core\UserToken;
 use models\Likes;
 use models\Post;
@@ -105,10 +106,13 @@ class TestController extends Controller
 
 	public function dbTest()
 	{
-		$user = new Likes();
+		$user = new Client();
 
-//		$user->getOneBy(1);
-		$like = Likes::findOne(['id' => 1]);
+		$user->setUsername('test');
+		$user->getOneBy(1);
+
+		var_dump($user);
+		die($user->getUsername());
 
 		return $user;
 	}
