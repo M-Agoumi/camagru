@@ -16,21 +16,10 @@ class Roles extends \core\Db\DbModel
 	public bool $promote = false;
 	public ?User $updated_by = null;
 
-
-	public function attributes(): array
-	{
-		return ['user', 'super_admin', 'users', 'posts', 'comments', 'likes', 'promote', 'updated_by'];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	/**
+	 * @var string table primary key
+	 */
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc

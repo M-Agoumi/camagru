@@ -13,15 +13,7 @@ class BannedIP extends \core\Db\DbModel
 
 	protected static string $tableName = 'banned_ip';
 
-	public function attributes(): array
-	{
-		return ['address', 'status', 'comment'];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
+	protected static string $primaryKey = 'id';
 
 	public function getId(): ?int
 	{

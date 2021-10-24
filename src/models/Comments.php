@@ -15,20 +15,10 @@ class Comments extends DbModel
 	public ?string $content = null;
 	public int $status = 0;
 
-	public function attributes(): array
-	{
-		return ['post', 'user', 'content', 'status'];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	/**
+	 * @var string table primary key
+	 */
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc
@@ -42,6 +32,11 @@ class Comments extends DbModel
 		];
 	}
 
+
+	/**
+	 * @param $id
+	 * @return User get the user by the id
+	 */
 	public function user($id): User
 	{
 		$user = New User();

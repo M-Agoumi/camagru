@@ -17,23 +17,15 @@ class Post extends DbModel
 	public ?int $status = null;
 	public ?User $author = null;
 
+	/**
+	 * @var string $tableName in the database
+	 */
 	protected static string $tableName = 'posts';
 
 	/**
-	 * @return array
+	 * @var string table primary key
 	 */
-	public function attributes(): array
-	{
-		return ['title', 'comment', 'picture', 'slug', 'status', 'author'];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * @return array
@@ -43,11 +35,6 @@ class Post extends DbModel
 		return [
 			'picture' => [self::RULE_REQUIRED],
 		];
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
 	}
 
 	public function relationships(): array

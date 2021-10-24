@@ -39,50 +39,20 @@ class User extends DbModel
 	 */
 	protected static string $tableName = 'users';
 
-	public function attributes(): array
-	{
-		return ['name', 'username', 'email', 'password', 'status', 'ip_address', 'picture'];
-	}
-	
 	/**
-	 * @return string
+	 * @var string $primaryKey of the table
 	 */
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
+	protected static string $primaryKey = 'id';
 
 	/**
-	 * @return int|null
+	 * properties that aren't database table attributes
 	 */
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	protected static array $nonAttributes = ['pass'];
 
 	/**
-	 * @return string|null
+	 * @var array|string[] protected attributes from public sharing (Ex:API...)
 	 */
-	public function getUsername(): ?string
-	{
-		return $this->username;
-	}
-
-	/**
-	 * @return string|null
-	 */
-	public function getEmail(): ?string
-	{
-		return $this->email;
-	}
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
-    }
+	protected static array $protected = ['id', 'password'];
 
 	/** hash password before saving
 	 * @return bool

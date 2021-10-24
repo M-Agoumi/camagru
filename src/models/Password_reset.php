@@ -13,30 +13,11 @@ class Password_reset extends DbModel
 	public ?string $token = null;
 	public ?int $used = null;
 
-
 	/**
-	 * @return array
+	 * @var string table primary key
 	 */
-	public function attributes(): array
-	{
-		return ['email', 'token', 'used'];
-	}
+	protected static string $primaryKey = 'id';
 
-	/**
-	 * @return string
-	 */
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	/**
-	 * @return int|null
-	 */
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
 
 	/**
 	 * @return array

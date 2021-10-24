@@ -12,6 +12,12 @@ class Languages extends DBModel
 	public ?string $language = null;
 
 	/**
+	 * @var string table primary key
+	 */
+	protected static string $primaryKey = 'id';
+
+
+	/**
 	 * the rules should be respect by each child model
 	 * @return array
 	 */
@@ -22,22 +28,12 @@ class Languages extends DBModel
 		];
 	}
 
-	public function attributes(): array
-	{
-		return ['user', 'language'];
-	}
 
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
-
-	public static function getLang(int $id)
+	/**
+	 * @param int $id
+	 * @return DbModel language
+	 */
+	public static function getLang(int $id): DbModel
 	{
 		return self::findOne(['id' => $id]);
 	}
