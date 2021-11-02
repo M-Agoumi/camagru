@@ -1,18 +1,14 @@
 <?php
 
-
 namespace controller;
 
 use core\Application;
 use core\Request;
-use core\View;
 use Middlewares\DevMiddleware;
 use models\Client;
-use models\core\UserToken;
-use models\Likes;
 use models\Post;
-use models\Roles;
 use models\User;
+use vendor\FakeData\FakeDataFactory;
 
 class TestController extends Controller
 {
@@ -115,5 +111,22 @@ class TestController extends Controller
 		die($user->getUsername());
 
 		return $user;
+	}
+
+	public function fakeData(User $user): string
+	{
+		$fake = FakeDataFactory::create();
+
+		for ($i = 0; $i < 5; $i++) {
+			$user = new User();
+
+			$user->name = $fake->name;
+			$user->username = $fake->username($user->name);
+			$user->email = $fake->email($user->name);
+			$user->password = "P@ssw0rd!";
+			$user->save();
+		}
+
+		return "";
 	}
 }
