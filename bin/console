@@ -27,7 +27,7 @@ CONST B_WHITE = "\e[37;1m";
 
 /** require autoloader */
 if (file_exists(dirname(__DIR__) . '/__autoload.php'))
-	require dirname(__DIR__) . '/__autoload.php';
+	require dirname(__DIR__) . '/vendor/__autoload.php';
 else
 	die("failed to load the autoloader\n");
 
