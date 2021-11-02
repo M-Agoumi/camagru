@@ -96,5 +96,5 @@ Router::get('/setcookie', function (){
 	return Application::$APP->cookie->set('test', '1', time() + (86400 * 30), "/");
 });
 Router::get('/testabc' ,[TestController::class, 'dbTest']);
-
+Router::get('/fake', [TestController::class, 'fakeData']);
 
