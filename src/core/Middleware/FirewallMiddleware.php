@@ -9,7 +9,9 @@ use models\core\BannedIP;
 
 class FirewallMiddleware extends BaseMiddleware
 {
-
+	/**
+	 * check if ip is banned
+	 */
 	public function execute()
 	{
 		$ip = Application::$APP->request->getUserIpAddress();
@@ -19,7 +21,7 @@ class FirewallMiddleware extends BaseMiddleware
 
 		if ($banned->id)
 			die(
-				'sorry your are banned for the following reason: '.$banned->comment . '<br>' .
+				'sorry your are banned for the following reason: ' . $banned->comment . '<br>' .
 				'if you think this was a mistake please feel free to contact us on <a href="mailto:' .
 				Application::getEnvValue('supportMail') . '">' . Application::getEnvValue('supportMail') .'</a>'
 			);
