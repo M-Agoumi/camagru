@@ -75,7 +75,7 @@ if (isset($config['env']) && $config['env'] === 'dev'){
  * require our autoloader
  */
 
-if (file_exists(dirname(__DIR__) . '/__autoload.php'))
+if (file_exists(dirname(__DIR__) . '/vendor/__autoload.php'))
 	require dirname(__DIR__) . '/vendor/__autoload.php';
 else
 	die("failed to load the autoloader\n");
