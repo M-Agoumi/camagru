@@ -116,6 +116,20 @@ class Router
 		return self::registerRoute('get', $path, $callback);
 	}
 
+	/** redirect from a path to a path, (ex: a link has been updated? set the old one to redirect to the new
+	 * one so none is lost in 404)
+	 * @param string $from
+	 * @param string $to
+	 * @param string|null $method
+	 */
+	public static function redirect(string $from, string $to, string $method = null)
+	{
+		if ($method == 'get' || $method == null)
+			self::registerRoute('get', $from, function () use($to){redirect($to);});
+		if ($method == 'post' || $method == null)
+			self::registerRoute('post', $from, function () use($to){redirect($to);});
+	}
+
 	/** register a name for the current path
 	 * @param string $name
 	 */
@@ -183,7 +197,7 @@ class Router
 		if (empty($this->routes))
 			die (render('defaults.firstRun'));
 
-		$path = strtolower($this->request->getPath());
+		$path = $this->request->getPath();
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
 

@@ -7,7 +7,7 @@ use vendor\FakeData\src\FakeData;
 class FakeDataFactory extends FakeData
 {
 	private static ?FakeDataFactory $instance = null;
-	private array $types = ['person'];
+	private array $types = ['person', 'text', 'media'];
 
 	private function __construct()
 	{
@@ -41,7 +41,7 @@ class FakeDataFactory extends FakeData
 		{
 			if (in_array($method, $this->$type) && $method != '_class') {
 				$class = new $this->$type['_class']();
-				return $class->$method($args);
+				return call_user_func_array([$class, $method], $args);
 			}
 		}
 
