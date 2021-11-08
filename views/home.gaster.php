@@ -47,13 +47,13 @@
                         post += '<div class="panel-title">' + posts[i].title + '</div>';
                         post += '<div class="panel-tags">';
                         post += '<span class="tag-icon">';
-                        post += '<img class="tag-icon-img" src="/uploads/tag-icon.svg" alt=""/>';
+                        post += '<img class="tag-icon-img" src="/assets/icon/tag-icon.svg" alt=""/>';
                         post += '</span>';
                         post += '<span class="tags-list">' + posts[i].hashtags + '</span>'
                         post += '</div>';
                         post += '</div>';
-                        post += '<img class="panel-gradient" src="/uploads/base-gradient.png" alt=""/>';
-                        post += '<img class="panel-vingette" src="/uploads/darken-gradient.png" alt=""/>';
+                        post += '<img class="panel-gradient" src="/assets/icon/base-gradient.png" alt=""/>';
+                        post += '<img class="panel-vingette" src="/assets/icon/darken-gradient.png" alt=""/>';
                         post += '</div>';
                         post += '<img class="panel-img" id=' + id + ' alt="' + posts[i].title + '"/>';
                         post += '</div>';
