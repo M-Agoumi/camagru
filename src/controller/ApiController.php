@@ -27,7 +27,7 @@ class ApiController extends Controller
    {
 	   $posts = $post->paginate([
 		   'order' => 'DESC',
-		   'articles' => 3
+		   'articles' => 9
 	   ]);
 
 	   $posts = $this->generateHashtags($posts, $post);
