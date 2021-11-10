@@ -25,7 +25,6 @@ use core\Middleware\FirewallMiddleware;
 abstract class Controller
 {
 
-	public string $layout = 'main';
 	public string $action = '';
     /** @var BaseMiddleware[] */
 	protected array $middlewares = [];
@@ -81,10 +80,7 @@ abstract class Controller
 		    'X-Mailer: PHP/' . phpversion();
 
     	if (is_array($content)) {
-			$swap = $this->layout;
-    		$this->layout = 'mail';
     		$body = $this->render('mails/' . $content[0], $content[1], ['title' => $subject]);
-    		$this->layout = $swap;
 
     		return $this->mailer($to, $subject, $body, $headers);
 	    } else

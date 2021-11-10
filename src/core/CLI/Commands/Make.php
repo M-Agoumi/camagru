@@ -1,4 +1,17 @@
 <?php
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Make.php                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: magoumi <magoumi@student.1337.m            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/20 17:41:50 by magoumi           #+#    #+#             */
+/*   Updated: 2021/10/20 17:41:50 by magoumi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 
 namespace core\CLI\Commands;
 
@@ -7,12 +20,10 @@ use core\CLI\BaseCommandInterface;
 
 class Make extends BaseCommand implements BaseCommandInterface
 {
-
 	public function __construct()
 	{
 		self::$command = 'make';
 	}
-
 
 	/** Make a controller
 	 * @param $argv
@@ -21,6 +32,17 @@ class Make extends BaseCommand implements BaseCommandInterface
 	{
 		$controllerName = $this->getControllerName($argv[1] ?? '');
 		$this->makeController($controllerName);
+	}
+
+	/**
+	 * make an entity
+	 * @param $argv
+	 */
+	public function entity($argv): void
+	{
+		$entity = new MakeEntity();
+
+		$entity->entity($argv);
 	}
 
 	/**
@@ -106,7 +128,9 @@ class Make extends BaseCommand implements BaseCommandInterface
 		self::$command = $command;
 		$helperMessage = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage .= self::printCommand('controller') . "make a controller (accepts controller";
-		$helperMessage .= " name as an argument)[make:controller name]";
+		$helperMessage .= " name as an argument)[make:controller name]". PHP_EOL;
+		$helperMessage .= self::printCommand('entity'). "make an entity(module) (accept entity name as an";
+		$helperMessage .= "argument)[make:entity name]";
 
 		return $helperMessage;
 	}

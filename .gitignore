@@ -1,4 +1,10 @@
+# IDE files
 .idea
+
+# Sensitive files
 .env
-public/uploads/image*
-public/test.php
+config/db.conf
+
+# Personal files
+public/uploads/*
+!public/uploads/dps

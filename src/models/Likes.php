@@ -15,31 +15,10 @@ class Likes extends DbModel
 	public ?int $status = null;
 	public int $type = 0;
 
-
-	public function tableName(): string
-	{
-		return "likes";
-	}
-
-	public function attributes(): array
-	{
-		return [
-			'post',
-			'user',
-			'type',
-			'status'
-		];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	/**
+	 * @var string table primary key
+	 */
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * the rules should be respect by each child model

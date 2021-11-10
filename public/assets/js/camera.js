@@ -18,7 +18,10 @@ async function getWebCam() {
         console.log(e);
     }
 }
-getWebCam();
+
+window.onload = function() {
+    getWebCam();
+}
 
 /** image filters functions */
 

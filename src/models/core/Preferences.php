@@ -14,25 +14,7 @@ class Preferences extends DBModel
 	public ?int $language = null;
 	public ?int $commentsMail = null;
 
-	public function tableName(): string
-	{
-		return 'preferences';
-	}
-
-	public function attributes(): array
-	{
-		return ['user', 'language', 'commentsMail'];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * the rules should be respect by each child model

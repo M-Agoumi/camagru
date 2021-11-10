@@ -18,25 +18,15 @@ class ContactUs extends DbModel
 	public ?int $parentId = null;
 	public ?int $status = null;
 
-	public function tableName(): string
-	{
-		return 'contact_us';
-	}
+	/**
+	 * @var string table name in the database
+	 */
+	protected static string $tableName = "contact_us";
 
-	public function attributes(): array
-	{
-		return ['logged', 'user','email', 'title', 'content', 'parentId', 'status'];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	/**
+	 * @var string table primary key
+	 */
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc

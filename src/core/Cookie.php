@@ -19,14 +19,17 @@ class Cookie
 		if (!Application::isGuest()) {
 			if (!$this->get('user_tk')) {
 				$userToken->getOneBy('user', Application::$APP->user->getId());
+				$userToken->used = 0;
+
 				if (!$userToken->id){
 					/** not token is saved generate one */
-					$userToken = $this->generateToken();
+					$userToken->token = $this->generateToken();
 					$userToken->save();
-				} elseif ($userToken->used) {
-					$userToken = $this->generateToken($userToken->id);
+				} else {
+					$userToken->token = $this->generateToken();
 					$userToken->update();
 				}
+
 				$this->set('user_tk', $userToken->token, time() + (31556926));
 			}
 		} else {
@@ -76,21 +79,13 @@ class Cookie
 	}
 
 	/**
-	 * @param int|null $id
-	 * @return UserToken
+	 * @return string
 	 */
-	private function generateToken(int $id = null): UserToken
+	private function generateToken(): string
 	{
-		$userToken = New UserToken();
-
-		$userToken->id = $id;
-		$userToken->user = Application::$APP->user;
-
 		$token = openssl_random_pseudo_bytes(64);
 		//Convert the binary data into hexadecimal representation.
-		$userToken->token = bin2hex($token);
-		$userToken->used = 0;
 
-		return $userToken;
+		return (bin2hex($token));
 	}
 }

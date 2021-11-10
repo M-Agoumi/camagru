@@ -13,25 +13,9 @@ class UserToken extends \core\Db\DbModel
 	public ?string $token = null;
 	public ?int $used = null;
 
-	public function tableName(): string
-	{
-		return 'user_token';
-	}
+	protected static string $tableName =  'user_token';
 
-	public function attributes(): array
-	{
-		return ['user', 'token', 'used'];
-	}
-
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
-
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc

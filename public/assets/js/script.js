@@ -51,10 +51,12 @@ function save() {
 
 /* login popup */
 
-function loginPopUp()
+function loginPopUp(path)
 {
+    console.log('we good ' + path);
     if (confirm('You need to login to do this action, login?')) {
-        var path = window.location.href;
+        if (typeof path === 'undefined')
+            path = window.location.href;
         window.location.href = "/login?ref=" + path;
     }
 }

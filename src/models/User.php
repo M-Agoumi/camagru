@@ -14,7 +14,6 @@
 namespace   models;
 /**
  * Class User
- * @var $ROOT_DIR ~/Desktop/School/camagru
  */
 
 use core\Db\DbModel;
@@ -35,56 +34,25 @@ class User extends DbModel
 	public ?string $ip_address = null;
 	public bool $pass = false;
 
-
-	public function tableName(): string
-	{
-		return 'users';
-	}
-
-	public function attributes(): array
-	{
-		return ['name', 'username', 'email', 'password', 'status', 'ip_address', 'picture'];
-	}
-	
 	/**
-	 * @return string
+	 * @var string table name in the database
 	 */
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
+	protected static string $tableName = 'users';
 
 	/**
-	 * @return int|null
+	 * @var string $primaryKey of the table
 	 */
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+	protected static string $primaryKey = 'id';
 
 	/**
-	 * @return string|null
+	 * properties that aren't database table attributes
 	 */
-	public function getUsername(): ?string
-	{
-		return $this->username;
-	}
+	protected static array $nonAttributes = ['pass'];
 
 	/**
-	 * @return string|null
+	 * @var array|string[] protected attributes from public sharing (Ex:API...)
 	 */
-	public function getEmail(): ?string
-	{
-		return $this->email;
-	}
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email)
-    {
-        $this->email = $email;
-    }
+	protected static array $protected = ['id', 'password'];
 
 	/** hash password before saving
 	 * @return bool
@@ -93,6 +61,7 @@ class User extends DbModel
 	{
 		$this->status = self::STATUS_INACTIVE;
 		$this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
 	    return parent::save();
 	}
 
@@ -121,8 +90,4 @@ class User extends DbModel
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
         ];
     }
-
-	/**
-	 * @return array[]
-	 */
 }

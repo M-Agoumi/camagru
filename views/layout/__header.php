@@ -14,7 +14,7 @@ use core\Application;
 				<?php if (!Application::isGuest()): ?>
 					<li><a href="<?= Application::path('camera.index') ?>"><?= $this->lang('camera'); ?></a></li>
 				<?php else: ?>
-					<li><a href="#" onclick="loginPopUp()"><?= $this->lang('camera'); ?></a></li>
+					<li><a href="#" onclick="loginPopUp('http%3A%2F%2Fcamagru.io%2Fcamera')"><?= $this->lang('camera'); ?></a></li>
 				<?php endif ?>
 			</div>
 			<div class="nav-right">

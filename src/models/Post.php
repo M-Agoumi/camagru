@@ -17,30 +17,15 @@ class Post extends DbModel
 	public ?int $status = null;
 	public ?User $author = null;
 
+	/**
+	 * @var string $tableName in the database
+	 */
+	protected static string $tableName = 'posts';
 
 	/**
-	 * @return string
+	 * @var string table primary key
 	 */
-	public function tableName(): string
-	{
-		return 'posts';
-	}
-
-	/**
-	 * @return array
-	 */
-	public function attributes(): array
-	{
-		return ['title', 'comment', 'picture', 'slug', 'status', 'author'];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function primaryKey(): string
-	{
-		return 'id';
-	}
+	protected static string $primaryKey = 'id';
 
 	/**
 	 * @return array
@@ -52,11 +37,6 @@ class Post extends DbModel
 		];
 	}
 
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
-
 	public function relationships(): array
 	{
 		return ['author' => User::class];
@@ -66,7 +46,7 @@ class Post extends DbModel
 	 * @param string $comment
 	 * @return string]
 	 */
-	public function hashtag(string $comment)
+	public function hashtag(string $comment): string
 	{
 		$hashtags = '';
 		$tags = preg_match_all("/#(\w+)/", $comment, $m);
