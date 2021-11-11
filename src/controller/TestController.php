@@ -116,12 +116,12 @@ class TestController extends Controller
 	/**
 	 * @return string
 	 */
-	public function fakeUser()
+	public function fakeUser(): string
 	{
 		$fake = FakeDataFactory::create();
 
 		echo <<<html
-		<table>
+		<table style="border: 2px solid #fbb034">
 			<thead>
 				<tr>
 				    <th>name</th>
@@ -143,7 +143,7 @@ class TestController extends Controller
 			$user->username = $fake->username($user->name);
 			$user->email = $fake->email($user->name);
 			$user->password = "P@ssw0rd!";
-//			$user->save();
+			$user->save();
 			echo "<tr>";
 				echo '<td>' . $user->getName() . '</td>';
 				echo '<td>' . $user->getUsername() . '</td>';
@@ -152,14 +152,21 @@ class TestController extends Controller
 			echo "</tr>";
 
 		}
-		return '';
+
+		return 'void';
 	}
 
-	public function fakePost(User $user): void
+	public function fakePost()
 	{
 		$fake = FakeDataFactory::create();
 
 		echo <<<html
+		<style>
+			table, th, td {
+			  border: 1px solid black;
+			  border-collapse: collapse;
+		}
+		</style>
 		<table>
 			<thead>
 				<tr>
@@ -176,22 +183,41 @@ class TestController extends Controller
 		/**
 		 * generate post
 		 */
-		$user->getOneBy(1);
 		for ($i = 0; $i < 100; $i++) {
 			$post = new Post();
 
 			$post->title = $fake->sentence;
 			$hashtag = str_replace('#', '', $fake->hashtag(1));
 			$post->comment = $fake->text(5, 30) . ' #' . $hashtag . ' ' . $fake->hashtag(2);
-			$post->picture = $fake->picture(Application::$ROOT_DIR . '/public/uploads/', $hashtag);
+			$post->picture = 'https://loremflickr.com/650/550/' . $hashtag;
 			$post->slug = $fake->slugify($post->title);
-			$post->author = $user;
+			$post->author = User::findOne(['id' => $fake->model(User::class)]);
 			$post->status = 0;
+			echo '<tr>';
+				echo '<td>[' . $i . '] ' . $post->title . '</td>';
+				echo '<td>' . $post->comment . '</td>';
+				echo '<td><img src="' . $post->picture . '"/></td>';
+				echo '<td>' . $post->slug . '</td>';
+				echo '<td>' . $post->author->getName() . '</td>';
+			echo '</tr>';
 
 			$post->save();
 		}
 
-		echo "done";
+		return "done";
 	}
 
+	public function getAllPosts()
+	{
+		$post = New Post();
+
+		$posts = $post->findAll();
+
+		foreach ($posts as $post)
+		{
+			echo '[' . $post['id'] . ']<br>';
+		}
+
+		die();
+	}
 }

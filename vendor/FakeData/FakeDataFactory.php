@@ -7,7 +7,7 @@ use vendor\FakeData\src\FakeData;
 class FakeDataFactory extends FakeData
 {
 	private static ?FakeDataFactory $instance = null;
-	private array $types = ['person', 'text', 'media'];
+	private array $types = ['person', 'text', 'media', 'model'];
 
 	private function __construct()
 	{
