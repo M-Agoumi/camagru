@@ -295,6 +295,26 @@ abstract class DbModel extends Model
 
 		return $this->totalRecords;
 	}
+
+
+	public function random($count = 1)
+	{
+		/** SELECT * FROM tbl AS t1 JOIN (SELECT id FROM tbl ORDER BY RAND() LIMIT 10) as t2 ON t1.id=t2.id */
+		/** SELECT * FROM users AS t1 JOIN (SELECT id FROM users ORDER BY RAND() LIMIT 10) as t2 ON t1.id=t2.id */
+		$tableName = static::tableName();
+		$primary = static::primaryKey();
+
+		$stmt = self::prepare(
+			'SELECT * FROM ' . $tableName .' AS t1 JOIN (SELECT ' .
+			$primary . ' FROM ' . $tableName . ' ORDER BY RAND() LIMIT ' .
+			$count . ') as t2 ON t1.' . $primary . '=t2.' . $primary
+		);
+
+		$stmt->execute();
+
+		return $stmt->fetchAll(2);
+	}
+
     /**
      * this method is just to keep the code clean
      * instead of writing the whole prepare statement on the app instance
@@ -302,7 +322,7 @@ abstract class DbModel extends Model
      * @param string $sql
      * @return false|PDOStatement
      */
-	public static function prepare(string $sql)
+	protected static function prepare(string $sql)
 	{
 		return Application::$APP->db->pdo->prepare($sql);
 	}
