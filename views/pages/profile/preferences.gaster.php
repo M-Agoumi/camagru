@@ -3,7 +3,7 @@
 @section('content')
 	<?php
 
-	use core\Form\Form;use models\core\languages;
+	use core\Form\Form;use models\core\Languages;
 
 	$lang = New languages();
 
