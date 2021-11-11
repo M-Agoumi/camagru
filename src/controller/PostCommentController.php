@@ -25,18 +25,11 @@ class PostCommentController extends Controller
 	 * 0 => comment not valid
 	 * 1 => comment added
 	 * 2 => error occurred while saving the comment
-	 * @throws ExpiredException
 	 */
 	public function add(Post $post, Request $request):string
 	{
-		if (!$request->isPost())
-			throw New ExpiredException();
-		if (Application::isGuest()) {
-			$user = new User();
-			$user->getOneBy(2);
-			Application::$APP->user = $user;
-//			return "-2";
-		}
+		if (Application::isGuest())
+			return "-2";
 
 		$postTmp = $post;
 

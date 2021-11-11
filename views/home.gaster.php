@@ -72,7 +72,7 @@
 
         function loadImage(url, id)
         {
-	        document.getElementById(id).src = '/uploads/' + url;
+	        document.getElementById(id).src = url;
         }
 
         function getScrollPercent() {

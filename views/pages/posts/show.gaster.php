@@ -10,7 +10,7 @@
 	<div class="center">
 	    <h1 class="usernameTitle"><?=$post->title?>
 	        <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
-	    <img src="/uploads/<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
+	    <img src="<?=$post->picture?>" alt="<?=$post->comment ?? $post->title?>">
 	    <div class="usernameInfo">
 	        <p><?=$post->highlightHashtag($post->comment)?></p>
 			<?php
