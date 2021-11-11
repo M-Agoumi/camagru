@@ -19,6 +19,7 @@ class TextArea
 	public string $disabled;
 	public string $required;
 	public string $default;
+	private string $class;
 
 	/**
 	 * TextArea constructor.
@@ -34,6 +35,7 @@ class TextArea
 		$this->required = '';
 		$this->default = '';
 		$this->holder = '';
+		$this->class = '';
 	}
 
 	/** magic method to convert from object to string
@@ -57,7 +59,7 @@ class TextArea
 		</div>
 		', $this->attribute
 			, !empty($this->label) ? $this->label : ucfirst($this->attribute)
-			, $this->model->hasError($this->attribute) ? 'is-invalid' : ''
+			, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
 			, $this->attribute
 			, $this->attribute
 			, !empty($this->holder) ? $this->holder : (!empty($this->label) ? $this->label : $this->attribute)
@@ -118,6 +120,13 @@ class TextArea
 	public function setLabel(string $string): TextArea
 	{
 		$this->label = $string;
+
+		return $this;
+	}
+
+	public function setClass(string $string):TextArea
+	{
+		$this->class = $string;
 
 		return $this;
 	}
