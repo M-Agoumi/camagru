@@ -33,6 +33,7 @@ class Field
 	public string $disabled;
 	public string $required;
 	public string $default;
+	private string $class;
 
 	public function __construct(Model $model, string $attribute)
 	{
@@ -42,6 +43,7 @@ class Field
 		$this->disabled = '';
 		$this->required = '';
 		$this->default = '';
+		$this->class = '';
 	}
 
 
@@ -66,7 +68,7 @@ class Field
 		', !($this->type == self::TYPE_HIDDEN ) ? $this->attribute : ''
 		    , !empty($this->label) ? $this->label : ucfirst($this->attribute)
 		    , $this->type
-		    , $this->model->hasError($this->attribute) ? 'is-invalid' : ''
+		    , $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
 		    , $this->attribute
 		    , $this->attribute
 		    , $this->model->{$this->attribute}
@@ -156,6 +158,13 @@ class Field
 	public function setLabel(string $string): Field
 	{
 		$this->label = $string;
+
+		return $this;
+	}
+
+	public function setClass(string $class): Field
+	{
+		$this->class = $class;
 
 		return $this;
 	}
