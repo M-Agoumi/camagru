@@ -1,7 +1,7 @@
 <?php
 
 
-use core\Application;
+use Simfa\Framework\Application;
 use core\Db\Database;
 
 class mg0012_create_user_login_token_table

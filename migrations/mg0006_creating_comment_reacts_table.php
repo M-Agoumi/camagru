@@ -1,6 +1,6 @@
 <?php
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0006_creating_comment_reacts_table
 {

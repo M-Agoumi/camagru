@@ -1,7 +1,7 @@
 <?php
 
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0003_creating_password_restore_table
 {

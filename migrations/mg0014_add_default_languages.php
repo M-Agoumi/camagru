@@ -1,8 +1,7 @@
 <?php
 
-
-use core\Application;
-use core\Db\Database;
+use Simfa\Framework\Application;
+use Simfa\Framework\Db\Database;
 
 class mg0014_add_default_languages
 {

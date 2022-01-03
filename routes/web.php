@@ -1,15 +1,5 @@
 <?php
 
-use controller\Admin\DashboardController;
-use controller\PostCommentController;
-use controller\TestController;
-use core\Router;
-use controller\AuthController;
-use controller\CameraController;
-use controller\DefaultController;
-use controller\PostController;
-use controller\UserController;
-use core\Application;
 
 
 /**
@@ -17,6 +7,18 @@ use core\Application;
  */
 
 /** error pages */
+
+use Controller\Admin\DashboardController;
+use Controller\AuthController;
+use Controller\CameraController;
+use Controller\DefaultController;
+use Controller\PostCommentController;
+use Controller\PostController;
+use Controller\TestController;
+use Controller\UserController;
+use Simfa\Framework\Application;
+use Simfa\Framework\Router;
+
 Router::get('/javascript-disabled', 'error.__noJavascript');
 
 /** default Controller routes */

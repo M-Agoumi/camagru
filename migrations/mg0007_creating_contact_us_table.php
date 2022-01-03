@@ -1,11 +1,11 @@
 <?php
 
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0007_creating_contact_us_table
 {
-	public \core\Db\Database $db;
+	public Simfa\Framework\Db\Database $db;
 
 	public function __construct()
 	{

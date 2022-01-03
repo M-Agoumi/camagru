@@ -1,6 +1,6 @@
 <?php
 
-use core\Router;
+use Simfa\Framework\Router;
 
 Router::get('/', function(){return 'Home';})->name('home.index');
 Router::get('/contact', function(){return 'contact us';})->name('contact.us');

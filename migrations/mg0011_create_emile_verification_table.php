@@ -1,11 +1,11 @@
 <?php
 
-
-use core\Application;
+use Simfa\Framework\Application;
+use Simfa\Framework\Db\Database;
 
 class mg0011_create_emile_verification_table
 {
-	public \core\Db\Database $db;
+	public Database $db;
 
 	public function __construct()
 	{

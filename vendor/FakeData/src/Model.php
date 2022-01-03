@@ -2,7 +2,7 @@
 
 namespace vendor\FakeData\src;
 
-use core\Db\DbModel;
+use Simfa\Db\DbModel;
 
 class Model
 {

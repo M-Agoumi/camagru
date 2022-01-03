@@ -1,7 +1,7 @@
 <?php
 
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0002_creating_posts_table
 {

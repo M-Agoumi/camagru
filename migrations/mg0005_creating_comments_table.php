@@ -1,6 +1,7 @@
 <?php
 
-use core\Application;
+
+use Simfa\Framework\Application;
 
 class mg0005_creating_comments_table
 {

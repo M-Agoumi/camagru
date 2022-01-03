@@ -4,9 +4,9 @@
 namespace Middlewares;
 
 
-use core\Application;
-use core\Exception\NotFoundException;
-use core\Middleware\BaseMiddleware;
+use Simfa\Framework\Application;
+use Simfa\Framework\Exception\NotFoundException;
+use Simfa\Framework\Middleware\BaseMiddleware;
 
 class DevMiddleware extends BaseMiddleware
 {

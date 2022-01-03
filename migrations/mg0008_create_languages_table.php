@@ -1,10 +1,11 @@
 <?php
 
-use core\Application;
+use Simfa\Framework\Application;
+use Simfa\Framework\Db\Database;
 
 class mg0008_create_languages_table
 {
-	public \core\Db\Database $db;
+	public Simfa\Framework\Db\Database $db;
 
 	public function __construct()
 	{

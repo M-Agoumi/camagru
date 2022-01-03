@@ -1,4 +1,4 @@
-<?php use core\Application; ?>
+<?php use Simfa\Framework\Application; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

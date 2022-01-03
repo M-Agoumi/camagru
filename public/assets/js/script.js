@@ -91,6 +91,7 @@ function likePost(post, elem, react = 1) {
                 }
             } else {
                 console.log('error ' + this.status);
+                console.log('return: ' + this.responseText);
             }
         }
 

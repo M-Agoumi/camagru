@@ -1,8 +1,8 @@
 <?php
 
-use controller\ApiController;
-use core\Application;
-use core\Router;
+use Controller\ApiController;
+use Simfa\Framework\Application;
+use Simfa\Framework\Router;
 
 $app = Application::$APP;
 

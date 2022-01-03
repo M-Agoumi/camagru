@@ -4,9 +4,9 @@
 namespace Middlewares;
 
 
-use core\Application;
-use core\Exception\NotFoundException;
-use core\Middleware\BaseMiddleware;
+use Simfa\Application;
+use Simfa\Exception\NotFoundException;
+use Simfa\Middleware\BaseMiddleware;
 use models\Roles;
 
 class AdminMiddleware extends BaseMiddleware

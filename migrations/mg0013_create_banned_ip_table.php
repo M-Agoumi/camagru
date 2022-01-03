@@ -1,7 +1,7 @@
 <?php
 
 
-use core\Application;
+use Simfa\Framework\Application;
 use core\Db\Database;
 
 class mg0013_create_banned_ip_table

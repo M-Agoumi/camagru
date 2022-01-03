@@ -1,6 +1,5 @@
 <?php
-
-use core\Application;
+use Simfa\Framework\Application;
 
 ?>
 <header class="page-header">

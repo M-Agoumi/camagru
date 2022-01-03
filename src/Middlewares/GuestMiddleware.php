@@ -3,10 +3,10 @@
 
 namespace Middlewares;
 
+use Simfa\Framework\Application;
+use Simfa\Framework\Middleware\BaseMiddleware;
 
-use core\Application;
-
-class GuestMiddleware extends \core\Middleware\BaseMiddleware
+class GuestMiddleware extends BaseMiddleware
 {
 	public function __construct(array $action = [])
 	{
@@ -17,7 +17,6 @@ class GuestMiddleware extends \core\Middleware\BaseMiddleware
 	{
 		if (!Application::isGuest()) {
 			if (empty($this->action) || in_array(Application::$APP->controller->action, $this->action)) {
-				// throw new ForbiddenException();
 				Application::$APP->response->redirect('/');
 			}
 		}

@@ -80,7 +80,7 @@ if (file_exists(dirname(__DIR__) . '/vendor/__autoload.php'))
 else
 	die("failed to load the autoloader\n");
 
-use core\Application;
+use Simfa\Framework\Application;
 
 /**
  * creating a new instance of the Application class

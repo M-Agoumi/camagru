@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use core\CLI\CLIApplication;
+use Simfa\Framework\CLI\CLIApplication;
 
 /** our constants variables */
 

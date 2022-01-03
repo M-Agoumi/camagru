@@ -1,8 +1,8 @@
 <?php
 
 
-use core\Db\Migration;
-use core\Db\Migration\Schema;
+use Simfa\Framework\Db\Migration;
+use Simfa\Framework\Db\Migration\Schema;
 
 class mg0015_add_client_table extends Migration
 {

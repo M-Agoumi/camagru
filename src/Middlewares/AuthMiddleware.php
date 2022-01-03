@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Middlewares;
 
 
-use core\Application;
-use core\Exception\ExpiredException;
-use core\Middleware\BaseMiddleware;
+use Simfa\Framework\Application;
+use Simfa\Framework\Middleware\BaseMiddleware;
 
 class AuthMiddleware extends BaseMiddleware
 {

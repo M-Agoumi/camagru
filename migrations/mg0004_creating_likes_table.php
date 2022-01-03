@@ -1,6 +1,6 @@
 <?php
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0004_creating_likes_table
 {

@@ -1,11 +1,11 @@
 <?php
 
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0010_create_roles_table
 {
-	public \core\Db\Database $db;
+	public Simfa\Framework\Db\Database $db;
 
 	public function __construct()
 	{

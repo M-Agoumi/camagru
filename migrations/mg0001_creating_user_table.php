@@ -11,7 +11,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-use core\Application;
+use Simfa\Framework\Application;
 
 class mg0001_creating_user_table
 {
