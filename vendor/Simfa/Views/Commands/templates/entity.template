@@ -1,0 +1,37 @@
+<?php
+/* ************************************************************************************************ */
+/*                                                                                                  */
+/*                                                        :::   ::::::::   ::::::::  :::::::::::    */
+/*   {{ file_name }}:+:+:  :+:    :+: :+:    :+: :+:     :+:     */
+/*                                                      +:+         +:+        +:+        +:+       */
+/*   By: magoumi <magoumi@student.1337.ma>             +#+      +#++:      +#++:        +#+         */
+/*                                                    +#+         +#+        +#+      +#+           */
+/*   Created: {{ date_time }} by magoumi         #+#  #+#    #+# #+#    #+#     #+#             */
+/*   Updated: {{ date_time }} by magoumi      ####### ########   ########      ###.ma           */
+/*                                                                                                  */
+/* ************************************************************************************************ */
+
+namespace   Models;
+
+/**
+ * Class {{ class_name }}
+ */
+
+use Simfa\Framework\Db\DbModel;
+
+class {{ class_name }} extends DbModel
+{
+	{{ class_properties }}
+
+	{{ table_name }}
+
+	/**
+	 * @return array[]
+	 */
+	public function rules(): array
+	{
+		return [
+		    {{ rules }}
+		];
+	}
+}

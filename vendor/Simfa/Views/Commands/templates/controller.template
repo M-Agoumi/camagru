@@ -1,0 +1,32 @@
+<?php
+/* ************************************************************************************************ */
+/*                                                                                                  */
+/*                                                        :::   ::::::::   ::::::::  :::::::::::    */
+/*   {{ file_name }}:+:+:  :+:    :+: :+:    :+: :+:     :+:     */
+/*                                                      +:+         +:+        +:+        +:+       */
+/*   By: magoumi <magoumi@student.1337.ma>             +#+      +#++:      +#++:        +#+         */
+/*                                                    +#+         +#+        +#+      +#+           */
+/*   Created: {{ date_time }} by magoumi         #+#  #+#    #+# #+#    #+#     #+#             */
+/*   Updated: {{ date_time }} by magoumi      ####### ########   ########      ###.ma           */
+/*                                                                                                  */
+/* ************************************************************************************************ */
+
+namespace Controller;
+
+/**
+ * Class {{ class_name }}
+ */
+
+class {{ class_name }} extends \Simfa\Action\Controller
+{
+
+   public function __construct()
+   {
+        // TODO implement your middlewares
+   }
+
+   public function index()
+   {
+      return render('{{ view_name }}', ['controller' => '{{ class_name }}.php', 'view' => '{{ view_name }}.gaster.php']);
+   }
+}
