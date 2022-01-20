@@ -1,6 +1,16 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * coded on php 7.4.3 environment compatible with php 8.0*
+ * (*)has not been tested on it yet
+ * check if php version is meet
+ */
+
+if (version_compare(phpversion(), '7.4.0', '<='))
+	die("php version is too old, this scripts require php >=  v7.4\n");
+
+
 use Simfa\Framework\CLI\CLIApplication;
 
 /** our constants variables */
