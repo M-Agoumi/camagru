@@ -13,6 +13,14 @@ background: linear-gradient(to right, #373B44, #73C8A9); /* W3C, IE 10+/ Edge, F
 		<p style="margin: auto; width: 500px; font-size: medium; font-family: Arial,serif; font-weight: bold;text-align: center; color: #FFF">
 			you are seeing this page because you didn't set any routes for your page yet, head to routes/<?=
 			\Simfa\Framework\Application::$APP->interface?>.php and do some magic ;-)</p>
+			<a href='https://github.com/M-Agoumi/simfa' target="_blank" style='
+				color: #FFA;
+				text-align: center;
+				font-weight: bold;
+				font-size: large;'
+			>
+				<h3>documentation</h3>
+			</a>
 	</div>
 </body>
 </html>
