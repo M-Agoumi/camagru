@@ -64,7 +64,7 @@ abstract class DbModel extends Model
 
 		if ($static) {
 			if (static::$tableName != '')
-				return lcfirst(static::$tableName);
+				return static::$tableName;
 
 			return (lcfirst((new ReflectionClass(static::class))->getShortName()));
 		}
