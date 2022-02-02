@@ -17,7 +17,7 @@
 
         function loadPosts() {
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://localhost:8080/posts');
+            xhr.open('POST', <?= \Simfa\Framework\Application::getEnvValue('appURL')?>'/posts');
 
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
@@ -35,7 +35,7 @@
                         document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no more posts</h1>");
                     }
                 } else {
-                    for (var i in posts)
+                    for (let i in posts)
                     {
                         let id = Math.random().toString(36).slice(2);
                         let post = '';
