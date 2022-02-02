@@ -2,6 +2,9 @@
 
 namespace Simfa\Framework\CLI;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 use Simfa\Framework\CLI\Commands\BaseCommands;
 use Simfa\Framework\CLI\Commands\Cache;
 use Simfa\Framework\CLI\Commands\Make;
@@ -106,13 +109,32 @@ class CLIApplication
 	 */
 	private function registerCommands():array
 	{
-		return [
+		$commands  = [
 			'cache'     => Cache::class,
 			'make'      => Make::class,
 			'migrate'   => Migrate::class,
 			'server'    => Server::class,
 			'setup'     => Setup::class
 		];
+
+		return array_merge($commands, $this->getCustomCommands());
+	}
+
+	private function getCustomCommands():array
+	{
+		$path = $this->root . 'src/Command';
+
+		$allFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+		$phpFiles = new RegexIterator($allFiles, '/\.php$/');
+
+		$commands = [];
+		foreach ($phpFiles as $phpFile) {
+			$command        = $phpFile->getBasename('.' . $phpFile->getExtension());
+			$commandClass   = '\Command\\' . $command;
+			$commands[strtolower($command)] = $commandClass;
+		}
+
+		return $commands;
 	}
 
 	/**
