@@ -9,6 +9,7 @@
 /** error pages */
 
 use Controller\Admin\DashboardController;
+use Controller\ApiController;
 use Controller\AuthController;
 use Controller\CameraController;
 use Controller\DefaultController;
@@ -67,6 +68,7 @@ Router::magic('/post/{slug}', [PostController::class, 'show']);
 Router::magic('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
 
 /** API routes */
+Router::post('/posts', [ApiController::class, 'posts']);
 Router::magic('/api/post/likes/{id}', [PostController::class, 'showLikes']); /** post fetch like */
 Router::magic('/api/post/comment/{slug}', [PostCommentController::class, 'add']); /** post add comments */
 Router::post('/api/user/name', [UserController::class, 'getName']); /** get logged user name */
