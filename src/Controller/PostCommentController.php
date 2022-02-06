@@ -55,7 +55,7 @@ class PostCommentController extends Controller
 						$emailSubject = Application::$APP->user->username . " commented on your post";
 						$emailContent = ['postComment', [
 							'name' => Application::$APP->user->username,
-							'postUrl' => Application::getEnvValue('appProtocol') . Application::getEnvValue('appURL') . '/post/' . $postTmp->slug
+							'postUrl' => Application::getEnvValue('APP_PROTOCOL') . Application::getEnvValue('APP_URL') . '/post/' . $postTmp->slug
 						]];
 						$fromEmail = 'notification@camagru.io';
 

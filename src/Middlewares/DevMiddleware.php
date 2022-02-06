@@ -18,7 +18,7 @@ class DevMiddleware extends BaseMiddleware
 	public function execute()
 	{
 		if (empty($this->action) || in_array(Application::$APP->controller->action, $this->action))
-			if (Application::getEnvValue('env') != 'dev' && Application::getEnvValue('env') != 'local')
+			if (Application::getEnvValue('ENV') != 'dev' && Application::getEnvValue('ENV') != 'local')
 				throw new NotFoundException();
 	}
 }

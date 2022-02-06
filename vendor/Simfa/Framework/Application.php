@@ -57,7 +57,7 @@ class Application
 		self::$ENV = $this->getDotEnv();
 		$this->catcher = New Catcher();
 		$this->interface = $appInterface;
-		$this->userCLass = self::getEnvValue('userClass') ?? 'models\User';
+		$this->userCLass = self::getEnvValue('USER_CLASS') ?? 'models\User';
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->db = New Database($this->getDatabaseConfig());

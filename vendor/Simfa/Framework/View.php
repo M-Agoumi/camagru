@@ -249,8 +249,8 @@ class View
 
 	public function asset(string $link): string
 	{
-		$protocol = Application::getEnvValue('secure') ? 'https://' : 'http://';
-		$appUrl = Application::getEnvValue('appURL');
+		$protocol = Application::getEnvValue('SECURE') ? 'https://' : 'http://';
+		$appUrl = Application::getEnvValue('APP_URL');
 		$appPort = Application::$APP->request->port();
 
 		$asset = $protocol . $appUrl;

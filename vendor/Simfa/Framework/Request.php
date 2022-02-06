@@ -82,7 +82,7 @@ class Request
 	{
 		$body = [];
 		if ($this->Method() === 'get') {
-			if (Application::getEnvValue('csrfVerification')) {
+			if (Application::getEnvValue('CSRF_Verification')) {
 				if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
 					if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
 						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go
@@ -96,7 +96,7 @@ class Request
 			}
 		}
 		if ($this->Method() === 'post') {
-			if (Application::getEnvValue('csrfVerification')) {
+			if (Application::getEnvValue('CSRF_Verification')) {
 				if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
 					if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
 						die("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 

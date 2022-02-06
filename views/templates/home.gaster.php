@@ -17,7 +17,7 @@
 
         function loadPosts() {
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', <?= \Simfa\Framework\Application::getEnvValue('appURL')?>'/posts');
+            xhr.open('POST', '/posts');
 
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
@@ -72,7 +72,7 @@
 
         function loadImage(url, id)
         {
-	        document.getElementById(id).src = url;
+	        document.getElementById(id).src = '/uploads/' + url;
         }
 
         function getScrollPercent() {

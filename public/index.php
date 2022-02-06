@@ -38,7 +38,7 @@ if (file_exists("../var/cache/maintenance_on")) {
 	$allowed = unserialize(trim(file_get_contents("../var/cache/maintenance_on")));
 
 	if (!in_array($_SERVER['REMOTE_ADDR'], $allowed) && $_SERVER['REMOTE_ADDR'] != '127.0.0.1') {
-		include("../views/error/maintenance.html");
+		include("../views/templates/error/maintenance.html");
 		exit(0);
 	}
 	echo '<h1 style="font-size: 34px;color: red; background-color: #FFF;padding: 15px; text-align: center">
@@ -61,7 +61,7 @@ if (!file_exists(__DIR__ . "/../.env"))
 	die('.env file not found, please set it up first (use the .env.example template)');
 
 $config = parse_ini_file(__DIR__ . "/../.env");
-if (isset($config['env']) && $config['env'] === 'dev'){
+if (isset($config['ENV']) && $config['ENV'] === 'dev'){
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL ^ E_DEPRECATED);

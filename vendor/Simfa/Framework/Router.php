@@ -201,7 +201,7 @@ class Router
 		$method = $this->request->Method();
 		$callback = $this->routes[$method][$path] ?? false;
 
-		$newPath = str_replace(Application::getEnvValue('url'), '', $path);
+		$newPath = str_replace(Application::getEnvValue('URL'), '', $path);
 		$newPath = !empty($newPath) ? $newPath : '/';
 
 		$callback = $callback ?: $this->routes[$method][$newPath] ?? false;
