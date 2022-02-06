@@ -1,24 +1,31 @@
 <?php
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   SimpleData.php                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: magoumi <magoumi@student.1337.m            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/6 18:38:44 by magoumi            #+#    #+#             */
+/*   Updated: 2022/02/6 18:38:44 by magoumi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 namespace Command;
 
 use Simfa\Framework\CLI\BaseCommand;
-use Simfa\Framework\CLI\BaseCommandInterface;
 
-class SimpleData extends BaseCommand implements BaseCommandInterface
+class SimpleData extends BaseCommand
 {
-
-	public function __construct()
-	{
-		self::$command = 'simpleData';
-	}
+	protected static string $command = 'simpleData';
 
 	public function posts()
 	{
 		die("we are on\n");
 	}
 
-	public static function helper(string $command = 'simpleData'): string
+	public static function helper(): string
 	{
 		$helperMessage  = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage .= self::printCommand('posts') . "create random posts" . PHP_EOL;

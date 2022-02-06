@@ -6,8 +6,7 @@ interface BaseCommandInterface
 {
 	/**
 	 * Show command help list
-	 * @param string $command
 	 * @return string
 	 */
-	public static function helper(string $command): string;
+	public static function helper(): string;
 }

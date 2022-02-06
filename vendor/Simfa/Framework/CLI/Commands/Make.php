@@ -21,10 +21,7 @@ use Simfa\Framework\CLI\CLIApplication;
 
 class Make extends BaseCommand implements BaseCommandInterface
 {
-	public function __construct()
-	{
-		self::$command = 'make';
-	}
+	protected static string $command = 'make';
 
 	/** Make a Controller
 	 * @param $argv
@@ -136,9 +133,11 @@ class Make extends BaseCommand implements BaseCommandInterface
 		return str_replace('{{ view_name }}', "$view", $template);
 	}
 
-	public static function helper(string $command = 'make'): string
+	/**
+	 * @return string Make commands help
+	 */
+	public static function helper(): string
 	{
-		self::$command = $command;
 		$helperMessage = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage .= self::printCommand('Controller') . "make a Controller (accepts Controller";
 		$helperMessage .= " name as an argument)[make:Controller name]". PHP_EOL;

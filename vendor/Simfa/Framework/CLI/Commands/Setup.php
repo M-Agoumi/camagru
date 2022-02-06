@@ -2,15 +2,16 @@
 
 namespace Simfa\Framework\CLI\Commands;
 
+use Simfa\Framework\CLI\BaseCommand;
 use Simfa\Framework\CLI\CLIApplication;
 
-class Setup extends \Simfa\Framework\CLI\BaseCommand implements \Simfa\Framework\CLI\BaseCommandInterface
+class Setup extends BaseCommand
 {
 
-	public function __construct()
-	{
-		self::$command = 'setup';
-	}
+	/**
+	 * @var string
+	 */
+	protected static string $command = 'setup';
 
 	/**
 	 * set up the mail catcher env
@@ -175,9 +176,8 @@ class Setup extends \Simfa\Framework\CLI\BaseCommand implements \Simfa\Framework
 	/**
 	 * @inheritDoc
 	 */
-	public static function helper($command = 'setup'): string
+	public static function helper(): string
 	{
-		self::$command = $command;
 		$helperMessage = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage .= self::printCommand('mail') . "setup your mail server, so you can send mails" . PHP_EOL;
 		$helperMessage .= self::printCommand('setup') . "setup your local env, you should run ";

@@ -1,4 +1,16 @@
 <?php
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Migrate.php                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: magoumi <magoumi@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/6 18:39:13 by magoumi            #+#    #+#             */
+/*   Updated: 2022/02/6 18:39:13 by magoumi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 namespace Simfa\Framework\CLI\Commands;
 
@@ -8,13 +20,13 @@ use Simfa\Framework\CLI\CLIApplication;
 use PDO;
 use PDOException;
 
-class Migrate extends BaseCommand implements \Simfa\Framework\CLI\BaseCommandInterface
+class Migrate extends BaseCommand
 {
 
-	public function __construct()
-	{
-		self::$command = 'migrate';
-	}
+	/**
+	 * @var string
+	 */
+	protected static string $command = 'migrate';
 
 
 	/** create database using our DSN connection [config/db.conf]
@@ -113,9 +125,8 @@ class Migrate extends BaseCommand implements \Simfa\Framework\CLI\BaseCommandInt
 		return implode(';', $config);
 	}
 
-	public static function helper(string $command = 'migrate'): string
+	public static function helper(): string
 	{
-		self::$command = $command;
 		$helperMessage  = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage    .= self::printCommand("create") ."create the project ";
 		$helperMessage    .= "database if it doesn't not exist --database fetched from config file" . PHP_EOL;

@@ -2,24 +2,17 @@
 
 namespace Simfa\Framework\CLI\Commands;
 
+use Simfa\Framework\CLI\BaseCommand;
 use Simfa\Framework\CLI\CLIApplication;
 
-class BaseCommands extends \Simfa\Framework\CLI\BaseCommand implements \Simfa\Framework\CLI\BaseCommandInterface
+class BaseCommands extends BaseCommand
 {
-
-	/**
-	 * @inheritDoc
-	 */
-	public function __construct()
-	{
-	}
-
 	/**
 	 * @return string
 	 */
 	public function version(): string
 	{
-		return GREEN . 'VERSION: ' . CYAN . '1.0.0' . RESET . PHP_EOL;
+		return GREEN . 'VERSION: ' . CYAN . '1.1.0' . RESET . PHP_EOL;
 	}
 
 
@@ -54,17 +47,20 @@ class BaseCommands extends \Simfa\Framework\CLI\BaseCommand implements \Simfa\Fr
 	{
 		$downFile = CLIApplication::$app->root . 'var/cache/maintenance_on';
 
-		if (unlink($downFile))
-			return YELLOW . "SERVER MAINTENANCE MODE HAS DEACTIVATED" . RESET . PHP_EOL;
+		if (file_exists($downFile))
+			if (unlink($downFile))
+				return YELLOW . "SERVER MAINTENANCE MODE HAS DEACTIVATED" . RESET . PHP_EOL;
+			else
+				return RED . "SOMETHING WENT WRONG WHILE PUTTING THE SERVER OFF MAINTENANCE MODE" . RESET . PHP_EOL;
 
-		return RED . "SOMETHING WENT WRONG WHILE PUTTING THE SERVER OFF MAINTENANCE MODE" . RESET . PHP_EOL;
+		return YELLOW . "SERVER ALREADY UP" . RESET . PHP_EOL;
 	}
 
 
 	/**
 	 * @inheritDoc
 	 */
-	public static function helper(string $command): string
+	public static function helper(): string
 	{
 		return '';
 	}

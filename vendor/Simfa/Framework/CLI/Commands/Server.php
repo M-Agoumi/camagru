@@ -7,10 +7,10 @@ use Simfa\Framework\CLI\CLIApplication;
 class Server extends \Simfa\Framework\CLI\BaseCommand implements \Simfa\Framework\CLI\BaseCommandInterface
 {
 
-	public function __construct()
-	{
-		self::$command = 'server';
-	}
+	/**
+	 * @var string
+	 */
+	protected static string $command = 'server';
 
 	/** start a dev server
 	 * @param array $argv
@@ -176,9 +176,8 @@ class Server extends \Simfa\Framework\CLI\BaseCommand implements \Simfa\Framewor
 	/**
 	 * @inheritDoc
 	 */
-	public static function helper($command = 'server'): string
+	public static function helper(): string
 	{
-		self::$command = $command;
 		$helperMessage  = RED . self::$command . RESET . PHP_EOL;
 		$helperMessage .= self::printCommand("start") . "start a php server on default ";
 		$helperMessage .= "port 8000 unless another port has been specified" . PHP_EOL;

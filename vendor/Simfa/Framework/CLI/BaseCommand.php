@@ -2,17 +2,12 @@
 
 namespace Simfa\Framework\CLI;
 
-abstract class BaseCommand
+abstract class BaseCommand implements BaseCommandInterface
 {
 	/**
 	 * @var string $command the command Name
 	 */
 	protected static string $command = '';
-
-	/**
-	 * define the self::$command value
-	 */
-	abstract public function __construct();
 
 	/** the help instruction command printing function
 	 * @param string $subCommand
@@ -20,9 +15,7 @@ abstract class BaseCommand
 	 */
 	protected static function printCommand(string $subCommand): string
 	{
-		$skip = str_repeat("\t", ceil((32 - (strlen(self::$command) + strlen($subCommand))) / 8));
-
-		return YELLOW . self::$command . ':' . GREEN . $subCommand . RESET . $skip;
+		return str_pad(YELLOW . static::$command . ':' . GREEN . $subCommand . RESET , 46, ' ');
 	}
 
 	/** write a console message for interactive shell
