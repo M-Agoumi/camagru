@@ -1,6 +1,6 @@
 <?php
 
-namespace vendor\FakeData\src;
+namespace FakeData\src;
 
 use Simfa\Db\DbModel;
 

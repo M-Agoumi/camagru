@@ -1,8 +1,8 @@
 <?php
 
-namespace vendor\FakeData;
+namespace FakeData;
 
-use vendor\FakeData\src\FakeData;
+use FakeData\src\FakeData;
 
 class FakeDataFactory extends FakeData
 {
