@@ -137,4 +137,14 @@ class Schema
 	{
 		return $this->columns;
 	}
+
+	public function foreign($column): Column
+	{
+		$column = new Column(
+			['foreign' => $column]
+		);
+		$this->columns[] = $column;
+
+		return $column;
+	}
 }

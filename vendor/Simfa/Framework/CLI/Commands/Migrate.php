@@ -69,7 +69,7 @@ class Migrate extends BaseCommand
 	 */
 	public function migrate()
 	{
-		$app = new Application(dirname($_SERVER['_'], 2));
+		$app = CLIApplication::$APP;
 		$app->db->applyMigrations();
 	}
 
@@ -78,8 +78,8 @@ class Migrate extends BaseCommand
 	 */
 	public function down()
 	{
-		$app = new Application(dirname($_SERVER['_'], 2));
-		$app->db->downMigrations(intval(CLIApplication::$app->argv[1] ?? 0));
+		$app = CLIApplication::$APP;
+		$app->db->downMigrations(intval(CLIApplication::$CLI_APP->argv[1] ?? 0));
 	}
 
 	/**

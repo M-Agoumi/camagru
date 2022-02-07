@@ -92,4 +92,15 @@ class Text
 
 		return $text;
 	}
+
+	/**
+	 * @param int $min
+	 * @param int $max
+	 * @return int
+	 * @throws \Exception
+	 */
+	public function number(int $min = -2147483648, int $max = 2147483647): int
+	{
+		return random_int($min, $max);
+	}
 }

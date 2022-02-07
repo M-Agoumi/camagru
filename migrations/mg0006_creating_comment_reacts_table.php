@@ -1,6 +1,8 @@
 <?php
 
 use Simfa\Framework\Application;
+use Simfa\Framework\Db\Migration;
+use Simfa\Framework\Db\Migration\Schema;
 
 class mg0006_creating_comment_reacts_table
 {
@@ -24,12 +26,24 @@ class mg0006_creating_comment_reacts_table
 						CONSTRAINT `FK_66` FOREIGN KEY `fkIdx_67` (`user`) REFERENCES `users` (`id`)
 						);
 					");
+		Migration::create('comment_reacts', function (Schema $table) {
+			$table->id();
+			$table->string('comment');
+			$table->int('user');
+			$table->smallInt('type')->default(0);
+			$table->smallInt('status')->default(0);
+			$table->timestamps();
+			$table->foreign('user')->references('entityID')->on('user')->onUpdate('cascade')->onDelete('cascade');
+
+			return $table;
+		});
 	}
 
 	public function down()
 	{
-		$db = Application::$APP->db;
-
-		$db->pdo->exec("DROP TABLE IF EXISTS comment_reacts");
+		Migration::drop('comment_reacts');
+//		$db = Application::$APP->db;
+//
+//		$db->pdo->exec("DROP TABLE IF EXISTS comment_reacts");
 	}
 }

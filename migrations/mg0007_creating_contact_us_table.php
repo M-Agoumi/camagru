@@ -2,6 +2,7 @@
 
 
 use Simfa\Framework\Application;
+use Simfa\Framework\Db\Migration;
 
 class mg0007_creating_contact_us_table
 {
@@ -37,6 +38,7 @@ class mg0007_creating_contact_us_table
 
 	public function down()
 	{
-		$this->db->pdo->exec("DROP TABLE IF EXISTS contact_us");
+		Migration::drop('contact_us');
+//		$this->db->pdo->exec("DROP TABLE IF EXISTS contact_us");
 	}
 }

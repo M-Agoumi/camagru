@@ -2,7 +2,8 @@
 
 
 use Simfa\Framework\Application;
-use core\Db\Database;
+use Simfa\Framework\Db\Database;
+
 
 class mg0013_create_banned_ip_table
 {

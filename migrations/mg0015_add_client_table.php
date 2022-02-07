@@ -13,7 +13,9 @@ class mg0015_add_client_table extends Migration
 			$table->string('name')->unique();
 			$table->string('username')->unique();
 			$table->string('email')->nullable()->unique();
+			$table->int('user');
 			$table->timestamps();
+			$table->foreign('user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
 
 			return $table;
 		});
@@ -21,6 +23,6 @@ class mg0015_add_client_table extends Migration
 
 	public function down()
 	{
-		Migration::drop('flights');
+		Migration::drop('clients');
 	}
 }

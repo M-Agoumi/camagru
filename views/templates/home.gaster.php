@@ -32,7 +32,11 @@
                 if (posts.length === 0) {
                     if (!reachedEnd) {
                         reachedEnd = true;
-                        document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no more posts</h1>");
+						if (page !== 1) {
+	                        document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no more posts</h1>");
+						} else {
+							document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no posts yet, start by creating the first one</h1>");
+						}
                     }
                 } else {
                     for (let i in posts)

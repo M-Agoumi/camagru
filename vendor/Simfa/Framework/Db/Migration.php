@@ -27,7 +27,7 @@ abstract class Migration
 	{
 		/** get database connection */
 		self::$db = Application::$APP->db;
-		self::$db->pdo->exec("DROP TABLE " . $tableName);
+		self::$db->pdo->exec('DROP TABLE IF EXISTS ' . $tableName);
 	}
 
 	private static function objectToSQL($schema): string

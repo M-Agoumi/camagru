@@ -2,7 +2,7 @@
 
 
 use Simfa\Framework\Application;
-use core\Db\Database;
+use Simfa\Framework\Db\Database;
 
 class mg0012_create_user_login_token_table
 {

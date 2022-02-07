@@ -5,6 +5,7 @@ namespace Simfa\Framework\CLI;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
+use Simfa\Framework\Application;
 use Simfa\Framework\CLI\Commands\BaseCommands;
 use Simfa\Framework\CLI\Commands\Cache;
 use Simfa\Framework\CLI\Commands\Make;
@@ -14,10 +15,11 @@ use Simfa\Framework\CLI\Commands\Setup;
 
 class CLIApplication
 {
-	public static CLIApplication $app;
+	public static CLIApplication $CLI_APP;
+	public static Application $APP;
 	public int $argc;
 	public array $argv;
-	public string $root;
+	public static string $ROOT_DIR;
 	public array $commands;
 	public bool $quite = false;
 
@@ -28,11 +30,12 @@ class CLIApplication
 	 */
 	public function __construct(string $root, int $argc, array $argv)
 	{
-		self::$app = $this;
+		self::$CLI_APP = $this;
+		self::$APP = new Application($root, 'CLI');
 		array_shift($argv);
 		$this->argc = $argc - 1;
 		$this->argv = $argv;
-		$this->root = $root . '/';
+		self::$ROOT_DIR = $root . '/';
 		$this->commands = $this->registerCommands();
 
 		if (PHP_SAPI !== 'cli')
@@ -122,7 +125,7 @@ class CLIApplication
 
 	private function getCustomCommands():array
 	{
-		$path = $this->root . 'src/Command';
+		$path = self::$ROOT_DIR . 'src/Command';
 
 		$allFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 		$phpFiles = new RegexIterator($allFiles, '/\.php$/');

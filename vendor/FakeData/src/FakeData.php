@@ -12,7 +12,7 @@ class FakeData
 	/**
 	 * @var array|string[]
 	 */
-	protected array $text = ['_class' => Text::class, 'word', 'sentence', 'text', 'hashtag', 'slugify'];
+	protected array $text = ['_class' => Text::class, 'word', 'sentence', 'text', 'hashtag', 'slugify', 'number'];
 
 	/**
 	 * @var array|string[]
