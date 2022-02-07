@@ -1,4 +1,16 @@
 <?php
+# **************************************************************************** #
+#                                                                              #
+#                                                          :::   :::  :::::::: #
+#                                                         :+:   :+: :+:    :+: #
+#    PostController.php                                  +:+ +:+  +:+          #
+#                                                        +#++:   +#+           #
+#    By: senox33 <yassineelidrissi02@gmail.com>          +#+   +#+             #
+#                                                      #+#    #+#    #+#       #
+#    Created: 2021/12/06 15:18:22    by senox33       ###     ########.ma      #
+#    Updated: 2021/12/06 15:18:22    by senox33                                #
+#                                                                              #
+# **************************************************************************** #
 
 
 namespace controller;
@@ -81,6 +93,7 @@ class PostController extends Controller
 					'user' => $user->name,
 					'picture' => '/uploads/dps/default.jpg',
 					'react' => $postLikes[$i]['type']
+		
 				]);
 				$i++;
 			}

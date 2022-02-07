@@ -62,6 +62,8 @@ class CLIApplication
 				/** run command */
 				$CommandInstance = new $this->commands[$command[0]]($command[0]);
 
+				// $CommandInstance = new $this->commands[$command[0]]($command[0]);
+
 				/** check if the wanted command exists in our class, and it's public, then run it */
 				if (is_callable(array($CommandInstance, $command[1]))){
 					$output = $CommandInstance->{$command[1]}($this->argv);
