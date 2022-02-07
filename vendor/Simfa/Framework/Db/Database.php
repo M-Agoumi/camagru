@@ -57,10 +57,12 @@ class Database
 		$appliedMigrations = $this->getAppliedMigrations();
 
 		$newMigrations = [];
+		$currentMigration = '';
 		$files = scandir(Application::$ROOT_DIR.'/migrations');
 		$toApplyMigrations = array_diff($files, $appliedMigrations);
 		try {
 			foreach ($toApplyMigrations as $migration) {
+				$currentMigration = $migration;
 				if ($migration == '.' || $migration == '..')
 					continue ;
 				require_once Application::$ROOT_DIR. "/migrations//".$migration;
@@ -74,9 +76,10 @@ class Database
 		} catch (Exception $e) {
 			if (!empty($newMigrations))
 				$this->saveMigrations($newMigrations);
-			echo "applying migration failed after " . $newMigrations[count($newMigrations) - 1] . PHP_EOL;
+			echo "applying migration failed after " . ($newMigrations[count($newMigrations) - 1] ?? $currentMigration) . PHP_EOL;
 			print_r($e);
 			echo PHP_EOL;
+			$this->saveMigrations($newMigrations);
 		}
 
 		if (!empty($newMigrations)) 

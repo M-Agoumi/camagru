@@ -25,7 +25,7 @@ class mg0012_create_user_login_token_table
 									
 									PRIMARY KEY (id),
 									KEY fkIdx_131 (user),
-									CONSTRAINT FK_130 FOREIGN KEY fkIdx_131 (user) REFERENCES users (id) ON DELETE CASCADE 
+									CONSTRAINT FK_130 FOREIGN KEY fkIdx_131 (user) REFERENCES user (EntityID) ON DELETE CASCADE 
 								);
 					");
 	}

@@ -26,7 +26,7 @@ class mg0009_create_preferences_table
 								KEY `fkIdx_102` (`language`),
 								CONSTRAINT `FK_101` FOREIGN KEY `fkIdx_102` (`language`) REFERENCES `languages` (`id`),
 								KEY `fkIdx_93` (`user`),
-								CONSTRAINT `FK_92` FOREIGN KEY `fkIdx_93` (`user`) REFERENCES `users` (`id`)
+								CONSTRAINT `FK_92` FOREIGN KEY `fkIdx_93` (`user`) REFERENCES `user` (`EntityID`)
 								);
 					");
 	}

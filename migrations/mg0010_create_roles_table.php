@@ -30,11 +30,11 @@ class mg0010_create_roles_table
 									
 									PRIMARY KEY (id),
 									KEY fkIdx_115 (user),
-									CONSTRAINT FK_114 FOREIGN KEY fkIdx_115 (user) REFERENCES users (id),
+									CONSTRAINT FK_114 FOREIGN KEY fkIdx_115 (user) REFERENCES user (EntityID),
 									KEY fkIdx_125 (updated_by),
-									CONSTRAINT FK_124 FOREIGN KEY fkIdx_125 (updated_by) REFERENCES users (id),
+									CONSTRAINT FK_124 FOREIGN KEY fkIdx_125 (updated_by) REFERENCES `user` (EntityID),
                  					KEY fkIdx_135 (updated_by),
-									CONSTRAINT FK_134 FOREIGN KEY fkIdx_135 (updated_by) REFERENCES users (id)
+									CONSTRAINT FK_134 FOREIGN KEY fkIdx_135 (updated_by) REFERENCES `user` (EntityID)
 								);
 
 								insert into roles (

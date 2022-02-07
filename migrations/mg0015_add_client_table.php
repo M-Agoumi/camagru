@@ -15,7 +15,7 @@ class mg0015_add_client_table extends Migration
 			$table->string('email')->nullable()->unique();
 			$table->int('user');
 			$table->timestamps();
-			$table->foreign('user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+			$table->foreign('user')->references('EntityID')->on('user')->onUpdate('cascade')->onDelete('cascade');
 
 			return $table;
 		});
