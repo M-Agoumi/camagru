@@ -23,8 +23,8 @@ class User extends DbModel
 	const STATUS_INACTIVE = 0;
 	const STATUS_ACTIVE = 1;
 	const STATUS_DELETED = 2;
-	
-    public ?int $id = null;
+
+    public ?int $entityID = null;
 	public ?string $name = null;
 	public ?string $username = null;
 	public ?string $email = null;
@@ -35,16 +35,6 @@ class User extends DbModel
 	public bool $pass = false;
 
 	/**
-	 * @var string table name in the database
-	 */
-	protected static string $tableName = 'users';
-
-	/**
-	 * @var string $primaryKey of the table
-	 */
-	protected static string $primaryKey = 'id';
-
-	/**
 	 * properties that aren't database table attributes
 	 */
 	protected static array $nonAttributes = ['pass'];
@@ -52,7 +42,7 @@ class User extends DbModel
 	/**
 	 * @var array|string[] protected attributes from public sharing (Ex:API...)
 	 */
-	protected static array $protected = ['id', 'password'];
+	protected static array $protected = ['EntityID', 'password'];
 
 	/** hash password before saving
 	 * @return bool

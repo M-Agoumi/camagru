@@ -160,6 +160,8 @@ abstract class DbModel extends Model
 
 		$sql .= " WHERE " . $this->primaryKey() . "=" . $this->{$this->primaryKey()} . ";";
 
+		echo '<br>' . $sql . '<br>';
+
 		$statement = self::prepare($sql);
 
 		foreach ($attributes as $attribute) {
@@ -169,8 +171,15 @@ abstract class DbModel extends Model
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
+		try {
+			$statement->execute();
+		} catch (\Exception $exception) {
+			echo '<br><br>' . $statement->debugDumpParams();
+		}
 		$this->updated_at = date('Y-m-d H:i:s', time());
 
+//		echo '<br><br>' . $statement->debugDumpParams();
+		die('<br>done');
 		return $statement->execute();
 	}
 
@@ -285,8 +294,8 @@ abstract class DbModel extends Model
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
 		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
-		$stmt = !empty($where) ?    self::prepare("SELECT * FROM $tableName WHERE ". $sql) :
-									self::prepare("SELECT * FROM $tableName");
+		$stmt = !empty($where) ?    self::prepare("SELECT * FROM `$tableName` WHERE ". $sql) :
+									self::prepare("SELECT * FROM `$tableName`");
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}

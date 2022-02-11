@@ -8,7 +8,7 @@ use Model\User;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
 use Simfa\Framework\Request;
-use Simfa\Model\Languages;
+use Simfa\Model\Language;
 use Simfa\Model\Preferences;
 
 class UserController extends Controller
@@ -124,8 +124,8 @@ class UserController extends Controller
 			/** todo add preference for sending an email on command or disabling it */
 			if ($pref->id) {
 				if ($pref->validate() && $pref->update()){
-					Application::$APP->session->set('lang_main', (languages::getLang($pref->language))->language);
-					Application::$APP->session->set('lang_fb', (languages::getLang($pref->language))->language);
+					Application::$APP->session->set('lang_main', (Language::getLang($pref->language))->language);
+					Application::$APP->session->set('lang_fb', (Language::getLang($pref->language))->language);
 					Application::$APP->session->setFlash('success', 'your preferences has been updated');
 					Application::$APP->response->redirect(Application::path('user.preferences'));
 				}
@@ -133,7 +133,7 @@ class UserController extends Controller
 				$pref->user = $user;
 
 				if ($pref->validate() && $pref->save()) {
-					Application::$APP->session->set('lang_main', (languages::getLang($pref->language))->language);
+					Application::$APP->session->set('lang_main', (Language::getLang($pref->language))->language);
 					Application::$APP->session->setFlash('success', 'your preferences has been updated');
 					Application::$APP->response->redirect(Application::path('user.preferences'));
 				}

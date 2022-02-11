@@ -17,7 +17,7 @@ use Simfa\Action\Controller;
 use Simfa\Framework\Db\Database;
 use Simfa\Framework\Db\DbModel;
 use Exception;
-use Simfa\Model\Languages;
+use Simfa\Model\Language;
 use Simfa\Model\Preferences;
 
 /**
@@ -57,7 +57,7 @@ class Application
 		self::$ENV = $this->getDotEnv();
 		$this->catcher = New Catcher();
 		$this->interface = $appInterface;
-		$this->userCLass = self::getEnvValue('USER_CLASS') ?? 'models\User';
+		$this->userCLass = self::getEnvValue('USER_CLASS') ?? 'Model\User';
 		$this->request = New Request();
 		$this->response = New Response();
 		$this->db = New Database($this->getDatabaseConfig());
@@ -83,10 +83,11 @@ class Application
 		if ($primaryValue) {
 			$primaryKey = self::$APP->userCLass::primaryKey();
 			$user = self::$APP->userCLass::findOne([$primaryKey =>  $primaryValue]);
-			$user->ip_address = Application::$APP->request->getUserIpAddress();
-			$user->update();
-
-			return $user;
+			if ($user->getId()) {
+				$user->ip_address = Application::$APP->request->getUserIpAddress();
+				$user->update();
+				return $user;
+			}
 		}
 
 		return NULL;
@@ -189,7 +190,7 @@ class Application
 	    } else {
 	    	/** not in session check database */
 		    if ($this->preferences && $this->preferences->id) {
-		    	$language = Languages::getLang($this->preferences->language)->language;
+		    	$language = Language::getLang($this->preferences->language)->language;
 		    	Application::$APP->session->set('lang_main', $language);
 			    array_push($lang, include self::$ROOT_DIR . '/translation/' . $language. '.lang.php');
 			    if ($lang != $config['fallback_language']) {

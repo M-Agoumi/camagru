@@ -4,7 +4,7 @@
 namespace Controller;
 
 
-use Model\Likes;
+use Model\Like;
 use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
@@ -28,7 +28,7 @@ class PostController extends Controller
 		if (Application::isGuest() || !$request->isPost())
 			return "-1";
 
-		$likes = new Likes();
+		$likes = new Like();
 
 		$liked = $likes->findOne([
 						'user' => Application::$APP->user->getId(),
@@ -70,7 +70,7 @@ class PostController extends Controller
 			$usersLikes = [];
 
 			/** create like model to fetch likes */
-			$likes = New Likes();
+			$likes = New Like();
 
 			$postLikes = $likes->findAllBy(['post' => $id, 'status' => 0]);
 			/** create a user model to fetch users */

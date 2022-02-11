@@ -4,17 +4,14 @@ namespace Simfa\Model;
 
 use Simfa\Framework\Db\DbModel;
 
-class Languages extends DBModel
+/**
+ * @method setLanguage(string $lang)
+ */
+class Language extends DBModel
 {
 
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?string $language = null;
-
-	/**
-	 * @var string table primary key
-	 */
-	protected static string $primaryKey = 'id';
-
 
 	/**
 	 * the rules should be respect by each child model
@@ -34,6 +31,6 @@ class Languages extends DBModel
 	 */
 	public static function getLang(int $id): DbModel
 	{
-		return self::findOne(['id' => $id]);
+		return self::findOne(['entityID' => $id]);
 	}
 }

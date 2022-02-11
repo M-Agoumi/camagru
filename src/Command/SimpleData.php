@@ -41,7 +41,7 @@ class SimpleData extends BaseCommand
 			$post->comment = $fake->text(5, 30) . ' #' . $hashtag . ' ' . $fake->hashtag(2);
 			$post->picture = $images[$i];
 			$post->slug = $fake->slugify($post->title);
-			$post->author = User::findOne(['id' => $fake->model(User::class)]);
+			$post->author = User::findOne(['entityID' => $fake->model(User::class)]);
 			$post->status = 0;
 			$post->save();
 		}
@@ -55,7 +55,7 @@ class SimpleData extends BaseCommand
 		if (isset($argv[1]) && is_numeric($argv[1]))
 			$users_number = $argv[1];
 
-		echo GREEN . 'Generating ' . $users_number . ' posts' . RESET . PHP_EOL;
+		echo GREEN . 'Generating ' . $users_number . ' users' . RESET . PHP_EOL;
 		$fake = FakeDataFactory::create();
 
 		for ($i = 0; $i < $users_number; $i++)
@@ -81,11 +81,11 @@ class SimpleData extends BaseCommand
 		foreach ($posts as $post)
 		{
 			$commentsNumber = $fake->number(0, 10);
-			echo BLUE . $post['id'] . GREEN .  ' => ' . WHITE . $post['title'] . RESET . PHP_EOL;
+			echo BLUE . $post['entityID'] . GREEN .  ' => ' . WHITE . $post['title'] . RESET . PHP_EOL;
 
 			for ($i = 0; $i < $commentsNumber; $i++) {
 				$comment = new Comments();
-				$comment->post = $post['id'];
+				$comment->post = $post['entityID'];
 				$comment->user = $fake->model(User::class);
 				$comment->content = $fake->text();
 
@@ -119,7 +119,7 @@ class SimpleData extends BaseCommand
 	private function getImages(): array
 	{
 		$uploads    = CLIApplication::$ROOT_DIR. 'public/uploads';
-		$ignoreFiles= ['.', '..', 'dps'];
+		$ignoreFiles= ['.', '..', 'dps', 'index.php'];
 
 		return array_values(array_diff(scandir($uploads), $ignoreFiles));
 	}

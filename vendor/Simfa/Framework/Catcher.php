@@ -44,7 +44,7 @@ class Catcher
 			$message = ob_get_clean();
 		}
 
-		if ($this->app->getDotEnv()['env'] != 'dev') {
+		if ($this->app->getDotEnv()['ENV'] != 'dev') {
 			$codeView = 'error/__' . $e->getCode();
 			if (file_exists(Application::$ROOT_DIR . '/views/' . $codeView . '.gaster.php'))
 				echo $this->app->view->renderView('error/__' . $e->getCode(), ['e' => $e, 'title' => $e->getCode()]);

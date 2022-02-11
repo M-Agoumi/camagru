@@ -6,7 +6,7 @@
 	/** @var $post Post */
 
 	use Model\Comments;
-	use Model\Likes;
+	use Model\Like;
 	use Model\Post;
 	use Simfa\Form\Form;
 	use Simfa\Framework\Application;
@@ -23,11 +23,11 @@
 			$author = $post->author;
 
 			/** get likes */
-			$likes = New Likes();
+			$likes = New Like();
 
-			$likesCount = $likes->getCount(['post' => $post->id, 'status' => 0]);
+			$likesCount = $likes->getCount(['post' => $post->entityID, 'status' => 0]);
 			if (Application::$APP->user)
-				$liked = $likes->getCount(['post' => $post->id, 'user' => Application::$APP->user->getId(), 'status' => 0]);
+				$liked = $likes->getCount(['post' => $post->entityID, 'user' => Application::$APP->user->getId(), 'status' => 0]);
 			else
 				$liked = 0;
 

@@ -8,16 +8,13 @@ use Simfa\Framework\Db\DbModel;
 class Comments extends DbModel
 {
 
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?int $post = null;
 	public ?int $user = null;
 	public ?string $content = null;
 	public int $status = 0;
 
-	/**
-	 * @var string table primary key
-	 */
-	protected static string $primaryKey = 'id';
+	protected static string $tableName = 'comment';
 
 	/**
 	 * @inheritDoc

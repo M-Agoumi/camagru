@@ -4,9 +4,9 @@
 	<?php
 
 	use Simfa\Form\Form;
-	use Simfa\Model\Languages;
+	use Simfa\Model\Language;
 
-	$lang = New languages();
+	$lang = New Language();
 
 	?>
 	<h1>Preferences</h1>

@@ -9,23 +9,13 @@ use Simfa\Framework\Db\DbModel;
 class Post extends DbModel
 {
 
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?string $title = null;
 	public ?string $comment = null;
 	public ?string $picture = null;
 	public ?string $slug = null;
 	public ?int $status = null;
 	public ?User $author = null;
-
-	/**
-	 * @var string $tableName in the database
-	 */
-	protected static string $tableName = 'posts';
-
-	/**
-	 * @var string table primary key
-	 */
-	protected static string $primaryKey = 'id';
 
 	/**
 	 * @return array
