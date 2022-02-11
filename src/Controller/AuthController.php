@@ -136,7 +136,7 @@ class AuthController extends Controller
 				if (!$tmp)
 					$email->save();
 				else {
-					$email->id = $tmp['id'];
+					$email->entityID = $tmp['entityID'];
 					$email->update();
 				}
 

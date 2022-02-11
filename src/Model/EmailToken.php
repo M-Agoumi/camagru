@@ -6,7 +6,7 @@ namespace Model;
 
 class EmailToken extends \Simfa\Framework\Db\DbModel
 {
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?string $email = '';
 	public ?string $token = '';
 	public int $used = 0;
@@ -14,7 +14,7 @@ class EmailToken extends \Simfa\Framework\Db\DbModel
 	/**
 	 * @var string table primary key
 	 */
-	protected static string $primaryKey = 'id';
+	protected static string $tableName = 'email_token';
 
 	/**
 	 * @inheritDoc

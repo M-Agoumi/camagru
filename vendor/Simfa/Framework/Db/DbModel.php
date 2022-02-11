@@ -166,12 +166,14 @@ abstract class DbModel extends Model
 		foreach ($attributes as $attribute) {
 			if ($attribute == 'updated_at')
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
+			elseif ($attribute == 'created_at' && !$this->{$attribute})
+				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
 			else
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
 		$this->updated_at = date('Y-m-d H:i:s', time());
-		
+
 		return $statement->execute();
 	}
 
