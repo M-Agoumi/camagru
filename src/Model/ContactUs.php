@@ -8,7 +8,7 @@ use Simfa\Framework\Db\DbModel;
 class ContactUs extends DbModel
 {
 
-	protected ?int $id = null;
+	protected ?int $entityID = null;
 	protected ?int $logged = null;
 	protected ?int $user = null;
 	protected ?string $email = null;
@@ -22,10 +22,6 @@ class ContactUs extends DbModel
 	 */
 	protected static string $tableName = "contact_us";
 
-	/**
-	 * @var string table primary key
-	 */
-	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc

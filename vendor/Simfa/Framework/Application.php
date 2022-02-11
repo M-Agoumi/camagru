@@ -18,7 +18,7 @@ use Simfa\Framework\Db\Database;
 use Simfa\Framework\Db\DbModel;
 use Exception;
 use Simfa\Model\Language;
-use Simfa\Model\Preferences;
+use Simfa\Model\Preference;
 
 /**
  * Class Application don't forget to include your user class
@@ -35,7 +35,7 @@ class Application
 	public ?Response $response = null;
 	public ?controller $controller = null;
 	public ?Session $session = null;
-	public ?Preferences $preferences = null;
+	public ?Preference $preferences = null;
 	public ?DbModel $user;
 	public ?View $view;
 	public ?Helper $helper = null;
@@ -67,7 +67,7 @@ class Application
 		$this->view = New View();
 		$this->helper = New Helper();
 		$this->cookie = New Cookie();
-		$this->preferences = $this->user ? Preferences::getPerf($this->user->getId()) : null;
+		$this->preferences = $this->user ? Preference::getPerf($this->user->getId()) : null;
 		$lang = $this->setLang();
 		$this->MainLang = $lang[0];
 		$this->fallbackLang = $lang[1];
@@ -189,7 +189,7 @@ class Application
 		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_fb') . '.lang.php');
 	    } else {
 	    	/** not in session check database */
-		    if ($this->preferences && $this->preferences->id) {
+		    if ($this->preferences && $this->preferences->entityID) {
 		    	$language = Language::getLang($this->preferences->language)->language;
 		    	Application::$APP->session->set('lang_main', $language);
 			    array_push($lang, include self::$ROOT_DIR . '/translation/' . $language. '.lang.php');

@@ -6,15 +6,13 @@ namespace Simfa\Model;
 
 use Simfa\Framework\Db\DbModel;
 
-class Preferences extends DBModel
+class Preference extends DBModel
 {
 
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?int $user = null;
 	public ?int $language = null;
-	public ?int $commentsMail = null;
-
-	protected static string $primaryKey = 'id';
+	public ?int $mail = null;
 
 	/**
 	 * the rules should be respect by each child model

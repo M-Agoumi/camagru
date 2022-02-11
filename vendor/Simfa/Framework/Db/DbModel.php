@@ -160,7 +160,6 @@ abstract class DbModel extends Model
 
 		$sql .= " WHERE " . $this->primaryKey() . "=" . $this->{$this->primaryKey()} . ";";
 
-		echo '<br>' . $sql . '<br>';
 
 		$statement = self::prepare($sql);
 
@@ -171,15 +170,8 @@ abstract class DbModel extends Model
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
 
-		try {
-			$statement->execute();
-		} catch (\Exception $exception) {
-			echo '<br><br>' . $statement->debugDumpParams();
-		}
 		$this->updated_at = date('Y-m-d H:i:s', time());
-
-//		echo '<br><br>' . $statement->debugDumpParams();
-		die('<br>done');
+		
 		return $statement->execute();
 	}
 

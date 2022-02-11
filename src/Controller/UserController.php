@@ -9,7 +9,7 @@ use Simfa\Action\Controller;
 use Simfa\Framework\Application;
 use Simfa\Framework\Request;
 use Simfa\Model\Language;
-use Simfa\Model\Preferences;
+use Simfa\Model\Preference;
 
 class UserController extends Controller
 {
@@ -113,7 +113,7 @@ class UserController extends Controller
 
 	public function preferences(Request $request)
 	{
-		$pref = New Preferences();
+		$pref = New Preference();
 		$user = Application::$APP->user->getId();
 
 		$pref->getOneBy('user', $user);
@@ -122,7 +122,7 @@ class UserController extends Controller
 			$pref->loadData($request->getBody());
 
 			/** todo add preference for sending an email on command or disabling it */
-			if ($pref->id) {
+			if ($pref->entityID) {
 				if ($pref->validate() && $pref->update()){
 					Application::$APP->session->set('lang_main', (Language::getLang($pref->language))->language);
 					Application::$APP->session->set('lang_fb', (Language::getLang($pref->language))->language);

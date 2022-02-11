@@ -9,7 +9,8 @@ use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
-use vendor\FakeData\FakeDataFactory;
+use Simfa\Framework\Request;
+use FakeData\FakeDataFactory;
 
 class TestController extends Controller
 {

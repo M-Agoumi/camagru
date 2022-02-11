@@ -6,8 +6,8 @@ use FakeData\src\FakeData;
 use Simfa\Framework\Db\DbModel;
 
 /**
- * @method username
- * @method email
+ * @method username(string $from)
+ * @method email(string $from)
  * @method text(int $min = 5, int $max = null)
  * @method slugify(string $slug)
  * @method model($model)

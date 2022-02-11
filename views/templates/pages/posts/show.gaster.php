@@ -39,40 +39,40 @@
 	    <div class="filters">
 	    <span class="origin">
 	        <span>
-	            (<span class="likeCount" onclick="showLikes(<?=$post->id?>)"><?=$likesCount?></span>)
+	            (<span class="likeCount" onclick="showLikes(<?=$post->entityID?>)"><?=$likesCount?></span>)
 
 	        <span class="wrapper-like">
 	            <?php if ($liked): ?>
-	            <span onclick="likePost(<?=$post->id?>, this)">liked</span>
+	            <span onclick="likePost(<?=$post->entityID?>, this)">liked</span>
 	            <?php else: ?>
 	                <div class="icon like">
 						<div class="tooltip">like</div>
-						<span onclick="likePost(<?=$post->id?>, this, 0)"><i class="fa fa-thumbs-up"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 0)"><i class="fa fa-thumbs-up"></i></span>
 					</div>
 	            <?php endif; ?>
 					<div class="icon love">
 						<div class="tooltip">love</div>
-						<span onclick="likePost(<?=$post->id?>, this, 1)"><i class="fa fa-heart"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 1)"><i class="fa fa-heart"></i></span>
 					</div>
 					<div class="icon wow">
 						<div class="tooltip">wow</div>
-						<span onclick="likePost(<?=$post->id?>, this, 2)"><i class="fas fa-grin-alt"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 2)"><i class="fas fa-grin-alt"></i></span>
 					</div>
 					<div class="icon haha">
 						<div class="tooltip">haha</div>
-						<span onclick="likePost(<?=$post->id?>, this, 3)"><i class="fas fa-grin-squint-tears"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 3)"><i class="fas fa-grin-squint-tears"></i></span>
 					</div>
 					<div class="icon sad">
 						<div class="tooltip">sad</div>
-						<span onclick="likePost(<?=$post->id?>, this, 4)"><i class="fas fa-sad-tear"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 4)"><i class="fas fa-sad-tear"></i></span>
 					</div>
 					<div class="icon angry">
 						<div class="tooltip">angry</div>
-						<span onclick="likePost(<?=$post->id?>, this, 5)"><i class="fa fa-angry"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 5)"><i class="fa fa-angry"></i></span>
 					</div>
 	        </span>
 	<?php
-		        if (Application::$APP->user && Application::$APP->user->id == $post->author->id):
+		        if (Application::$APP->user && Application::$APP->user->entityID == $post->author->entityID):
 		        ?>
 	        <span>edit post</span>
 	<?php endif; ?>
@@ -99,7 +99,7 @@
 	                <table id="commentsTable">
 						<?php
 		                /** post comments table content */
-		                $comments = $comment->findAllBy(['post' => $post->id]);
+		                $comments = $comment->findAllBy(['post' => $post->entityID]);
 		                foreach ($comments as $com) {
 			                echo '<tr>';
 			                $user = $comment->user($com['user']);

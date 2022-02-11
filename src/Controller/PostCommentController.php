@@ -9,7 +9,7 @@ use Model\Post;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
 use Simfa\Framework\Request;
-use Simfa\Model\Preferences;
+use Simfa\Model\Preference;
 
 class PostCommentController extends Controller
 {
@@ -45,11 +45,11 @@ class PostCommentController extends Controller
 				$comment->user = Application::$APP->user->getId();
 
 				/** get author preferences to check if he has enabled getting notifications by email */
-				$preferences = new Preferences();
+				$preferences = new Preference();
 				$preferences->getOneBy('user', $post->author->id);
 
 				if ($comment->save()) {
-					if ($preferences->commentsMail != '0') {
+					if ($preferences->mail != '0') {
 						/** fill email data */
 						$authorEmail = $post->author->email;
 						$emailSubject = Application::$APP->user->username . " commented on your post";

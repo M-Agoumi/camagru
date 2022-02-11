@@ -14,7 +14,7 @@
 	<?php
 	$form = Form::begin();
 	echo $form->select($pref, 'language', $lang);
-	echo $form->select($pref, 'commentsMail', ['1' => 'yes', '0' => 'no'])->setLabel('receive notification emails');
+	echo $form->select($pref, 'mail', ['1' => 'yes', '0' => 'no'])->setLabel('receive notification emails');
 	echo $form->submit('Save');
 	$form::end();
 	?>

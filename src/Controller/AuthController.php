@@ -56,7 +56,7 @@ class AuthController extends Controller
 		foreach ((array)$savedUsers as $savedUser) {
 			$token = new UserToken();
 			$token->getOneBy('token', $savedUser);
-			if ($token->id)
+			if ($token->entityID)
 				array_push($users, $token);
 		}
 
@@ -331,7 +331,7 @@ class AuthController extends Controller
 		foreach ((array)$users as $key => $value) {
 			$userToken = new UserToken();
 			$userToken->getOneBy('token', $value);
-			if ($userToken->id && $userToken->user->getId() == Application::$APP->session->get('user_tmp'))
+			if ($userToken->entityID && $userToken->user->getId() == Application::$APP->session->get('user_tmp'))
 				unset($users[$key]);
 		}
 

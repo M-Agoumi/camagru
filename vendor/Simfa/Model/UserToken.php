@@ -8,14 +8,12 @@ use Model\User;
 
 class UserToken extends \Simfa\Framework\Db\DbModel
 {
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?User $user = null;
 	public ?string $token = null;
 	public ?int $used = null;
 
 	protected static string $tableName =  'user_token';
-
-	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc

@@ -103,5 +103,8 @@ Router::get('/testabc' ,[TestController::class, 'dbTest']);
 Router::get('/fakeUser', [TestController::class, 'fakeUser']);
 Router::get('/fakePost', [TestController::class, 'fakePost']);
 Router::redirect('/redirect', '/hello');
-Router::get('/hello', function (){return 'hello world';});
+Router::get('/hello', function (){
+	$_SESSION['user'] = 1;
+	return 'hello world';
+});
 
