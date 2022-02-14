@@ -12,7 +12,7 @@ class Cookie
 	public function __construct()
 	{
 		/** set test cookie */
-		setcookie('cookies_active', '1',['path' => '/', 'httponly' => false, 'secure' => false]);
+		setcookie('cookies_active', '1',['path' => '/', 'httponly' => false, 'secure' => false, 'samesite' => 'Strict']);
 
 		/** check if user is logged save him in cookies */
 		$userToken = New UserToken();

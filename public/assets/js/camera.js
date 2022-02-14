@@ -2,10 +2,10 @@
 // getElementById over and over
 let canvas = document.getElementById("canvas");
 
-// a global variable to store our applied filters so we don't
+// a global variable to store our applied filters, so we don't
 // override one when we modify another one
 
-var appliedFilters = [];
+let appliedFilters = [];
 
 async function getWebCam() {
     try {
@@ -19,9 +19,7 @@ async function getWebCam() {
     }
 }
 
-window.onload = function() {
-    getWebCam();
-}
+getWebCam();
 
 /** image filters functions */
 
@@ -47,10 +45,29 @@ function applyFilters() {
 // clear all filters
 function clearFilters()
 {
-    if (canvas.style.filter === 'none')
+    if (canvas.style.filter === 'none') {
+		const emotes = document.getElementsByClassName('emotes');
+
+		for (const emote of emotes) {
+			// 👇️ Remove element from DOM
+			emote.style.display = 'block';
+
+			// 👇️ hide element (still takes up space on page)
+			// box.style.visibility = 'hidden';
+		}
         applyFilters();
-    else
+	} else {
+		const emotes = document.getElementsByClassName('emotes');
+
+		for (const emote of emotes) {
+			// 👇️ Remove element from DOM
+			emote.style.display = 'none';
+
+			// 👇️ hide element (still takes up space on page)
+			// box.style.visibility = 'hidden';
+		}
         canvas.style.filter = 'none';
+	}
 }
 
 // increase the brightness of the image

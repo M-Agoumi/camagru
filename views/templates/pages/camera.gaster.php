@@ -80,10 +80,21 @@
         function addImage(imgLink) {
             var img = document.createElement("img");
             img.className  = "emotes";
+			img.id = 'emoteTest';
             img.src = imgLink;
+			img.draggable = true;
+			img.onmousedown = sayHi;
             var src = document.getElementById("image");
             src.appendChild(img);
         }
+
+		/** make the emotes movable **/
+		function sayHi(e)
+		{
+			this.style.position = "absolute";
+			this.style.top = e.clientY - (e.clientY - this.offsetTop) + "px";
+			this.style.left = e.clientX - (e.clientX - this.offsetLeft) + "px";
+		}
 	</script>
 @endsection
 
