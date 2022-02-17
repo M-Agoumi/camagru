@@ -108,6 +108,7 @@ class Session
 
 	/**
 	 * @return false|string csrf token if stored in session
+	 * @throws \Exception
 	 */
 	public function getCsrf()
 	{
@@ -120,7 +121,9 @@ class Session
 			$i++;
 		}
 
-		return false;
+		$this->generateCsrf();
+
+		return $this->getCsrf();
 	}
 	
 	/**

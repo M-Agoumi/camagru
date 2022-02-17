@@ -166,27 +166,34 @@ function addComment(e, slug) {
     xhr.send(data);
 
     xhr.onload = () => {
-        let response = xhr.responseText;
+        let response = JSON.parse(xhr.responseText);
         console.log(response);
 
-        if (response == -2)
-            loginPopUp();
-        if (response == -1)
-            console.log('post not found');
-        if (response == 0) {
-            document.getElementsByClassName('invalid-feedback')[0].innerHTML = 'comment is not valid';
-            document.getElementById('content').classList.add('is-invalid');
-        }
-        if (response == 1) {
-            var table = document.getElementById("commentsTable");
-            var row = table.insertRow(0);
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            // console.log('username: ' + getUserName());
-            cell1.innerHTML = UserName;
-            cell2.innerText = document.getElementById('content').value;
-            document.getElementById('content').value = "";
-        }
+		document.getElementById('csrf_comment').value = response.token;
+		if (response.code === -2)
+			loginPopUp();
+		if (response.code === -1) {
+			document.getElementsByClassName('invalid-feedback')[0].innerHTML = 'Post is not available anymore';
+			document.getElementById('content').classList.add('is-invalid');
+		}
+		if (response.code === -3) {
+			document.getElementsByClassName('invalid-feedback')[0].innerHTML = 'invalid token, please try again or refresh the page';
+			document.getElementById('content').classList.add('is-invalid');
+		}
+		if (response.code === 0) {
+			document.getElementsByClassName('invalid-feedback')[0].innerHTML = 'comment is not valid';
+			document.getElementById('content').classList.add('is-invalid');
+		}
+		if (response.code === 1) {
+			const table = document.getElementById("commentsTable");
+			let row = table.insertRow(0);
+			let cell1 = row.insertCell(0);
+			let cell2 = row.insertCell(1);
+			// console.log('username: ' + getUserName());
+			cell1.innerHTML = UserName;
+			cell2.innerText = document.getElementById('content').value;
+			document.getElementById('content').value = "";
+		}
     }
 
     return false;

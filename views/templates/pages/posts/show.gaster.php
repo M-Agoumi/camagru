@@ -81,11 +81,12 @@
 		            $comment = New Comments();
 		            $form = Form::begin(
 			            '/api/post/comment/' . $post->slug, 'POST', '',
-			            'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"'
+			            'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"',
+					'csrf_comment'
 		            );
 		            echo $form->field($comment, 'content', 'Comment')
 			            ->setHolder('Comment Content')
-			            ->required();
+			            ;
 		            echo $form->submit('comment', '');
 		            $form::end();
 
