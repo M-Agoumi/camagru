@@ -67,7 +67,7 @@ function likePost(post, elem, react = 0) {
                         likes.innerHTML = parseInt(likes.textContent) + 1;
                     } else {
 						elem.classList.remove(reacts[react] + '-active');
-						likes.innerHTML = parseInt(likes.textContent) - 1;
+						likes.innerHTML = parseInt(likes.textContent) -	 1;
 					}
                 }
             } else {
@@ -114,10 +114,17 @@ function showLikes(post) {
                                 '<li><img src="' + users[i].picture + '" alt="profile picture"></li>' +
                                 '<li>' + users[i].user + '</li>';
                             if (users[i].react == 0)
-                                output += '<li><span class="fa fa-thumbs-o-up"></span></li>';
+                                output += '<li><span class="fas fa-thumbs-up"></span></li>';
                             else if (users[i].react == 1)
-                                output += '<li><span class="fa fa-heart"></span></li>';
-
+                                output += '<li><span class="fas fa-heart"></span></li>';
+							else if (users[i].react == 2)
+								output += '<li><span class="fas fa-grin-alt"></span></li>';
+							else if (users[i].react == 3)
+								output += '<li><span class="fas fa-grin-squint-tears"></span></li>';
+							else if (users[i].react == 4)
+								output += '<li><span class="fas fa-sad-tear"></span></li>';
+							else if (users[i].react == 5)
+								output += '<li><span class="fas fa-angry"></span></li>';
 
                             output += '</ul>';
                         }
