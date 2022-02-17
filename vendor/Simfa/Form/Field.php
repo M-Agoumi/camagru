@@ -66,7 +66,7 @@ class Field
 			</div>
 		</div>
 		', !($this->type == self::TYPE_HIDDEN ) ? $this->attribute : ''
-		    , !empty($this->label) ? $this->label : ucfirst($this->attribute)
+		    , $this->type != self::TYPE_HIDDEN ? (!empty($this->label) ?  $this->label : ucfirst($this->attribute)) : ''
 		    , $this->type
 		    , $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
 		    , $this->attribute
@@ -148,7 +148,7 @@ class Field
         return $this;
     }
 
-	public function hiddentField(): Field
+	public function hiddenField(): Field
 	{
 		$this->type = self::TYPE_HIDDEN;
 

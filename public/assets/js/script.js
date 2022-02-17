@@ -27,25 +27,6 @@ async function dismissMessage() {
     source.style.display = "none";
 }
 
-async function capture() {
-    const canvas = document.getElementById('canvas');
-    let context = canvas.getContext('2d');
-
-    context.drawImage(video, 0, 0, 650, 490);
-    document.getElementById('picture').style.display = 'block';
-    document.getElementById('camera').style.display = 'none';
-}
-
-function save() {
-    var canvas = document.getElementById("canvas");
-    var img    = canvas.toDataURL("image/jpeg");
-
-    var tmp = document.getElementById('tmp');
-    tmp.innerHTML = '<img src="'+img+'" alt="tmp image"/>';
-    console.log(img);
-    document.getElementById('inputPicture').value = img;
-}
-
 /* starting ajax code */
 
 

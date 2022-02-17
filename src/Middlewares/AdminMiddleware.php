@@ -3,18 +3,17 @@
 
 namespace Middlewares;
 
-
-use Simfa\Application;
-use Simfa\Exception\NotFoundException;
-use Simfa\Middleware\BaseMiddleware;
-use models\Roles;
+use Model\Role;
+use Simfa\Framework\Application;
+use Simfa\Framework\Exception\NotFoundException;
+use Simfa\Framework\Middleware\BaseMiddleware;
 
 class AdminMiddleware extends BaseMiddleware
 {
 
 	public function execute()
 	{
-		$roles = new Roles();
+		$roles = new Role();
 		$roles->getOneBy('user', Application::$APP->user->getId());
 		if (!$roles->getId())
 			throw new NotFoundException();

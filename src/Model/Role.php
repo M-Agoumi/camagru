@@ -4,9 +4,11 @@
 namespace Model;
 
 
-class Roles extends \Simfa\Db\DbModel
+use Simfa\Framework\Db\DbModel;
+
+class Role extends DbModel
 {
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?User $user = null;
 	public bool $super_admin = false;
 	public bool $users = false;
@@ -16,10 +18,6 @@ class Roles extends \Simfa\Db\DbModel
 	public bool $promote = false;
 	public ?User $updated_by = null;
 
-	/**
-	 * @var string table primary key
-	 */
-	protected static string $primaryKey = 'id';
 
 	/**
 	 * @inheritDoc

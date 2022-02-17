@@ -20,7 +20,7 @@ class Cache extends BaseCommand
 	 */
 	public function clear(array $params = []): string
 	{
-		$path = CLIApplication::$app->root . 'var/cache/gaster';
+		$path = CLIApplication::$ROOT_DIR . 'var/cache/gaster';
 		$files = new DirectoryIterator($path);
 
 		/** delete template engine cache files */

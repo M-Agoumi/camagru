@@ -160,7 +160,7 @@ class MakeEntity
 	private function createEntityCLassFile(string $entityName, string $entityTable, array $entityComponents)
 	{
 		/** @var string $template get class template and stop script in case it weren't found */
-		$templateFileName = CLIApplication::$app->root . 'vendor/Simfa/Views/Commands/templates/entity.template';
+		$templateFileName = CLIApplication::$ROOT_DIR . 'vendor/Simfa/Views/Commands/templates/entity.template';
 		$template = file_get_contents($templateFileName);
 
 		if (!$template)
@@ -193,7 +193,7 @@ class MakeEntity
 		/** add required rule for no nullable properties */
 		$template = str_replace('{{ rules }}', $this->getRulesForProperties($entityComponents), $template);
 
-		if (file_put_contents(CLIApplication::$app->root. "src/Model/" . $entityName . ".php", $template))
+		if (file_put_contents(CLIApplication::$ROOT_DIR. "src/Model/" . $entityName . ".php", $template))
 			echo "class created successfully\n";
 		else
 			echo "something went wrong while writing to the file\n";

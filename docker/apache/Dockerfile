@@ -16,7 +16,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # ARG user=sqli
 
 ## install required packages for our server
-RUN apt install &&  apt update && apt install -y  git curl libpng-dev libonig-dev libxml2-dev  zip unzip
+RUN apt install &&  apt update && apt upgrade -y && apt install -y  git curl libpng-dev libonig-dev libxml2-dev  zip unzip
 
 ## install vim to help when debugging
 RUN apt install -y vim
@@ -28,7 +28,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN apt update -y && apt upgrade -y
 
 ## install php
-RUN apt install -y php-common php-mysql php-cli
+RUN apt install -y php-common php-mysql php-cli php-gd
 
 ## install apache
 RUN apt install -y apache2  libapache2-mod-php

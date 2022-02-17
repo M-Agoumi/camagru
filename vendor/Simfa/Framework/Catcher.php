@@ -50,8 +50,12 @@ class Catcher
 				echo $this->app->view->renderView('error/__' . $e->getCode(), ['e' => $e, 'title' => $e->getCode()]);
 			else
 				echo $this->app->view->renderView('error/__500', ['title' => '500 Internal Server Error']);
-		} else
-			echo $this->app->view->renderView('error/__error', ['e' => $e, ['title' => $e->getCode()]]);
+		} else {
+			if (in_array($e->getCode(), ['404', '500', '403']))
+				echo $this->app->view->renderView('error/__' . $e->getCode(), ['e' => $e, ['title' => $e->getCode()]]);
+			else
+				echo $this->app->view->renderView('error/__error', ['e' => $e, ['title' => $e->getCode()]]);
+		}
 	}
 
 	private function apiLog(Exception $e)

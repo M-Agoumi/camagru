@@ -3,10 +3,9 @@
 
 namespace Controller\Admin;
 
-
-use controller\Controller;
 use Middlewares\AdminMiddleware;
 use Middlewares\AuthMiddleware;
+use Simfa\Action\Controller;
 
 class BaseController extends Controller
 {

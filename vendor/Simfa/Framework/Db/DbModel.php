@@ -261,18 +261,34 @@ abstract class DbModel extends Model
 
 	/**
 	 * @param array $where
+	 * @param string $limit
 	 * @return array
 	 */
-	public function findAllBy(array $where, string $limit = '')
+	public function findAllBy(array $where, string $limit = ''): array
 	{
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
 		$primary = static::primaryKey();
-		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
+		$sql = '';
+		foreach ($where as $criteria => $value) {
+			$sql .= $sql != '' ? ' and ' : '';
+			if (is_array($value)) {
+				foreach ($value as $key => $item) {
+					$sql .= $criteria . ' ' . $key . ' :' . $criteria . ' ';
+				}
+			} else
+				$sql .= $criteria . ' = :' . $criteria;
+		}
 		$limit = !empty($limit) ? 'limit ' . $limit : '';
 		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql . " ORDER BY " . $primary ." DESC " . $limit);
 		foreach ($where as $key => $item) {
-			$stmt->bindValue(":$key", $item);
+			if (!is_array($item))
+				$stmt->bindValue(":$key", $item);
+			else {
+				foreach ($item as $handler => $value) {
+					$stmt->bindValue(":$key", $value);
+				}
+			}
 		}
 		$stmt->execute();
 
@@ -316,6 +332,31 @@ abstract class DbModel extends Model
 		$stmt->execute();
 
 		return $stmt->fetchAll(2);
+	}
+
+	/** delete current object
+	 * @param int $confirm
+	 * @return bool
+	 */
+	public function delete(int $confirm = 0): bool
+	{
+		if ($confirm) {
+			$tableName = $this->tableName();
+			$entity = $this->getId();
+			$stmt = self::prepare('DELETE FROM ' . $tableName . ' WHERE ' . static::primaryKey() . ' = :primaryValue');
+
+			$stmt->bindValue(":primaryValue", $entity);
+
+			if ($stmt->execute()) {
+				foreach (static::attributes() as $attribute) {
+					$this->{$attribute} = null;
+				}
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
     /**

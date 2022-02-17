@@ -140,9 +140,26 @@ class Session
 		$_SESSION[self::FLASH_KEY] = $flashMessages;
 	}
 
+	/** unset session variable
+	 * @param string $key
+	 * @return void
+	 */
 	public function unset(string $key)
 	{
 		unset($_SESSION[$key]);
+	}
+
+	/** get session token or generate it if it doesn't exist yet
+	 * @return mixed|null
+	 */
+	public function getToken()
+	{
+		if ($this->get('admin_token'))
+			return $this->get('admin_token');
+
+		$this->set('admin_token', bin2hex(openssl_random_pseudo_bytes(16)));
+
+		return $this->getToken();
 	}
 
 }

@@ -121,7 +121,7 @@ class Application
                 echo $output;
 	    	elseif(is_bool($output))
 			    echo render('messages.default', ['title' => 'empty page', 'value' => $output]);
-	    	else
+			elseif (!is_null($output))
 	    		var_dump($output);
         } catch (Exception $e) {
 	    	$this->catcher->catch($e);

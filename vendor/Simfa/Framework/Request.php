@@ -206,4 +206,12 @@ class Request
 		$config = implode(', ', $config[$interface] ?? []);
 		header('Access-Control-Allow-Origin: ' . $config);
 	}
+
+	/** return last key of the url
+	 * @return string
+	 */
+	public static function getSimpleUrl(): string
+	{
+		return (basename($_SERVER['REQUEST_URI']));
+	}
 }

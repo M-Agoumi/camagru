@@ -13,6 +13,7 @@
 
 namespace Simfa\Framework;
 
+use ReflectionException;
 use Simfa\Action\Controller;
 use Simfa\Framework\Db\DbModel;
 use Simfa\Framework\Exception\ExpiredException;
@@ -167,7 +168,7 @@ class Router
 	 * and execute it depends on its type
 	 * otherwise return 404 error
 	 * @return false|mixed|string|string[]
-	 * @throws NotFoundException
+	 * @throws NotFoundException|ReflectionException
 	 */
 	public function resolve()
 	{
@@ -214,7 +215,7 @@ class Router
 	}
 
 	/**
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	protected function execArrayCallback($callback)
 	{
@@ -241,7 +242,7 @@ class Router
 	/**
 	 * @param $callback
 	 * @return array
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	protected function injectDependencies($callback): array
 	{
@@ -286,7 +287,7 @@ class Router
 	/** inject module
 	 * @param $type
 	 * @return object|void
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	private function injectModule($type)
 	{
@@ -297,7 +298,7 @@ class Router
 	}
 
 	/**
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 * @throws ExpiredException
 	 * @throws NotFoundException
 	 */
@@ -338,7 +339,7 @@ class Router
 	}
 
 	/**
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	private function getClassConstructorArguments(string $type): ?array
 	{

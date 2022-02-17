@@ -7,6 +7,7 @@ namespace Controller;
 
 
 use Middlewares\AuthMiddleware;
+use Model\Emote;
 use Model\Post;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
@@ -21,26 +22,65 @@ class CameraController extends Controller
 
 	public function index()
 	{
-		return $this->render('pages/camera', ['title' => 'Camera']);
+		$emotes = New Emote();
+		$emotes = $emotes->findAll();
+
+		return $this->render('pages/camera', ['title' => 'Camera', 'emotes' => $emotes]);
 	}
 
-	public function save(Request $request)
+	public function save()
 	{
 		$post = New Post();
 		$imgCode = Application::$APP->request->getBody()['picture'];
-		$data = $imgCode;
+		$emotesPost = $_POST['emote'] ?? [];
+		$emotes = []; // processed input
+		foreach ($emotesPost as $key => $emote) {
+			$coordination = explode('/', $emote);
+			$emotes[$key] = [
+				'y' => 	intval($coordination[0] ?? 0),
+				'x' => intval($coordination[1] ?? 0),
+				'z' => intval($coordination[2] ?? 0)
+			];
+		}
+		// sort by z-index
+		uasort($emotes, function($a, $b) {
+			return $a['z'] <=> $b['z'];
+		});
+		$image = $this->mergeEmotes($imgCode, $emotes);
+		$imageFileName = 'image_' . uniqid() . '.png';
+		$imageWrapper = fopen(Application::$ROOT_DIR . '/public/tmp/' . $imageFileName , "w") or die("Can't create file");
+		imagepng($image, $imageWrapper);
+		$post->picture = $imageFileName;
 
-		list($type, $data) = explode(';', $data);
-		list(, $data)      = explode(',', $data);
-		$data = base64_decode($data);
-		$image = uniqid();
-		$path = Application::$ROOT_DIR .'/runtime/tmp/image_' . $image .'.jpeg';
-		if (file_put_contents($path, $data))
-			$post->picture = $image;
-		Application::$APP->session->set('picture', $path);
-		Application::$APP->session->set('pictureData', $imgCode);
+		return $this->render('pages/cameraShare', ['post'=> $post, 'title' => 'share to the world']);
+	}
 
-		return $this->render('pages/cameraShare', ['post'=> $post]);
+	private function mergeEmotes($image, $emotes)
+	{
+		$image = imagecreatefromjpeg($image);
+		// start merging images
+		$emoteEntity = new Emote();
+		foreach ($emotes as $key => $emote) {
+			$emoteEntity->getOneBy('name', $key);
+			if ($emoteEntity->getId()) {
+				$stamp = imagecreatefrompng(Application::$ROOT_DIR . '/public/assets/img/' . $emoteEntity->getFile());
+				imagecopy($image, $stamp, $emote['x'], $emote['y'], 0, 0, imagesx($stamp), imagesy($stamp));
+			}
+		}
+
+		return $image;
+	}
+
+	private function resize_image($image, int $newWidth, int $newHeight) {
+		$newImg = imagecreatetruecolor($newWidth, $newHeight);
+		imagealphablending($newImg, false);
+		imagesavealpha($newImg, true);
+		$transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
+		imagefilledrectangle($newImg, 0, 0, $newWidth, $newHeight, $transparent);
+		$src_w = imagesx($image);
+		$src_h = imagesy($image);
+		imagecopyresampled($newImg, $image, 0, 0, 0, 0, $newWidth, $newHeight, $src_w, $src_h);
+		return $newImg;
 	}
 
 	public function share(Request $request)
@@ -50,12 +90,9 @@ class CameraController extends Controller
 		$post->loadData($request->getBody());
 
 		/** get image from tmp to our uploads */
-		$picture = Application::$ROOT_DIR .'/runtime/tmp/image_' . $post->picture .'.jpeg';
-		if (!rename($picture, 'uploads/image_' . $post->picture . '.jpeg'))
-			die("error while saving your image"); /** todo handle this */
-
-		/** update picture name to match its url */
-		$post->picture = 'image_' . $post->picture . '.jpeg';
+		$picture = Application::$ROOT_DIR .'/public/tmp/' . $post->picture;
+		if (!rename($picture, 'uploads/' . $post->picture))
+			die("error while saving your image");
 
 		/** generate slug */
 		if ($post->title)

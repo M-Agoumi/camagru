@@ -6,6 +6,14 @@ namespace Model;
 
 use Simfa\Framework\Db\DbModel;
 
+/**
+ * @method getPicture():string
+ * @method getTitle():string
+ * @method getComment():string
+ * @method getSlug():string
+ * @method getStatus():int
+ * @method getAuthor(): Model\User
+ */
 class Post extends DbModel
 {
 

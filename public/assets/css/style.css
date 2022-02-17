@@ -1101,10 +1101,9 @@ input[type=submit]:hover {
 }
 
 .picture .emotes{
-	height: 100px;
 	z-index: 5;
 	position: absolute;
-	top: 0px;
+	top: 0;
 	left: 264px;
 }
 

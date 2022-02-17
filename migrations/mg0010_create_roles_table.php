@@ -18,7 +18,7 @@ class mg0010_create_roles_table
 			$table->smallInt('likes')->default(0);
 			$table->smallInt('promote')->default(0);
 			$table->int('created_by');
-			$table->int('updated_by');
+			$table->int('updated_by')->nullable();
 			$table->smallInt('mail');
 			$table->timestamps();
 			$table->foreign('user')->references('entityID')->on('user')->onUpdate('cascade')

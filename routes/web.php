@@ -76,6 +76,13 @@ Router::get('/api/maincolor', function() {return '#FFF';});
 
 /** Admin dashboard routes */
 Router::get('/dashboard', [DashboardController::class, 'index']);
+Router::get('/dashboard/emotes', [DashboardController::class, 'emotes']);
+Router::request('/dashboard/emotes/new', [DashboardController::class, 'addEmote']);
+Router::magic('/dashboard/emotes/delete/{entityID}', [DashboardController::class, 'DeleteEmote']);
+Router::get('/dashboard/users', [DashboardController::class, 'users']);
+Router::magic('/dashboard/users/delete/{entityID}', [DashboardController::class, 'DeleteUser']);
+Router::get('/dashboard/posts', [DashboardController::class, 'posts']);
+Router::magic('/dashboard/posts/delete/{entityID}', [DashboardController::class, 'DeletePost']);
 
 /** debug routes */
 Router::get('/dev/code', function (){return $_SESSION['email_code'] ?? 'no code found';});
@@ -107,4 +114,4 @@ Router::get('/hello', function (){
 	$_SESSION['user'] = 1;
 	return 'hello world';
 });
-
+Router::request('/image',[TestController::class, 'imageProcessor']);
