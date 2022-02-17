@@ -41,6 +41,8 @@ class Admin extends BaseCommand
 			$role->setComments(1);
 			$role->setLikes(1);
 			$role->setPromote(1);
+			$role->setMail(1);
+			$role->created_by = $user;
 			$role->updated_by = $user;
 			$role->created_at = date('Y-m-d H:i:s', time());
 

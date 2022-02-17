@@ -14,6 +14,7 @@ use Simfa\Framework\Db\DbModel;
  * @method setLikes(int $int)
  * @method setPosts(int $int)
  * @method setPromote(int $int)
+ * @method setMail(int $int)
  */
 class Role extends DbModel
 {
@@ -25,6 +26,8 @@ class Role extends DbModel
 	public bool $comments = false;
 	public bool $likes = false;
 	public bool $promote = false;
+	public bool $mail = false;
+	public ?User $created_by = null;
 	public ?User $updated_by = null;
 
 
@@ -38,6 +41,6 @@ class Role extends DbModel
 
 	public function relationships(): array
 	{
-		return ['user' => User::class, 'updated_by' => User::class];
+		return ['user' => User::class, 'updated_by' => User::class, 'created_by' => User::class];
 	}
 }
