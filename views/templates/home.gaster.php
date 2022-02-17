@@ -11,11 +11,11 @@
     foreach($posts as $post):
     ?>
         <div class="image">
+        <a href="/post/<?= $post['slug']; ?>">
             <img src="/uploads/<?=$post['picture']?>" alt="<?=$post['title']?>">
+        </a>
         </div>
-        <span class="image-link">
-        <a href="/post/<?= $post['slug']; ?>"><?= $post['title']; ?></a>
-        </span>
+        
     <?php endforeach; ?>
         
     
@@ -43,10 +43,18 @@
         .image {
             display: inline-block;
             margin-bottom: 10px;
+            position: relative;
             overflow: hidden;
         }
 
-        .image img {
+        .image-link {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 9;
+        }
+
+        .image a img {
             width: 100%;
             transition: 0.25s ease-in-out;
         }
