@@ -31,7 +31,7 @@
 						<img src="/assets/icon/mail.png" alt="Icon"> <?=$user->email?>
 					</span>
 					<span class="pf profile-body-info-status">
-						<img src="/assets/icon/check.png" alt="Icon"> <?=$user->status ? 'Activated' : 'Not Activated'?>
+						<img src="/assets/icon/check.png" alt="Icon"> <?=!$user->status ? 'Activated' : 'Not Activated'?>
 					</span>
 					<span class="pf profile-body-info-date">
 						<img src="/assets/icon/calander.png" alt="Icon"> <?=explode(" ", $user->created_at)[0]?>
