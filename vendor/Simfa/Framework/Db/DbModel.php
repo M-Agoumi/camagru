@@ -145,9 +145,9 @@ abstract class DbModel extends Model
 	{
 		$tableName = $this->tableName();
 		$attributes = $this->attributes();
-		array_push($attributes, 'updated_at');
+		$attributes[] = 'updated_at';
 
-		$sql = "UPDATE $tableName SET ";
+		$sql = "UPDATE `$tableName` SET ";
 		$first = 1;
 		foreach ($attributes as $attr) {
 			if (!$first)
@@ -223,9 +223,6 @@ abstract class DbModel extends Model
 		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
 		$stmt = self::prepare("SELECT * FROM `$tableName` WHERE ". $sql);
 
-//		die(static::class);
-//		if (static::class == 'Model\Like')
-//			die("SELECT * FROM $tableName WHERE ". $sql);
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}

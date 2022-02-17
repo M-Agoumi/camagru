@@ -40,7 +40,7 @@
 
 	<footer class="mastfoot mt-auto">
 		<div class="inner">
-			<p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+			<p>thank you for your correction if you got any question keep it for yourself ty</p>
 		</div>
 	</footer>
 </div>

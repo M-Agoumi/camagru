@@ -21,7 +21,7 @@ class FirewallMiddleware extends BaseMiddleware
 
 		if ($banned->id)
 			die(
-				'sorry your are banned for the following reason: ' . $banned->comment . '<br>' .
+				'sorry you are banned for the following reason: ' . $banned->comment . '<br>' .
 				'if you think this was a mistake please feel free to contact us on <a href="mailto:' .
 				Application::getEnvValue('SUPPORT_MAIL') . '">' . Application::getEnvValue('SUPPORT_MAIL') .'</a>'
 			);
