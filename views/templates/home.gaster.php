@@ -13,6 +13,9 @@
         <div class="image">
             <img src="/uploads/<?=$post['picture']?>" alt="<?=$post['title']?>">
         </div>
+        <span class="image-link">
+        <a href="/post/<?= $post['slug']; ?>"><?= $post['title']; ?></a>
+        </span>
     <?php endforeach; ?>
         
     
