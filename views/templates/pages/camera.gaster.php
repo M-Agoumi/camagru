@@ -44,7 +44,7 @@
 		    <div id="emote-control-container" style="">
 
 		    </div>
-		    <div style="height: 200px; overflow: hidden">
+		    <div class="camera-emots">
 			    <?php foreach ($emotes as $emote):?>
 			    <img src="/assets/img/<?=$emote['file']?>" width="100" onclick="addImage(this.src, '<?=$emote['name']?>')"/>
 			    <?php endforeach;?>
@@ -54,8 +54,12 @@
 				<?php use Simfa\Framework\Application;Application::$APP->session->generateCsrf();?>
 	            <input type="hidden" name="__csrf" value="<?=Application::$APP->session->getCsrf()?>">
 	            <input type="hidden" name='picture' id="inputPicture">
-	            <input type="submit" value="save"><br>
-		        <div class="capture retake" onclick="getWebCam()">Retake</div>
+	            <div class="camera-btns">
+					<div class="submit-btn">
+						<input type="submit" value="save">
+					</div>
+					<div class="capture retake" onclick="getWebCam()">Retake</div>
+				</div>
 	        </form>
 	    </div>
 	</div>

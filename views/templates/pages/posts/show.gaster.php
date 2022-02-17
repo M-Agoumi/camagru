@@ -47,7 +47,7 @@
 	            <?php else: ?>
 	                <div class="icon like">
 						<div class="tooltip">like</div>
-						<span onclick="likePost(<?=$post->entityID?>, this, 0)"><i class="fa fa-thumbs-up"></i></span>
+						<span onclick="likePost(<?=$post->entityID?>, this, 0)"><i class="fas fa-thumbs-up"></i></span>
 					</div>
 	            <?php endif; ?>
 					<div class="icon love">

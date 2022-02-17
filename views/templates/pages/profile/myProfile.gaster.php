@@ -86,6 +86,28 @@
 							</div>
 						</div>
 					</div>
+					<div class="profile-posts">
+						<div class="profile-post">
+							<div class="profile-post-info">
+								<div class="profile-post-info-header">
+									<div class="profile-post-info-logo">
+										<img class="user-pic" src="/assets/icon/profil logo.png" alt="Logo">
+										<div class="pf-info">
+											<h5>Yassine elidrissi</h5>
+											<span><i class="fa fa-clock-o"></i> September 28 2021 - 21:13</span>
+										</div>
+									</div>
+									<span class="pf-menu"><img src="/assets/icon/more-icon.png" alt=""></span>
+								</div>
+							</div>
+							<div class="profile-post-statu">
+								<p>how do I look ??</p>
+							</div>
+							<div class="profile-post-image">
+								<img src="/assets/icon/1_post.png" alt="Picture">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 				

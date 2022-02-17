@@ -38,7 +38,7 @@ class DefaultController extends Controller
 			'postModule' => $post,
 			'posts' => $post->paginate([
 				'order' => 'DESC',
-				'articles' => 10
+				'articles' => 100
 			])
 		];
 
