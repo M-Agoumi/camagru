@@ -664,18 +664,24 @@ nav .active {
 
 .profile-page .profile-body-posts {
 	width: 60%;
-	padding-top: 2rem;
-	color: #000;
+    padding-top: 2rem;
+    color: #000;
+	height: 650px;
+	overflow-y: auto;
 	
 }
 
+.profile-page .profile-body-posts::-webkit-scrollbar {
+    display: none;
+}
+
 .profile-page .profile-body-posts .profile-posts {
-	height: 650px;
 	overflow-y: auto;
 }
 
 .profile-page .profile-body-posts .profile-posts .profile-post {
 	margin-bottom: 1.5rem;
+	height: 650px;
 }
 
 .profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header {
@@ -1068,7 +1074,7 @@ input[type=submit]:hover {
 
 .camera_container .capture {
 
-	padding: .8rem 0;
+	/* padding: .8rem 0; */
 
 	background: var(--mainColor);
 
@@ -1083,6 +1089,10 @@ input[type=submit]:hover {
 	font-weight: 600;
 
 	text-transform: capitalize;
+
+	height: 50px;
+
+	line-height: 50px;
 
 	cursor: pointer;
 
@@ -1107,6 +1117,11 @@ input[type=submit]:hover {
 	left: 264px;
 }
 
+.picture .camera-emots {
+	padding: 2rem 0;
+	overflow: hidden;
+}
+
 .camera_container .picture .pic-btn {
 
 	display: flex;
@@ -1127,9 +1142,7 @@ input[type=submit]:hover {
 
 
 
-.camera_container .picture .confirm,
-
-.camera_container .picture .retake {
+.camera_container .picture .confirm {
 
 	margin-bottom: .5rem;
 
@@ -1161,13 +1174,46 @@ input[type=submit]:hover {
 
 	width: 640px;
 
-	max-width: 80%;
+	max-width: 100%;
 
-	padding: 1rem 0;
+	height: 50px;
+
+	/* padding: 1rem 0; */
 
 	/* background-color: #CCC; */
 
 }
+
+.camera_container .btn-save #picture-form .camera-btns {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+
+}
+
+.camera_container .btn-save #picture-form .camera-btns > div {
+	width: calc(50% - 30px);
+	/* padding: 1rem 0; */
+	height: 100% !important;
+}
+
+.camera_container .btn-save #picture-form .camera-btns .submit-btn > input {
+	width: 100%;
+}
+
+.camera_container .btn-save #picture-form .camera-btns .retake {
+	height: 50px !important;
+    line-height: 50px;
+	transition: .4s ease-in-out;
+}
+
+.camera_container .btn-save #picture-form .camera-btns .retake:hover {
+	background-color: #FFF;
+	color: var(--mainColor);
+	border: 1px solid var(--mainColor);
+}
+
+
 
 
 
