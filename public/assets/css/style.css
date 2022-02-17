@@ -673,6 +673,7 @@ nav .active {
 
 .profile-page .profile-body-posts::-webkit-scrollbar {
     display: none;
+	scrollbar-width: none;
 }
 
 .profile-page .profile-body-posts .profile-posts {
