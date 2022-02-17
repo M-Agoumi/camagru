@@ -6,6 +6,15 @@ namespace Model;
 
 use Simfa\Framework\Db\DbModel;
 
+/**
+ * @method setUser(User $user)
+ * @method getUser():User
+ * @method setUsers(int $int)
+ * @method setComments(int $int)
+ * @method setLikes(int $int)
+ * @method setPosts(int $int)
+ * @method setPromote(int $int)
+ */
 class Role extends DbModel
 {
 	public ?int $entityID = null;

@@ -112,7 +112,7 @@ abstract class DbModel extends Model
 
 		$params = array_map(fn($m) => ":$m", $attributes);
 		$statement = self::prepare(
-			"INSERT INTO $tableName (". implode(", ", $attributes) . ") value (
+			"INSERT INTO `$tableName` (". implode(", ", $attributes) . ") values (
 				" . implode(", ", $params) . ")"
 		);
 
