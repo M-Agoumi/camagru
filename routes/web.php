@@ -65,11 +65,11 @@ Router::post('/camera/share', [CameraController::class, 'share'])->name('camera.
 
 /** post Controller routes */
 Router::magic('/post/{slug}', [PostController::class, 'show']);
-Router::magic('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
+Router::magic('/post/like/{entityID}', [PostController::class, 'like'])->name('post.like');
 
 /** API routes */
 Router::post('/posts', [ApiController::class, 'posts']);
-Router::magic('/api/post/likes/{id}', [PostController::class, 'showLikes']); /** post fetch like */
+Router::magic('/api/post/likes/{entityID}', [PostController::class, 'showLikes']); /** post fetch like */
 Router::magic('/api/post/comment/{slug}', [PostCommentController::class, 'add']); /** post add comments */
 Router::post('/api/user/name', [UserController::class, 'getName']); /** get logged user name */
 Router::get('/api/maincolor', function() {return '#FFF';});

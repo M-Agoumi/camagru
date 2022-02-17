@@ -32,7 +32,7 @@ class PostController extends Controller
 
 		$liked = $likes->findOne([
 						'user' => Application::$APP->user->getId(),
-						'post' => $post->id,
+						'post' => $post->getId(),
 						]);
 
 		if ($liked->getId()) {
@@ -78,13 +78,14 @@ class PostController extends Controller
 
 			/** fetch first 5 users */
 			$i = 0;
+
 			while ($i < count($postLikes) && $i < 5) {
-				$user = $users->getOneBy($postLikes[$i]['user']);
-				array_push($usersLikes, [
-					'user' => $user->name,
+				$users->getOneBy($postLikes[$i]['user']);
+				$usersLikes[] = [
+					'user' => $users->name,
 					'picture' => '/uploads/dps/default.jpg',
 					'react' => $postLikes[$i]['type']
-				]);
+				];
 				$i++;
 			}
 

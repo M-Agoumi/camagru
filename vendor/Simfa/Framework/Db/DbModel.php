@@ -221,7 +221,11 @@ abstract class DbModel extends Model
 		$tableName = static::tableName();
 		$attributes = array_keys($where);
 		$sql = implode(" AND " ,array_map(fn($attr) => "$attr = :$attr", $attributes));
-		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql);
+		$stmt = self::prepare("SELECT * FROM `$tableName` WHERE ". $sql);
+
+//		die(static::class);
+//		if (static::class == 'Model\Like')
+//			die("SELECT * FROM $tableName WHERE ". $sql);
 		foreach ($where as $key => $item) {
 			$stmt->bindValue(":$key", $item);
 		}
@@ -267,7 +271,6 @@ abstract class DbModel extends Model
 	public function findAllBy(array $where, string $limit = ''): array
 	{
 		$tableName = static::tableName();
-		$attributes = array_keys($where);
 		$primary = static::primaryKey();
 		$sql = '';
 		foreach ($where as $criteria => $value) {
@@ -280,7 +283,7 @@ abstract class DbModel extends Model
 				$sql .= $criteria . ' = :' . $criteria;
 		}
 		$limit = !empty($limit) ? 'limit ' . $limit : '';
-		$stmt = self::prepare("SELECT * FROM $tableName WHERE ". $sql . " ORDER BY " . $primary ." DESC " . $limit);
+		$stmt = self::prepare("SELECT * FROM `$tableName` WHERE ". $sql . " ORDER BY " . $primary ." DESC " . $limit);
 		foreach ($where as $key => $item) {
 			if (!is_array($item))
 				$stmt->bindValue(":$key", $item);
