@@ -1453,7 +1453,45 @@ input[type=submit]:hover {
 
 }
 
+.like-active{
+	background: #3B5999 !important;
 
+	color: #FFF;
+}
+
+.love-active{
+	background: #DE463B !important;
+
+	color: #FFF;
+}
+
+.haha-active{
+	background: #f2db00 !important;
+
+	color: #FFF;
+}
+
+.sad-active{
+	background: #FFEA61 !important;
+
+	color: #FFF;
+}
+
+.wow-active{
+	background-color: #fbb034;
+
+	background-image: linear-gradient(315deg, #fbb034 0%, #ffdd00 74%) !important;
+
+	color: #FFF;
+}
+
+.angry-active{
+	background-color: #ff4e00;
+
+	background-image: linear-gradient(315deg, #ff4e00 0%, #ec9f05 74%) !important;
+
+	color: #FFF;
+}
 
 .wrapper-like .like:hover span,
 

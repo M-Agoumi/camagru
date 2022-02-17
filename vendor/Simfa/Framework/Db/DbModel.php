@@ -20,6 +20,10 @@ use PDOStatement;
 use ReflectionClass;
 use ReflectionProperty;
 
+/**
+ * @method getType()
+ * @method setType(int $type)
+ */
 abstract class DbModel extends Model
 {
     public ?string $created_at = null;

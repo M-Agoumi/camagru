@@ -44,7 +44,7 @@ function loginPopUp(path)
 
 var reacts = ['Like', 'Heart', 'Wow', 'Haha', 'Sad', 'Angry'];
 /* like button */
-function likePost(post, elem, react = 1) {
+function likePost(post, elem, react = 0) {
     try {
         // Create XHR Object
         var xhr = new XMLHttpRequest();

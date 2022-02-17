@@ -6,5 +6,7 @@
 config/db.conf
 
 # Personal files
+public/tmp/*
 public/uploads/*
 !public/uploads/dps
+

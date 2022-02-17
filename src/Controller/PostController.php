@@ -29,6 +29,7 @@ class PostController extends Controller
 			return "-1";
 
 		$likes = new Like();
+		$type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
 
 		$liked = $likes->findOne([
 						'user' => Application::$APP->user->getId(),
@@ -36,24 +37,21 @@ class PostController extends Controller
 						]);
 
 		if ($liked->getId()) {
-			if ($liked->status) {
-				$liked->status = 0;
-				$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
-				if ($liked->update())
-					echo "1";
+			if ($liked->getType() == $type) {
+				if ($liked->delete())
+					return $this->json(0);
 			} else {
-				$liked->status = 1;
-
+				$liked->setType($type);
 				if ($liked->update())
-					echo "0";
+					return $this->json(1);
 			}
 		} else {
 			$likes->post = $post->getId();
 			$likes->user = Application::$APP->user->getId();
 			$likes->status = 0;
-			$likes->type = intval(filter_var($_GET['react'], FILTER_VALIDATE_INT));
+			$likes->type = $type;
 			if ($likes->save())
-				echo "1";
+				return $this->json(1);
 		}
 
 		return "\n";
