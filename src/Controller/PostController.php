@@ -38,8 +38,10 @@ class PostController extends Controller
 
 		if ($liked->getId()) {
 			if ($liked->getType() == $type) {
-				if ($liked->delete())
+				if ($liked->delete(1)) {
 					return $this->json(0);
+				}
+				return $this->json(10);
 			} else {
 				$liked->setType($type);
 				if ($liked->update())

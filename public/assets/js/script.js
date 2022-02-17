@@ -42,7 +42,7 @@ function loginPopUp(path)
     }
 }
 
-var reacts = ['Like', 'Heart', 'Wow', 'Haha', 'Sad', 'Angry'];
+var reacts = ['like', 'love', 'wow', 'haha', 'sad', 'angry'];
 /* like button */
 function likePost(post, elem, react = 0) {
     try {
@@ -62,13 +62,13 @@ function likePost(post, elem, react = 0) {
                 if (this.responseText == -1)
                     loginPopUp();
                 else {
-                    if (this.responseText == 0) {
-                        elem.innerHTML = reacts[react];
-                        likes.innerHTML = parseInt(likes.textContent) - 1;
-                    } else {
-                        elem.innerHTML = reacts[react] + 'ed';
+                    if (this.responseText == 1) {
+                        elem.classList.add(reacts[react] + '-active');
                         likes.innerHTML = parseInt(likes.textContent) + 1;
-                    }
+                    } else {
+						elem.classList.remove(reacts[react] + '-active');
+						likes.innerHTML = parseInt(likes.textContent) - 1;
+					}
                 }
             } else {
                 console.log('error ' + this.status);

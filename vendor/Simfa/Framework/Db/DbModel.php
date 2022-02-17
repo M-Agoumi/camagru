@@ -347,13 +347,13 @@ abstract class DbModel extends Model
 		if ($confirm) {
 			$tableName = $this->tableName();
 			$entity = $this->getId();
-			$stmt = self::prepare('DELETE FROM ' . $tableName . ' WHERE ' . static::primaryKey() . ' = :primaryValue');
+			$stmt = self::prepare('DELETE FROM `' . $tableName . '` WHERE ' . static::primaryKey() . ' = :primaryValue');
 
 			$stmt->bindValue(":primaryValue", $entity);
 
 			if ($stmt->execute()) {
 				foreach (static::attributes() as $attribute) {
-					$this->{$attribute} = null;
+					unset($this->{$attribute});
 				}
 
 				return true;
