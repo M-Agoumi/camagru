@@ -13,7 +13,7 @@
 		<div class="profile-page">
 			<div class="profile-header">
 				<div class="profile-header-logo">
-					<img src="/assets/icon/profil logo.png" alt="Logo">
+					<img src="/uploads/dps/<?=$user->getPicture()??'default.jpg'?>" alt="Logo">
 				</div>
 				<div class="profile-header-cover">
 					<i class="fa fa-camera"></i> 
@@ -42,72 +42,32 @@
 					</div>
 				</div>
 				<div class="profile-body-posts">
+					<?php foreach ($posts as $post) :?>
 					<div class="profile-posts">
 						<div class="profile-post">
 							<div class="profile-post-info">
 								<div class="profile-post-info-header">
 									<div class="profile-post-info-logo">
-										<img class="user-pic" src="/assets/icon/profil logo.png" alt="Logo">
+										<img class="user-pic" src="/uploads/dps/<?=$user->getPicture()??'default.jpg'?>" alt="Logo">
 										<div class="pf-info">
-											<h5>Yassine elidrissi</h5>
-											<span><i class="fa fa-clock-o"></i> September 28 2021 - 21:13</span>
+											<h5>{{ user->getName() }}</h5>
+											<span><i class="fa fa-clock-o"></i> <?=humanTiming(strtotime($post['created_at']))?> ago</span>
 										</div>
 									</div>
 									<span class="pf-menu"><img src="/assets/icon/more-icon.png" alt=""></span>
 								</div>
 							</div>
 							<div class="profile-post-statu">
-								<p>how do I look ??</p>
+								<p>{{ post['title'] }}</p>
 							</div>
 							<div class="profile-post-image">
-								<img src="/assets/icon/1_post.png" alt="Picture">
+								<a href="/post/{{ post['slug'] }}">
+									<img src="/uploads/{{ post['picture'] }}" alt="Picture">
+								</a>
 							</div>
 						</div>
 					</div>
-					<div class="profile-posts">
-						<div class="profile-post">
-							<div class="profile-post-info">
-								<div class="profile-post-info-header">
-									<div class="profile-post-info-logo">
-										<img class="user-pic" src="/assets/icon/profil logo.png" alt="Logo">
-										<div class="pf-info">
-											<h5>Yassine elidrissi</h5>
-											<span><i class="fa fa-clock-o"></i> September 28 2021 - 21:13</span>
-										</div>
-									</div>
-									<span class="pf-menu"><img src="/assets/icon/more-icon.png" alt=""></span>
-								</div>
-							</div>
-							<div class="profile-post-statu">
-								<p>how do I look ??</p>
-							</div>
-							<div class="profile-post-image">
-								<img src="/assets/icon/1_post.png" alt="Picture">
-							</div>
-						</div>
-					</div>
-					<div class="profile-posts">
-						<div class="profile-post">
-							<div class="profile-post-info">
-								<div class="profile-post-info-header">
-									<div class="profile-post-info-logo">
-										<img class="user-pic" src="/assets/icon/profil logo.png" alt="Logo">
-										<div class="pf-info">
-											<h5>Yassine elidrissi</h5>
-											<span><i class="fa fa-clock-o"></i> September 28 2021 - 21:13</span>
-										</div>
-									</div>
-									<span class="pf-menu"><img src="/assets/icon/more-icon.png" alt=""></span>
-								</div>
-							</div>
-							<div class="profile-post-statu">
-								<p>how do I look ??</p>
-							</div>
-							<div class="profile-post-image">
-								<img src="/assets/icon/1_post.png" alt="Picture">
-							</div>
-						</div>
-					</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 				

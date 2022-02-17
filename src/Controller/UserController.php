@@ -4,6 +4,7 @@ namespace Controller;
 
 
 use Middlewares\AuthMiddleware;
+use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
@@ -21,12 +22,16 @@ class UserController extends Controller
 
 	public function index(User $user)
 	{
+		/** get all posts of the user */
+		$posts = NEW Post();
+		$posts = $posts->findAllBy(['author' => $user->getId()]);
 		if (!Application::isGuest())
 			if ($user->username === Application::$APP->user->username)
 				return $this->render('pages/profile/myProfile', ['user' => $user,
-					'title' => Application::$APP->user->name . " - Profile"]);
+					'title' => Application::$APP->user->name . " - Profile", 'posts' => $posts]);
 
-		return render('pages/profile/profile', ['user' => $user, 'title' => $user->name . " - Profile"]);
+
+		return render('pages/profile/profile', ['user' => $user, 'title' => $user->name . " - Profile", 'posts' => $posts]);
 	}
 
 	/**

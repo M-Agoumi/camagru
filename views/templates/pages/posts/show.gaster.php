@@ -72,7 +72,6 @@
 		        ?>
 	        <span>edit post</span>
 	<?php endif; ?>
-		        <?php //var_dump($post)?>
 	    </span>
 	        <div>
 	            <h2>Comments</h2>
