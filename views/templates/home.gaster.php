@@ -11,15 +11,16 @@
 	foreach($posts as $post):
 		?>
 		<div class="image">
-			<img src="/uploads/<?=$post['picture']?>" alt="<?=$post['title']?>">
+			<a href="/post/<?= $post['slug']; ?>">
+				<img src="/uploads/<?=$post['picture']?>" alt="<?=$post['title']?>">
+			</a>
 		</div>
-		<span class="image-link">
-        <a href="/post/<?= $post['slug']; ?>"><?= $post['title']; ?></a>
-        </span>
 	<?php endforeach; ?>
 
 
 </div>
+
+<div onclick="scrollToTop()" class="scrollTop">Top</div>
 
 
 </div>
@@ -78,6 +79,19 @@
 		#gallery {
 			column-count: 1;
 		}
+	}
+
+	.scrollTop {
+		position: fixed;
+		bottom: 30px;
+		right: 30px;
+		padding: 10px 15px;
+		background-color: #000;
+		color: #FFF;
+		border-radius: 5px;
+		border: 1px solid #FFF;
+		cursor: pointer;
+		transition: all .5s ease-in-out;
 	}
 
 	/*
@@ -148,6 +162,11 @@
 
 </style>
 <script>
+
+	function scrollToTop() {
+		window.scrollTo(0, 0);
+	}
+
 	let shouldRemove = true;
 	let page = 1;
 	let firstRun = true;
