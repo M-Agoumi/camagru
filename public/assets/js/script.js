@@ -110,21 +110,21 @@ function showLikes(post) {
                         output += "this post has no likes yet, why don't you be the first?";
                     } else {
                         for (let i in users) {
-                            output += '<ul>' +
-                                '<li><img src="' + users[i].picture + '" alt="profile picture"></li>' +
-                                '<li>' + users[i].user + '</li>';
+                            output += '<ul class="XD">' +
+                                '<li class="user-img"><img src="' + users[i].picture + '" alt="profile picture"></li>' +
+                                '<li class="user-react">' + users[i].user + '</li>';
                             if (users[i].react == 0)
-                                output += '<li><span class="fas fa-thumbs-up"></span></li>';
+                                output += '<li class="user-react"><span class="fas fa-thumbs-up"></span></li>';
                             else if (users[i].react == 1)
-                                output += '<li><span class="fas fa-heart"></span></li>';
+                                output += '<li class="user-react"><span class="fas fa-heart"></span></li>';
 							else if (users[i].react == 2)
-								output += '<li><span class="fas fa-grin-alt"></span></li>';
+								output += '<li class="user-react"><span class="fas fa-grin-alt"></span></li>';
 							else if (users[i].react == 3)
-								output += '<li><span class="fas fa-grin-squint-tears"></span></li>';
+								output += '<li class="user-react"><span class="fas fa-grin-squint-tears"></span></li>';
 							else if (users[i].react == 4)
-								output += '<li><span class="fas fa-sad-tear"></span></li>';
+								output += '<li class="user-react"><span class="fas fa-sad-tear"></span></li>';
 							else if (users[i].react == 5)
-								output += '<li><span class="fas fa-angry"></span></li>';
+								output += '<li class="user-react"><span class="fas fa-angry"></span></li>';
 
                             output += '</ul>';
                         }

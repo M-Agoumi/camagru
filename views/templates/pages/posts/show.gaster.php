@@ -109,8 +109,8 @@
 	        </div>
 	        <div class="usersLikes">
 	            <div class="content">
-	                <span class="fa fa-close close" onclick="hideLikes()"></span>
-	                Hello World
+					<span class="fa fa-close close" onclick="hideLikes()"></span>
+					<!-- Hello World -->
 	            </div>
 	        </div>
 	    </div>
