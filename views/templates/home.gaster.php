@@ -86,7 +86,7 @@
 		bottom: 30px;
 		right: 30px;
 		padding: 10px 15px;
-		background-color: #000;
+		background-color: #167ede;
 		color: #FFF;
 		border-radius: 5px;
 		border: 1px solid #FFF;
