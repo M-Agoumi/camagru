@@ -680,11 +680,12 @@ nav .active {
 
 .profile-page .profile-body-posts .profile-posts {
 	overflow-y: auto;
+	height: auto;
 }
 
 .profile-page .profile-body-posts .profile-posts .profile-post {
 	margin-bottom: 1.5rem;
-	height: 650px;
+	/* height: 650px; */
 }
 
 .profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header {
