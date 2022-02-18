@@ -18,6 +18,9 @@ namespace   Model;
 
 use Simfa\Framework\Db\DbModel;
 
+/**
+ * @method getPicture()
+ */
 class User extends DbModel
 {
 	const STATUS_INACTIVE = 0;
