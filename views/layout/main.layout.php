@@ -24,19 +24,7 @@
 		@include ('layout/__header.php')
 		<main class="page-body">
 			<div class="container">
-				<?php if (Application::$APP->session->getFlash('success')): ?>
-					<div class="alert alert-success" id="flash_message">
-						<?= Application::$APP->session->getFlash('success') ?>
-						<span href="#" onclick="dismissMessage()">x</span>
-					</div>
-				<?php endif; ?>
-				<?php //todo optimize this ?>
-				<?php if (Application::$APP->session->getFlash('error')): ?>
-					<div class="alert alert-error" id="flash_message">
-						<?= Application::$APP->session->getFlash('error') ?>
-						<span href="#" onclick="dismissMessage()">x</span>
-					</div>
-				<?php endif; ?>
+				@include ('layout/__messages.php')
 				@yield('content')
 			</div>
 		</main>

@@ -37,7 +37,7 @@ function loginPopUp(path)
     console.log('we good ' + path);
     if (confirm('You need to login to do this action, login?')) {
         if (typeof path === 'undefined')
-            path = window.location.href;
+            path = window.location.pathname;
         window.location.href = "/login?ref=" + path;
     }
 }

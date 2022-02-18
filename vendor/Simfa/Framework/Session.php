@@ -155,12 +155,12 @@ class Session
 	/** get session token or generate it if it doesn't exist yet
 	 * @return mixed|null
 	 */
-	public function getToken()
+	public function getToken($token = 'admin')
 	{
-		if ($this->get('admin_token'))
-			return $this->get('admin_token');
+		if ($this->get($token . '_token'))
+			return $this->get($token . '_token');
 
-		$this->set('admin_token', bin2hex(openssl_random_pseudo_bytes(16)));
+		$this->set($token . '_token', bin2hex(openssl_random_pseudo_bytes(16)));
 
 		return $this->getToken();
 	}

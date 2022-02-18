@@ -8,7 +8,6 @@
 	<div class="my-profile">
 		<div class="profile-cover"></div>
 		<div class="profile-logo"></div>
-		{{-- <h1>Welcome back <?=$user->name?></h1> --}}
 
 		<div class="profile-page">
 			<div class="profile-header">

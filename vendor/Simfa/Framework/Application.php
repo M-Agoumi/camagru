@@ -224,13 +224,13 @@ class Application
 	 * @param DbModel $user
 	 * @param string $ref
 	 */
-	public function login(DbModel $user, string $ref)
+	public function login(DbModel $user, string $redirect)
 	{
 		$this->user = $user;
 		$primaryKey = 'get' . ucfirst($user->primaryKey());
 		$primaryValue = $user->{$primaryKey}();
 		$this->session->set('user', $primaryValue);
-		$this->response->redirect($ref);
+		$this->response->redirect(self::getEnvValue('URL') . '/' . $redirect);
 	}
 
 	/**
@@ -244,6 +244,6 @@ class Application
 		Application::$APP->session->remove('user');
 		Application::$APP->cookie->unsetCookie('user_tk');
 
-		Application::$APP->response->redirect($redirect);
+		Application::$APP->response->redirect(self::getEnvValue('URL') . '/' . $redirect);
 	}
 }

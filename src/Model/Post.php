@@ -25,6 +25,12 @@ class Post extends DbModel
 	public ?int $status = null;
 	public ?User $author = null;
 
+
+	/**
+	 * @var array $protected properties from public shows like api
+	 */
+	protected static array $protected = ['entityID'];
+
 	/**
 	 * @return array
 	 */

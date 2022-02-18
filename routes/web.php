@@ -65,6 +65,7 @@ Router::post('/camera/share', [CameraController::class, 'share'])->name('camera.
 
 /** post Controller routes */
 Router::magic('/post/{slug}', [PostController::class, 'show']);
+Router::magic('/post/delete/{slug}', [PostController::class, 'delete']);
 Router::magic('/post/like/{entityID}', [PostController::class, 'like'])->name('post.like');
 
 /** API routes */

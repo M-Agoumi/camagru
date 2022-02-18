@@ -35,11 +35,7 @@ class DefaultController extends Controller
 	{
 		$params = [
 			'title' => "Home",
-			'postModule' => $post,
-			'posts' => $post->paginate([
-				'order' => 'DESC',
-				'articles' => 100
-			])
+			'postModule' => $post
 		];
 
 		return render('home', $params);

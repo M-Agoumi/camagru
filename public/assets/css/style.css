@@ -2232,122 +2232,61 @@ input[type=submit]:hover {
 
 }
 
-
-
-/* END RESPONSIVE GALLERY [MEDUIM] */
-
-
-
-
-
-/* START RESPONSIVE GALLERY [SMALL] */
-
-
-
-/* @media screen and (max-width: 575px) {
-
-
-
-    .page-body .masonry-container .gal-one {
-
-        display: grid;
-
-        grid-template-columns: 100%;
-
-        grid-template-rows: repeat(5, 1fr);
-
-        grid-row-gap: 20px;
-
-        margin-bottom: 1rem;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one > a:first-of-type {
-
-        grid-column: 1fr;
-
-        grid-row: 1 / 2;
-
-        width: 100%;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one a:first-of-type > .panel {
-
-        width: 100%;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one > a:not(:first-of-type) {
-
-        grid-column: 1fr;
-
-        grid-row: 2 / 3;
-
-        width: 100%;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one a:not(:first-of-type) > .panel {
-
-        width: 100%;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one > .panel-one {
-
-        grid-column: 1fr;
-
-        grid-row: 3 / 4;
-
-        width: 100%;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one > .panel-two {
-
-        grid-column: 1fr;
-
-        grid-row: 4 / 5;
-
-        width: 100%;
-
-    }
-
-
-
-    .page-body .masonry-container .gal-one > .panel-three {
-
-        grid-column: 1fr;
-
-        grid-row: 5 / 6;
-
-        width: 100%;
-
-    }
-
-
-
-} */
-
-
-
-
-
-
-
-/* END RESPONSIVE GALLERY [SMALL] */
-
-
+#gallery {
+	position: relative;
+	column-count: 4;
+	padding: 20px;
+}
+
+.image {
+	display: inline-block;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.image img {
+	width: 100%;
+	transition: 0.25s ease-in-out;
+}
+
+.image:hover img {
+	transform: scale(1.1);
+	cursor: pointer;
+}
+
+@media screen and (max-width: 1024px) {
+	#gallery {
+		column-count: 3;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#gallery {
+		column-count: 3;
+	}
+}
+
+@media screen and (max-width: 567px) {
+	#gallery {
+		column-count: 2;
+	}
+}
+
+@media screen and (max-width: 375px) {
+	#gallery {
+		column-count: 1;
+	}
+}
+
+.scrollTop {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	padding: 10px 15px;
+	background-color: #000;
+	color: #FFF;
+	border-radius: 5px;
+	border: 1px solid #FFF;
+	cursor: pointer;
+	transition: all .5s ease-in-out;
+}

@@ -6,11 +6,11 @@ use Simfa\Framework\Application;
 
 abstract class Paginator
 {
-	public function paginate(array $config = [])
+	public function paginate(array $config = [], array $protected = [])
 	{
 		/** @var $articlesNum int elements by page */
 		$articlesNum = $config['articles'] ?? 10;
-		$order = strtoupper($config['order']) ?? 'asc';
+		$order = strtoupper($config['order']) ?? 'ASC';
 		$this->totalRecords = $this->getCount();
 		$this->currentPage = intval($_GET['page'] ?? $_POST['page'] ?? 1);
 		$limit = ($this->currentPage - 1) * $articlesNum;
@@ -19,7 +19,22 @@ abstract class Paginator
 		$this->limit = $limit;
 		$this->articlesByPage = $articlesNum;
 
-		return $this->findAll($limit, $order);
+		return $this->processData($this->findAll($limit, $order), $protected);
+	}
+
+	private function processData(array $data, $protected): array
+	{
+		$protected = [...$protected, ...static::$protected];
+
+		if (!empty($protected)) {
+			foreach ($protected as $key) {
+				for($i = 0; $i < count($data); $i++) {
+					unset($data[$i][$key]);
+				}
+			}
+		}
+
+		return $data;
 	}
 
 	public function pages()

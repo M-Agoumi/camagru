@@ -10,6 +10,7 @@ use Model\User;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
 use Simfa\Framework\Exception\ExpiredException;
+use Simfa\Framework\Exception\ForbiddenException;
 use Simfa\Framework\Request;
 
 class PostController extends Controller
@@ -93,5 +94,19 @@ class PostController extends Controller
 		}
 
 		throw New ExpiredException();
+	}
+
+	public function delete(Post $post)
+	{
+		if (!isset($_GET[Application::$APP->session->getToken('post')]))
+			throw new ForbiddenException();
+
+		// if ($post->delete(1)) {
+		Application::$APP->session->setFlash('success', 'Post Deleted Successfully');
+		Application::$APP->response->redirect('/');
+		
+		// }
+
+		return "Deleted :)"; 
 	}
 }

@@ -13,10 +13,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ## some args for the permissions problems
 # ARG uid=10000
-# ARG user=sqli
+# ARG user=magoumi
 
 ## install required packages for our server
-RUN apt install &&  apt update && apt upgrade -y && apt install -y  git curl libpng-dev libonig-dev libxml2-dev  zip unzip
+RUN apt install &&  apt update && apt upgrade -y && apt install -y  git curl libpng-dev libonig-dev libxml2-dev  zip unzip jq wget
 
 ## install vim to help when debugging
 RUN apt install -y vim

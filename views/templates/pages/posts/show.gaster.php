@@ -67,11 +67,9 @@
 					<span<?= $liked == 5 ? ' class="angry-active"' : ''?>  onclick="likePost(<?=$post->entityID?>, this, 5)"><i class="fa fa-angry"></i></span>
 				</div>
 	        </span>
-	<?php
-		        if (Application::$APP->user && Application::$APP->user->entityID == $post->author->entityID):
-		        ?>
-	        <span>edit post</span>
-	<?php endif; ?>
+			<?php if (Application::$APP->user && Application::$APP->user->entityID == $post->author->entityID):?>
+				<a href="/post/delete/<?=$post->getSlug() . '?' . Application::$APP->session->getToken('post')?>"><span>Delete Post</span></a>		
+			<?php endif; ?>
 	    </span>
 	        <div>
 	            <h2>Comments</h2>
