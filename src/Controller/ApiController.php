@@ -29,7 +29,8 @@ class ApiController extends Controller
    {
 	   $posts = $post->paginate([
 		   'order' => 'DESC',
-		   'articles' => 12
+		   'articles' => 12,
+		   'autoPage' => true
 	   ],['author', 'comment', 'created_at', 'status', 'updated_at']);
 
 	   return $this->json($posts);

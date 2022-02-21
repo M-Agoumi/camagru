@@ -13,13 +13,10 @@
 	}
 
 	let shouldRemove = true;
-	let page = 1;
 	let firstRun = true;
-	let reachedEnd = false;
 	window.onload = loadPosts();
 
 	function loadPosts() {
-		console.log(`Page Number ${page}`);
 		const xhr = new XMLHttpRequest();
 		xhr.open('POST', '/posts');
 
@@ -34,15 +31,11 @@
 			}
 
 			if (posts.length === 0) {
-				if (page !== 1) {
-					page = 1;
-					loadPosts();
-				} else {
-					if (!reachedEnd) {
-						reachedEnd = true;
-						document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no posts yet, start by creating the first one</h1>");
-					}
+				if (firstRun) {
+					document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no posts yet, start by creating the first one</h1>");
+					firstRun = false;
 				}
+
 			} else {
 				for (let i in posts)
 				{
@@ -62,11 +55,10 @@
 					document.getElementById('gallery').insertAdjacentHTML('beforeend', post);
 					loadImage(posts[i].picture, id);
 				}
-				page++;
 			}
 		}
 
-		xhr.send("page=" + page);
+		xhr.send();
 	}
 
 	function loadImage(url, id)
