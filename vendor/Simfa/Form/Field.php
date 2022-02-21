@@ -24,16 +24,20 @@ class Field
 	public const TYPE_HIDDEN = 'hidden';
 	public const DISABLED = 'disabled="disabled"';
 	public const REQUIRED = 'required="required"';
-	
-	public Model $model;
-	public string $attribute;
-	public string $label;
-	public string $type;
-	public string $holder;
-	public string $disabled;
-	public string $required;
-	public string $default;
+	private const AUTOCOMPLETE = 'autocomplete="off"';
+
+	private Model $model;
+	private string $attribute;
+	private ?string $label;
+	private string $type;
+	private string $holder;
+	private string $disabled;
+	private string $required;
+	private string $default;
 	private string $class;
+	private ?string $submit = null;
+	private ?string $submitExtra;
+	private string $autoComplete = '';
 
 	public function __construct(Model $model, string $attribute)
 	{
@@ -53,31 +57,122 @@ class Field
      */
     public function __toString(): string
     {
-	    return sprintf('
-		<div class="row">
-			<div class="col-25">
-				<label for="%s">%s</label>
+		if (!is_null($this->label))
+			return $this->printDefault();
+
+		return $this->printWithoutLabel();
+	}
+
+	private function printDefault(): string
+	{
+		if (!$this->submit)
+			return sprintf('
+				<div class="row">
+					<div class="col-25">
+						<label for="%s">%s</label>
+					</div>
+					<div class="col-75">
+						<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+						<div class="invalid-feedback">
+							%s
+						</div>
+					</div>
+				</div>
+				', !($this->type == self::TYPE_HIDDEN) ? $this->attribute : ''
+				, $this->type != self::TYPE_HIDDEN ? (!empty($this->label) ? $this->label : ucfirst($this->attribute)) : ''
+				, $this->type
+				, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
+				, $this->attribute
+				, $this->attribute
+				, $this->model->{'get' . ucfirst($this->attribute)}()
+				, !empty($this->holder) ? $this->holder : $this->attribute
+				, $this->disabled
+				, $this->required
+				, $this->model->getFirstError($this->attribute)
+			);
+
+		return $this->printSubmitWithLabel();
+	}
+
+
+	private function printSubmitWithLabel():string
+	{
+		return sprintf('
+			<div class="row">
+				<div class="col-25">
+					<label for="%s">%s</label>
+				</div>
+				<div class="col-75">
+					<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+					<div class="invalid-feedback">
+						%s
+					</div>
+				</div>
+				%s
 			</div>
-			<div class="col-75">
-				<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
-				<div class="invalid-feedback">
-					%s
+			', !($this->type == self::TYPE_HIDDEN) ? $this->attribute : ''
+			, $this->type != self::TYPE_HIDDEN ? (!empty($this->label) ? $this->label : ucfirst($this->attribute)) : ''
+			, $this->type
+			, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
+			, $this->attribute
+			, $this->attribute
+			, $this->model->{'get' . ucfirst($this->attribute)}()
+			, !empty($this->holder) ? $this->holder : $this->attribute
+			, $this->disabled . ' ' . $this->autoComplete
+			, $this->required
+			, $this->model->getFirstError($this->attribute)
+			, $this->printSubmit()
+		);
+	}
+
+
+	private function printWithoutLabel(): string
+	{
+		if ($this->submit) {
+			return sprintf('
+			<div class="row">
+				<div class="col-75">
+					<input type="%s" class="form-control %s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+					<div class="invalid-feedback">
+						%s
+					</div>
+				</div>
+				<div class="col-25">%s</div>
+			</div>
+			', $this->type
+				, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
+				, $this->attribute
+				, $this->attribute
+				, $this->model->{'get' . ucfirst($this->attribute)}()
+				, !empty($this->holder) ? $this->holder : $this->attribute
+				, $this->disabled . ' ' . $this->autoComplete
+				, $this->required
+				, $this->model->getFirstError($this->attribute)
+				, $this->printSubmit()
+			);
+		}
+
+		return sprintf('
+			<div class="row">
+				<div class="col-sm">
+					<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+					<div class="invalid-feedback">
+						%s
+					</div>
 				</div>
 			</div>
-		</div>
-		', !($this->type == self::TYPE_HIDDEN ) ? $this->attribute : ''
-		    , $this->type != self::TYPE_HIDDEN ? (!empty($this->label) ?  $this->label : ucfirst($this->attribute)) : ''
-		    , $this->type
-		    , $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
-		    , $this->attribute
-		    , $this->attribute
-		    , $this->model->{'get' . ucfirst($this->attribute)}()
-		    , !empty($this->holder) ? $this->holder : $this->attribute
-		    , $this->disabled
-		    , $this->required
-		    , $this->model->getFirstError($this->attribute)
-	    );
+			', $this->type
+			, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
+			, $this->attribute
+			, $this->attribute
+			, $this->model->{'get' . ucfirst($this->attribute)}()
+			, !empty($this->holder) ? $this->holder : $this->attribute
+			, $this->disabled . ' ' . $this->autoComplete
+			, $this->required
+			, $this->model->getFirstError($this->attribute)
+		);
 	}
+
 
     /**
      * set the field type to password
@@ -165,6 +260,36 @@ class Field
 	public function setClass(string $class): Field
 	{
 		$this->class = $class;
+
+		return $this;
+	}
+
+	public function noLabel(): Field
+	{
+		$this->label = null;
+
+		return $this;
+	}
+
+	public function addSubmit(string $value = 'submit', string $extra = null): Field
+	{
+		$this->submit = $value;
+		$this->submitExtra = $extra;
+
+		return $this;
+	}
+
+	private function printSubmit(): string
+	{
+		if ($this->submit)
+			return '<input type="submit" class="form-control" ' . $this->submitExtra . ' value="' . $this->submit . '">';
+
+		return '';
+	}
+
+	public function noAutocomplete()
+	{
+		$this->autoComplete = self::AUTOCOMPLETE;
 
 		return $this;
 	}

@@ -857,23 +857,19 @@ input[type=text], input[type=password],input[type=email], textarea {
 
 input[type=submit] {
 
-	/*width: 100px;*/
-
 	background-color: var(--mainColor);
 
 	color: white;
 
-	padding: 14px 20px;
+	padding: 9px 20px;
 
-	/* margin: 8px 0; */
+	 margin: 8px 0;
 
 	border: none;
 
 	border-radius: 4px;
 
 	cursor: pointer;
-
-	float: right;
 
 	font-size: 1.2rem;
 
@@ -945,7 +941,7 @@ input[type=submit]:hover {
 
 	width: 75%;
 
-	margin-top: 6px;
+	margin-top: 20px;
 
 }
 
@@ -1233,7 +1229,7 @@ input[type=submit]:hover {
 
 	max-width: 100%;
 
-	padding: 1rem 0;
+	padding-top: 1rem;
 
 	background-color: #FFF;
 
@@ -1247,7 +1243,7 @@ input[type=submit]:hover {
 
 	text-transform: capitalize;
 
-	color: var(--mainColor);
+	color: #424242;;
 
 	letter-spacing: 2px;
 
@@ -1265,13 +1261,14 @@ input[type=submit]:hover {
 
 	padding: 0 25px;
 
+	margin: 20px 10px;
+
 }
 
 
 
 .center .usernameInfo > p {
 
-	width: calc(50% - 1rem);
 
 	/* background-color: #CCC; */
 
@@ -1285,6 +1282,30 @@ input[type=submit]:hover {
 
 	letter-spacing: 1px;
 
+}
+
+.center .usernameInfo > div .posting-time {
+	padding: 5px;
+	color: gray;
+}
+.center .usernameInfo > div {
+	margin:10px 0;
+	color: #424242;
+}
+
+.center .usernameInfo > div > span > a {
+	outline: none;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 1.8em;
+}
+
+.center .usernameInfo > div > span > a:visited {
+	color: LinkText;
+}
+.center .usernameInfo .post-comment {
+	text-align: left;
+	margin-bottom: 10px;
 }
 
 
@@ -1302,8 +1323,6 @@ input[type=submit]:hover {
 
 
 .wrapper-like {
-
-	width: 50%;
 
 	/* background-color: magenta; */
 
@@ -1353,7 +1372,9 @@ input[type=submit]:hover {
 
 	width: 30px;
 
-	background: #fff;
+	background: rgba(42,42,42,0.1);
+
+	/*color: #fff;*/
 
 	border-radius: 50%;
 
@@ -1361,9 +1382,11 @@ input[type=submit]:hover {
 
 	z-index: 2;
 
-	box-shadow: 0px 10px 10px rgba(0,0,0,0.1);
+	/*box-shadow: 0px 10px 10px rgba(0,0,0,0.1);*/
 
 	transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+	padding: 5px;
 
 }
 
@@ -1371,7 +1394,7 @@ input[type=submit]:hover {
 
 	line-height: 30px;
 
-	font-size: 1rem;
+	font-size: 1.3em;
 
 }
 
@@ -1646,29 +1669,12 @@ input[type=submit]:hover {
 
 
 .filters .origin {
-
 	display: block;
-
-	/* background-color: #f9f9f9; */
-
+	background-color: #f9f9f9;
 	color: #333;
-
 	text-transform: capitalize;
-
 	font-weight: 600;
-
-	padding: .5rem 0;
-
-	margin-bottom: .5rem;
-
-	cursor: pointer;
-
-	margin-left: 25px;
-
-	margin-right: 25px;
-
-	box-shadow: 0px 2px 8px rgb(0 0 0 / 20%);
-
+	padding: .5rem 10px;
 }
 
 
@@ -2306,4 +2312,29 @@ input[type=submit]:hover {
 	border: 1px solid #FFF;
 	cursor: pointer;
 	transition: all .5s ease-in-out;
+}
+
+#commentsTable{
+	border-collapse: collapse;
+}
+
+#commentsTable td {
+	padding: 0.5rem 1rem;
+	text-align: left;
+}
+#commentsTable td a{
+	text-decoration: none;
+	color: var(--mainColor);
+}
+
+#commentsTable td a:visited{
+	color: var(--mainColor);
+}
+
+#commentsTable tr{
+	border-bottom: 1px solid #424242;
+	text-decoration: none;
+}
+#commentsTable tr:last-child{
+	border: none;
 }

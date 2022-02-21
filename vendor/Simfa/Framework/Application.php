@@ -244,6 +244,6 @@ class Application
 		Application::$APP->session->remove('user');
 		Application::$APP->cookie->unsetCookie('user_tk');
 
-		Application::$APP->response->redirect(self::getEnvValue('URL') . '/' . $redirect);
+		Application::$APP->response->redirect(self::getEnvValue('URL') . $redirect);
 	}
 }

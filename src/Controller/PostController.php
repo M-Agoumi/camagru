@@ -46,7 +46,7 @@ class PostController extends Controller
 			} else {
 				$liked->setType($type);
 				if ($liked->update())
-					return $this->json(1);
+					return $this->json(2);
 			}
 		} else {
 			$likes->post = $post->getId();

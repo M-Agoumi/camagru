@@ -20,6 +20,7 @@ use Simfa\Framework\Db\DbModel;
 
 /**
  * @method getPicture()
+ * @method getUsername()
  */
 class User extends DbModel
 {

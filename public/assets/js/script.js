@@ -34,7 +34,6 @@ async function dismissMessage() {
 
 function loginPopUp(path)
 {
-    console.log('we good ' + path);
     if (confirm('You need to login to do this action, login?')) {
         if (typeof path === 'undefined')
             path = window.location.pathname;
@@ -47,26 +46,26 @@ var reacts = ['like', 'love', 'wow', 'haha', 'sad', 'angry'];
 function likePost(post, elem, react = 0) {
     try {
         // Create XHR Object
-        var xhr = new XMLHttpRequest();
-        var liked = elem.textContent;
-        var likes = elem.previousElementSibling;
+        let xhr = new XMLHttpRequest();
+        const likes = document.getElementById('reactsCounter');
 
         // Open - type, url/file, asyc
-        console.log('request: ' + "/post/like/" + post + "?react=" + react);
         xhr.open('post', "/post/like/" + post + "?react=" + react, true);
 
         xhr.onload = function () {
             // check if request is okay
             if (this.status == 200) {
-                console.log('API: ' + this.responseText);
                 if (this.responseText == -1)
                     loginPopUp();
                 else {
                     if (this.responseText == 1) {
+						removeReactActive();
                         elem.classList.add(reacts[react] + '-active');
                         likes.innerHTML = parseInt(likes.textContent) + 1;
-                    } else {
-						elem.classList.remove(reacts[react] + '-active');
+                    } else if(this.responseText == 2) {
+						removeReactActive();
+						elem.classList.add(reacts[react] + '-active');
+					} else {
 						likes.innerHTML = parseInt(likes.textContent) -	 1;
 					}
                 }
@@ -82,6 +81,16 @@ function likePost(post, elem, react = 0) {
         throw new Error(e.message);
     }
     return false;
+}
+
+function removeReactActive()
+{
+	const tooltips = document.getElementsByClassName('icon')
+
+	for (let tooltip of tooltips) {
+		const myElem = tooltip.children[1];
+		myElem.className = '';
+	}
 }
 
 /** show people who liked the post */
@@ -106,8 +115,11 @@ function showLikes(post) {
                     var users = JSON.parse(this.responseText);
 
                     var output = '<span class="fa fa-close close" onclick="hideLikes()"></span>';
-                    if(!Object.keys(users).length){
+                    if(Object.keys(users).length === 0){
                         output += "this post has no likes yet, why don't you be the first?";
+						document.getElementsByClassName('content')[0].innerHTML = output;
+						document.getElementsByClassName('usersLikes')[0].style.display = 'block';
+						document.getElementsByClassName('usersLikes')[0].style.color = '#424242';
                     } else {
                         for (let i in users) {
                             output += '<ul class="XD">' +
@@ -127,11 +139,11 @@ function showLikes(post) {
 								output += '<li class="user-react"><span class="fas fa-angry"></span></li>';
 
                             output += '</ul>';
+							document.getElementsByClassName('content')[0].innerHTML = output;
+							document.getElementsByClassName('usersLikes')[0].style.display = 'block';
                         }
                     }
-                    console.log(users);
-                    document.getElementsByClassName('content')[0].innerHTML = output;
-                    document.getElementsByClassName('usersLikes')[0].style.display = 'block';
+
                 }
             } else {
                 console.log('error ' + this.status);
@@ -149,10 +161,11 @@ function showLikes(post) {
 /** add a new comment */
 let UserName = 'name';
 
+getUserName();
+
 function addComment(e, slug) {
     e.preventDefault();
 
-    getUserName();
     const form = document.getElementById('addCommentForm');
 
     const xhr = new XMLHttpRequest();
@@ -167,7 +180,6 @@ function addComment(e, slug) {
 
     xhr.onload = () => {
         let response = JSON.parse(xhr.responseText);
-        console.log(response);
 
 		document.getElementById('csrf_comment').value = response.token;
 		if (response.code === -2)
@@ -189,8 +201,7 @@ function addComment(e, slug) {
 			let row = table.insertRow(0);
 			let cell1 = row.insertCell(0);
 			let cell2 = row.insertCell(1);
-			// console.log('username: ' + getUserName());
-			cell1.innerHTML = UserName;
+			cell1.innerHTML = '<a href="/profile">' + UserName + '</a>';
 			cell2.innerText = document.getElementById('content').value;
 			document.getElementById('content').value = "";
 		}

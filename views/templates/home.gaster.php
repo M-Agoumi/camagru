@@ -1,9 +1,8 @@
 @layout('main')
 @section('title'){{ title }}@endsection
 @section('content')
-<h1><?=lang('home')?></h1>
 <div class="gal-one grid" id="gallery">
-	<div style="text-align: center;width: 100%;position: absolute;" id="loading">Content loading...</div>
+	<div style="text-align: center;width: 100%;position: absolute;" id="loading"><?= lang("Content loading...")?></div>
 </div>
 
 <div onclick="scrollToTop()" class="scrollTop">Top</div></div>

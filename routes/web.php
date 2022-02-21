@@ -48,7 +48,7 @@ Router::get('/logout-message', [AuthController::class, 'logoutMessage'])->name('
 Router::get('/logout-save-me', [AuthController::class, 'logoutSaveMe'])->name('app.logout.save');
 
 /** User Controller routes */
-Router::magic('/user/{username}', [UserController::class, 'index']);
+Router::magic('/user/{username}', [UserController::class, 'index'])->name('user.show');
 Router::get('/profile', [UserController::class, 'myProfile'])->name('user.profile');
 Router::get('/me', [UserController::class, 'myProfile']);
 Router::get('/profile/edit', [UserController::class, 'edit'])->name('user.edit');

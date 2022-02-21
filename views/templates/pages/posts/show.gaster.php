@@ -11,35 +11,45 @@
 	use Simfa\Form\Form;
 	use Simfa\Framework\Application;
 
+
+	/** get author name */
+	$author = $post->author; //todo move to controller
+
+	/** get likes */
+	$likes = new Like();
+
+	$likesCount = $likes->getCount(['post' => $post->entityID, 'status' => 0]);
+	if (Application::$APP->user) {
+		$liked = $likes->findOne(['post' => $post->entityID, 'user' => Application::$APP->user->getId(), 'status' => 0]);
+		$liked = $liked->getId() ? $liked->getType() : -1;
+	} else
+		$liked = -1;
+
+
 	?>
 	<div class="center">
 	    <h1 class="usernameTitle"><?=$post->title?>
 	        <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
 	    <img src="/uploads/<?=$post->picture?>" style="max-width: 677px;" alt="<?=$post->comment ?? $post->title?>">
 	    <div class="usernameInfo">
-	        <p><?=$post->highlightHashtag($post->comment)?></p>
-			<?php
-			/** get author name */
-			$author = $post->author;
-
-			/** get likes */
-			$likes = New Like();
-
-			$likesCount = $likes->getCount(['post' => $post->entityID, 'status' => 0]);
-			if (Application::$APP->user) {
-				$liked = $likes->findOne(['post' => $post->entityID, 'user' => Application::$APP->user->getId(), 'status' => 0]);
-				$liked = $liked->getId() ? $liked->getType() : -1;
-			} else
-				$liked = -1;
-
-			?>
-	        <p>posted <?=humanTiming(strtotime($post->created_at))?> ago by <span
-	                    class="authorName"><?=$author->name?></span></p>
+	        <div>
+		        <span class="authorName">
+			        <a href="<?=route('user.show', $author->getUsername())?>">
+				        <?=$author->name?>
+			        </a>
+		        </span>
+		        <span class="posting-time">
+		            <?=humanTiming(strtotime($post->created_at))?> ago
+		        </span>
+	        </div>
+		    <div class="post-comment">
+			     <?=$post->highlightHashtag($post->comment)?>
+		    </div>
 	    </div>
 	    <div class="filters">
 	    <span class="origin">
 	        <span>
-	            (<span class="likeCount" onclick="showLikes(<?=$post->entityID?>)"><?=$likesCount?></span>)
+	            (<span class="likeCount" id="reactsCounter" onclick="showLikes(<?=$post->entityID?>)"><?=$likesCount?></span>)
 
 	        <span class="wrapper-like">
 	            <div class="icon like">
@@ -72,7 +82,6 @@
 			<?php endif; ?>
 	    </span>
 	        <div>
-	            <h2>Comments</h2>
 	            <div>
 					<?php
 		            $comment = New Comments();
@@ -81,10 +90,8 @@
 			            'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"',
 					'csrf_comment'
 		            );
-		            echo $form->field($comment, 'content', 'Comment')
-			            ->setHolder('Comment Content')
-			            ;
-		            echo $form->submit('comment', '');
+		            echo $form->field($comment, 'content')
+			            ->setHolder('Comment Content')->noLabel()->addSubmit('comment')->noAutocomplete();
 		            $form::end();
 
 		            ?>
@@ -97,7 +104,7 @@
 		                foreach ($comments as $com) {
 			                echo '<tr>';
 			                $user = $comment->user($com['user']);
-			                echo '<td>' . $user->name . '</td> ';
+			                echo '<td><a href="' . route('user.show',$user->getUsername()) .'">' . $user->name . '</a></td> ';
 			                echo '<td>' . $com['content'] . '</td>';
 			                echo '</tr>';
 		                }
@@ -105,10 +112,10 @@
 	                </table>
 	            </div>
 	        </div>
-	        <div class="usersLikes">
+	        <div class="usersLikes" style="display: none">
 	            <div class="content">
-					<span class="fa fa-close close" onclick="hideLikes()"></span>
-					<!-- Hello World -->
+					<span class="fa fa-close close" onclick="hideLikes()" ></span>
+					Hello World
 	            </div>
 	        </div>
 	    </div>
