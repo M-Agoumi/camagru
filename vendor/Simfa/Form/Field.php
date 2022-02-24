@@ -43,6 +43,7 @@ class Field
 	{
 		$this->model = $model;
 		$this->attribute = $attribute;
+		$this->label = $attribute;
 		$this->type = self::TYPE_TEXT;
 		$this->disabled = '';
 		$this->required = '';
