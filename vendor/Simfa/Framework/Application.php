@@ -44,6 +44,7 @@ class Application
 	public array $MainLang = [];
 	protected array $fallbackLang = [];
 	public string $interface;
+	private ?array $appConfig = null;
 
 	/**
 	 * Application constructor.
@@ -108,6 +109,18 @@ class Application
 	public static function isAppProperty($instance): bool
 	{
 		return (property_exists(Application::class, $instance));
+	}
+
+	/**
+	 * @param string $string
+	 * @return array|false|null
+	 */
+	public static function getAppConfig(string $string): ?array
+	{
+		if (!self::$APP->appConfig)
+			self::$APP->appConfig = include(Application::$ROOT_DIR . '/config/config.php');
+
+		return self::$APP->appConfig[$string] ?? false;
 	}
 
 	/**
@@ -185,25 +198,25 @@ class Application
 
 	    if ($this->session->get('lang_main') && $this->session->get('lang_fb')) {
 	    	/** already in session just get em */
-		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_main') . '.lang.php');
-		    array_push($lang, include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_fb') . '.lang.php');
+		    $lang[] = include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_main') . '.lang.php';
+		    $lang[] = include self::$ROOT_DIR . '/translation/' . $this->session->get('lang_fb') . '.lang.php';
 	    } else {
 	    	/** not in session check database */
 		    if ($this->preferences && $this->preferences->entityID) {
 		    	$language = Language::getLang($this->preferences->language)->language;
 		    	Application::$APP->session->set('lang_main', $language);
-			    array_push($lang, include self::$ROOT_DIR . '/translation/' . $language. '.lang.php');
+			    $lang[] = include self::$ROOT_DIR . '/translation/' . $language . '.lang.php';
 			    if ($lang != $config['fallback_language']) {
 				    Application::$APP->session->set('lang_fb', $config['fallback_language']);
-				    array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
+				    $lang[] = include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php';
 			    } else {
 				    Application::$APP->session->set('lang_fb', $config['main_language']);
-				    array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
+				    $lang[] = include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php';
 			    }
 		    } else {
 		    	/** not in database take default setting from config file */
-		        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php');
-		        array_push($lang, include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php');
+		        $lang[] = include self::$ROOT_DIR . '/translation/' . $config['main_language'] . '.lang.php';
+		        $lang[] = include self::$ROOT_DIR . '/translation/' . $config['fallback_language'] . '.lang.php';
 		    }
 	    }
 
@@ -214,6 +227,7 @@ class Application
 	 * @param string $name
 	 * @param null $var
 	 * @return string
+	 * @throws Exception
 	 */
 	public static function path(string $name, $var = null): string
     {
@@ -222,7 +236,7 @@ class Application
 
 	/** save our logged user to the session
 	 * @param DbModel $user
-	 * @param string $ref
+	 * @param string $redirect
 	 */
 	public function login(DbModel $user, string $redirect)
 	{
@@ -235,6 +249,7 @@ class Application
 
 	/**
 	 * @param string $redirect to the last page the user was in
+	 * @throws Exception
 	 */
 	public static function logout(string $redirect = '/')
 	{

@@ -13,6 +13,7 @@
 
 namespace Controller;
 
+use Exception;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
 use Simfa\Framework\Request;
@@ -44,9 +45,10 @@ class DefaultController extends Controller
 	/** contact us page
 	 * @Route("get/post","/contact")
 	 * @param Request $request
-	 * @return false|string|string[]
+	 * @return string
+	 * @throws Exception
 	 */
-	public function contactUs(Request $request)
+	public function contactUs(Request $request): string
 	{
 		$contact = New ContactUs();
 

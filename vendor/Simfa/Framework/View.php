@@ -5,23 +5,54 @@ namespace Simfa\Framework;
 
 
 use DirectoryIterator;
+use Exception;
 
 class View
 {
 
-	public ?string $rootDir = null;
+	/**
+	 * @var string|null
+	 */
+	private ?string $rootDir = null;
 
-	public function renderView(string $view, $params = [])
+	/**
+	 * @var bool|mixed|null
+	 */
+	private ?bool $isCacheEnabled;
+
+	/**
+	 * init $isCacheEnabled from config/App.php
+	 */
+	public function __construct()
+	{
+		$config = Application::getAppConfig('view');
+		$this->isCacheEnabled = $config['cache'];
+	}
+
+
+	/**
+	 * @throws Exception
+	 */
+	public function renderView(string $view, $params = [], $return = 0): ?string
 	{
 		$this->rootDir = Application::$ROOT_DIR . '/';
-		$content = $this->getCacheContent($view, $params);
+		if (!$this->isCacheEnabled)
+			return $this->setCacheContent($view, $params, 1);
+		try {
+			$content = $this->getCacheContent($view, $params);
+		} catch (Exception $e) {
+			return $this->setCacheContent($view, $params, 1);
+		}
 
 		if (!$content)
-			$content = $this->setCacheContent($view, $params);
+			$content = $this->setCacheContent($view, $params, $return);
 
 		return $content;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private function getCacheContent(string $view, $params): ?string
 	{
 		/** retrieve the original file */
@@ -29,43 +60,56 @@ class View
 		if (file_exists($srcFile))
 			$hash = md5_file($srcFile);
 		else
-			die($srcFile . ' is not found anymore');
+			throw new Exception($srcFile . ' is not found anymore');
 		$file = $this->rootDir . 'var/cache/gaster/' . str_replace('/', '.', $view ) . '.endl.' . $hash . '.php';
 
 		if (file_exists($file)) {
-			foreach ($params as $key => $param) {
-				$$key = $param;
-			}
+			if (is_readable($file)) {
+				foreach ($params as $key => $param) {
+					$$key = $param;
+				}
 
-			ob_start();
-			include $file;
+				ob_start();
+				include $file;
 
-			return ob_get_clean();
+				return ob_get_clean();
+			} else
+				throw new Exception('permission denied to cached file');
 		}
 
 		return false;
 	}
 
-	private function setCacheContent(string $view, $params)
+	/**
+	 * @throws Exception
+	 */
+	private function setCacheContent(string $view, $params, $return = 0): ?string
 	{
 		$view = str_replace('.', '/', $view);
 		$file = $this->rootDir . 'views/templates/' . $view . '.gaster.php';
 
 		/** load view from the file */
 		if (file_exists($file))
-			return $this->renderOnlyView([$file, $view], $params);
-		else
-			die("view file not found: " . $view);
+			return $this->renderOnlyView([$file, $view], $params, $return);
+
+		throw new Exception('view file not found: ' . $view);
 	}
 
-	private function renderOnlyView($view, $params)
+	/**
+	 * @throws Exception
+	 */
+	private function renderOnlyView($view, $params, $return): ?string
 	{
 		$content = file_get_contents($view[0]);
 
 		$content = $this->preprocessContent($content);
-		$this->cacheContent($view, $content);
 
-		return $this->renderView(str_replace('/', '.', $view[1]), $params);
+		if (!$return) {
+			$this->cacheContent($view, $content);
+			return $this->renderView(str_replace('/', '.', $view[1]), $params);
+		}
+
+		return $this->renderProcessedData($content, $params);
 	}
 
 	private function preprocessContent($content)
@@ -113,11 +157,8 @@ class View
 		/** merge layout with the view and return the result */
 		$content = $this->layoutContentMerge($layout, $content);
 
-		/** get include files */
-		$content = $this->getIncludeFiles($content);
-
-		/** return our final masterpiece */
-		return $content;
+		/** get include files and return our final masterpiece */
+		return $this->getIncludeFiles($content);
 	}
 
 	private function getIncludeFiles(string $content): string
@@ -257,5 +298,16 @@ class View
 		$asset .= $appPort ? ":" . $appPort : '';
 
 		return $asset . "/" . $link;
+	}
+
+	private function renderProcessedData(string $content, $params): ?string
+	{
+		foreach ($params as $key => $param) {
+			$$key = $param;
+		}
+		ob_start();
+		eval('?>' . $content . '<?php');
+
+		return ob_get_clean();
 	}
 }
