@@ -17,11 +17,29 @@ class PostController extends Controller
 {
 	/**
 	 * @param Post $post
-	 * @return false|string|string[]
+	 * @return string
 	 */
-	public function show(Post $post)
+	public function show(Post $post): string
 	{
-		return render('pages/posts/show', ['post' => $post, 'title' => $post->title]);
+		/** get likes */
+		$likes = new Like();
+
+		$likesCount = $likes->getCount(['post' => $post->entityID, 'status' => 0]);
+		if (Application::$APP->user) {
+			$liked = $likes->findOne(['post' => $post->entityID, 'user' => Application::$APP->user->getId(), 'status' => 0]);
+			$liked = $liked->getId() ? $liked->getType() : -1;
+		} else
+			$liked = -1;
+
+		$data = [
+			'post'      => $post,
+			'title'     => $post->title,
+			'author'    => $post->author,
+			'likesCount'=> $likesCount,
+			'liked'     => $liked
+		];
+
+		return render('pages/posts/show', $data);
 	}
 
 	public function like(Post $post, Request $request): string
