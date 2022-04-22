@@ -13,12 +13,10 @@
 
 namespace Simfa\Framework;
 
+use Exception;
 use ReflectionException;
 use Simfa\Action\Controller;
-use Simfa\Framework\Db\DbModel;
-use Simfa\Framework\Exception\ExpiredException;
 use Simfa\Framework\Exception\NotFoundException;
-use ReflectionClass;
 
 
 class Router
@@ -29,7 +27,6 @@ class Router
 	protected array $paths = [];
 	protected string $tmp;
 	private string $interface;
-	private $callback;
 
 	/**
 	 * Router constructor.
@@ -65,6 +62,7 @@ class Router
 	 * @param $path
 	 * @param $callback
 	 * @return Router|null
+	 * @throws Exception
 	 */
 	private static function registerRoute(string $method, $path, $callback): ?Router
 	{
@@ -73,7 +71,7 @@ class Router
 		if (!isset($router->routes[$method][$path]))
 			$router->routes[$method][$path] = $callback;
 		else
-			die("route $path is already used please update it");
+			throw new Exception("route $path is already used please update it");
 		$router->tmp = $path;
 
 		return $router;
@@ -88,6 +86,7 @@ class Router
 	 *
 	 * does not return anything
 	 * @return Router
+	 * @throws Exception
 	 */
 	public static function post($path, $callback): Router
 	{
@@ -98,6 +97,7 @@ class Router
 	 * @param $path
 	 * @param $callback
 	 * @return Router
+	 * @throws Exception
 	 */
 
 	public static function magic($path, $callback): Router
@@ -109,6 +109,7 @@ class Router
 	 * @param string $path
 	 * @param $callback
 	 * @return Router|null
+	 * @throws Exception
 	 */
 	public static function request(string $path, $callback): ?Router
 	{
@@ -122,6 +123,7 @@ class Router
 	 * @param string $from
 	 * @param string $to
 	 * @param string|null $method
+	 * @throws Exception
 	 */
 	public static function redirect(string $from, string $to, string $method = null)
 	{
@@ -131,22 +133,24 @@ class Router
 			self::registerRoute('post', $from, function () use($to){redirect($to);});
 	}
 
-	/** register a name for the current path
+	/**
+	 * register a name for the current path
 	 * @param string $name
+	 * @throws Exception
 	 */
 	public function name(string $name)
 	{
 		if (!isset($this->paths[$name]))
 			$this->paths[$name] = $this->tmp;
 		else
-			die("the path name [$name] is already used");
+			throw new Exception("the path name [$name] is already used");
 	}
 
 	/**
 	 * @param string $name
 	 * @param $var
 	 * @return string
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function path(string $name, $var = null): string
 	{
@@ -154,12 +158,12 @@ class Router
 		if (isset($this->paths[$name])) {
 			if ($var) {
 				$path = $this->paths[$name];
-				return preg_replace('~\{.*\}~', $var, $path);
+				return preg_replace('~{.*}~', $var, $path);
 			} else
 				return $this->paths[$name];
 		}
 
-		throw new \Exception("there is no path with the name $name", '0');
+		throw new Exception("there is no path with the name $name", '0');
 	}
 
 	/**
@@ -175,9 +179,12 @@ class Router
 		$callback = $this->getCallbackOrFail();
 		$this->callback = $callback;
 
-		if (is_string($callback))
+		if (is_string($callback)){
+			if (strlen($callback) > 612) // too long? that's a view to show otherwise is a file need to be showed
+				return $callback;
 			return render($callback);
-		
+		}
+
 		if (is_array($callback))
 			return $this->execArrayCallback($callback);
 
@@ -189,6 +196,7 @@ class Router
 
 	/**
 	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function getCallbackOrFail()
 	{
@@ -196,7 +204,7 @@ class Router
 
 		/** check if there is any register routes in the app otherwise show default page */
 		if (empty($this->routes))
-			die (render('default.firstRun'));
+			return (Application::$APP->view->renderViewSystem('defaults.firstRun'));
 
 		$path = $this->request->getPath();
 		$method = $this->request->Method();
@@ -216,6 +224,7 @@ class Router
 
 	/**
 	 * @throws ReflectionException
+	 * @throws Exception
 	 */
 	protected function execArrayCallback($callback)
 	{
@@ -231,49 +240,13 @@ class Router
 		$callback[0] = $controller;
 
 		if (!method_exists($callback[0], $callback[1]))
-			die('method [' . $callback[1] . '] not found in class [' . get_class($callback[0]) . ']');
+			throw new Exception('method [' . $callback[1] . '] not found in class [' . get_class($callback[0]) . ']');
 
-		$params = $this->injectDependencies($callback);
+		$params = Application::$APP->injector->getDependencies($callback[0], $callback[1],
+			$callback[2] ?? null, $callback[3] ?? null);
 		unset($callback[2], $callback[3]);
 
 		return call_user_func_array($callback, $params);
-	}
-
-	/**
-	 * @param $callback
-	 * @return array
-	 * @throws ReflectionException
-	 */
-	protected function injectDependencies($callback): array
-	{
-		$params = [];
-
-		$reflector = new ReflectionClass($callback[0]);
-
-		foreach ($reflector->getMethod($callback[1])->getParameters() as $param) {
-			$modelName = $param->name;
-			$modelType = $param->getClass()->name ?? NULL;
-
-			if ($modelType)
-				array_push($params, $this->injectClassOrModule($modelType, $modelName));
-			else
-				array_push($params, $callback[3] ?? NULL);
-		}
-
-		return $params;
-	}
-
-	/**
-	 * @param $type
-	 * @param $name
-	 * @return mixed
-	 */
-	protected function injectClassOrModule($type, $name)
-	{
-		if (Application::isAppProperty($name) && $name != 'user') /** make dynamic instead of user */
-			return Application::$APP->$name;
-		else
-			return $this->injectModule($type);
 	}
 
 	/**
@@ -282,84 +255,6 @@ class Router
 	private function getRoutes()
 	{
 		include Application::$ROOT_DIR . "/routes/" . $this->interface . ".php";
-	}
-
-	/** inject module
-	 * @param $type
-	 * @return object|void
-	 * @throws ReflectionException
-	 */
-	private function injectModule($type)
-	{
-		if (class_exists($type))
-			return $this->createModuleInstance($type);
-
-		die('class ' . $type . ' not found while trying to inject it');
-	}
-
-	/**
-	 * @throws ReflectionException
-	 * @throws ExpiredException
-	 * @throws NotFoundException
-	 */
-	private function createModuleInstance(string $type): object
-	{
-		/** @var  $arguments array of constructor arguments */
-		$arguments = $this->getClassConstructorArguments($type);
-		$reflector = new ReflectionClass($type);
-		$name = $reflector->getShortName();
-
-		$instance = $reflector->newInstanceArgs($arguments);
-
-		$relations = [];
-
-		if (method_exists($instance, 'relationships'))
-			$relations = $instance->relationships();
-
-		if ($instance instanceof DbModel) {
-			$primaryKey = $this->callback[2] ?? '';
-
-			if ($name == $primaryKey)
-				$primaryKey = $instance->primaryKey();
-
-			if ($primaryKey) {
-				if (isset($this->callback[3])) {
-					$instance = $instance::findOne([$primaryKey => $this->callback[3]], $relations);
-
-					if (!$instance->getId())
-						if (strpos($this->callback[2], 'token') !== false)
-							throw new ExpiredException('Invalid token');
-						else
-							throw new NotFoundException();
-				}
-			}
-		}
-
-		return $instance;
-	}
-
-	/**
-	 * @throws ReflectionException
-	 */
-	private function getClassConstructorArguments(string $type): ?array
-	{
-		$rf = new ReflectionClass($type);
-
-		$constructorRef = $rf->getConstructor();
-		$constructorArguments = $constructorRef ? $constructorRef->getParameters() : [];
-		if (!count($constructorArguments))
-			return [];
-
-		$arguments = [];
-
-		foreach ($constructorArguments as $argument)
-		{
-			$type = $argument->getType();
-			$name = $argument->getName();
-			$arguments[] = $this->injectClassOrModule($type, $name);
-		}
-
-		return $arguments;
 	}
 }
 

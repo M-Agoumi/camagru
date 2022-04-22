@@ -13,38 +13,39 @@
 
 namespace Simfa\Framework;
 
-use Simfa\Action\Controller;
-use Simfa\Framework\Db\Database;
-use Simfa\Framework\Db\DbModel;
 use Exception;
 use Simfa\Model\Language;
 use Simfa\Model\Preference;
+use Simfa\Action\Controller;
+use Simfa\Framework\Db\DbModel;
+use Simfa\Framework\Db\Database;
 
 /**
  * Class Application don't forget to include your user class
  */
 class Application
 {
-	public static string $ROOT_DIR;
-	public static Application $APP;
-	public static array $ENV;
-	public string $userCLass;
-	public Database $db;
-	public ?Router $router = null;
-	public ?Request $request = null;
-	public ?Response $response = null;
-	public ?controller $controller = null;
-	public ?Session $session = null;
-	public ?Preference $preferences = null;
-	public ?DbModel $user;
-	public ?View $view;
-	public ?Helper $helper = null;
-	public ?Cookie $cookie = null;
-	public ?Catcher $catcher = null;
-	public array $MainLang = [];
-	protected array $fallbackLang = [];
-	public string $interface;
-	private ?array $appConfig = null;
+	public static string        $ROOT_DIR;
+	public static Application   $APP;
+	public static array         $ENV;
+	public string               $userCLass;
+	public Database             $db;
+	public ?Router              $router = null;
+	public ?Request             $request = null;
+	public ?Response            $response = null;
+	public ?controller          $controller = null;
+	public ?Session             $session = null;
+	public ?Preference          $preferences = null;
+	public ?DbModel             $user;
+	public ?View                $view;
+	public ?Helper              $helper = null;
+	public ?Cookie              $cookie = null;
+	public ?Catcher             $catcher = null;
+	public ?Injector            $injector = null;
+	public array                $MainLang = [];
+	protected array             $fallbackLang = [];
+	public string               $interface;
+	private ?array              $appConfig = null;
 
 	/**
 	 * Application constructor.
@@ -53,24 +54,25 @@ class Application
 
 	public function __construct(string $rootPath, string $appInterface = 'web')
 	{
-		self::$ROOT_DIR = $rootPath;
-		self::$APP = $this;
-		self::$ENV = $this->getDotEnv();
-		$this->catcher = New Catcher();
-		$this->interface = $appInterface;
-		$this->userCLass = self::getEnvValue('USER_CLASS') ?? 'Model\User';
-		$this->request = New Request();
-		$this->response = New Response();
-		$this->db = New Database($this->getDatabaseConfig());
-		$this->session = New Session();
-		$this->user = self::getUser();
-		$this->router = New Router($this->request, $this->response, $appInterface);
-		$this->view = New View();
-		$this->helper = New Helper();
-		$this->cookie = New Cookie();
-		$this->preferences = $this->user ? Preference::getPerf($this->user->getId()) : null;
-		$lang = $this->setLang();
-		$this->MainLang = $lang[0];
+		self::$ROOT_DIR     = $rootPath;
+		self::$APP          = $this;
+		self::$ENV          = $this->getDotEnv();
+		$this->interface    = $appInterface;
+		$this->injector     = new Injector();
+		$this->catcher      = new Catcher();
+		$this->userCLass    = self::getEnvValue('USER_CLASS') ?? 'Model\User';
+		$this->request      = New Request();
+		$this->response     = New Response();
+		$this->view         = New View();
+		$this->db           = New Database($this->getDatabaseConfig());
+		$this->session      = New Session();
+		$this->user         = self::getUser();
+		$this->router       = New Router($this->request, $this->response, $appInterface);
+		$this->helper       = Helper::initHelper();
+		$this->cookie       = new Cookie();
+		$this->preferences  = $this->user ? Preference::getPerf($this->user->getId()) : null;
+		$lang               = $this->setLang();
+		$this->MainLang     = $lang[0];
 		$this->fallbackLang = $lang[1];
 	}
 
@@ -174,8 +176,11 @@ class Application
 	 */
 	public static function getConfig(string $file)
 	{
-		return file_exists(self::$ROOT_DIR . "/config/" . $file . ".conf") ?
-			parse_ini_file(self::$ROOT_DIR . "/config/" . $file . ".conf", true) : [];
+		if (file_exists(self::$ROOT_DIR . "/config/" . $file . ".conf"))
+			return parse_ini_file(self::$ROOT_DIR . "/config/" . $file . ".conf", true);
+		if (file_exists(self::$ROOT_DIR . "/config/" . $file . ".php"))
+			return include(Application::$ROOT_DIR . '/config/'. $file . '.php');
+		return  [];
 	}
 
     /**
@@ -227,11 +232,15 @@ class Application
 	 * @param string $name
 	 * @param null $var
 	 * @return string
-	 * @throws Exception
 	 */
 	public static function path(string $name, $var = null): string
     {
-    	return self::$APP->router->path($name, $var);
+	    try {
+	    	return self::$APP->router->path($name, $var);
+	    } catch (Exception $e) {
+			Application::$APP->catcher->catch($e);
+	    }
+		return '';
     }
 
 	/** save our logged user to the session
