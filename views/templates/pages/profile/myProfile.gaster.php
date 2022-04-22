@@ -1,10 +1,18 @@
 @layout('main')
 @section('title'){{ title }} @endsection
 @section('content')
-	<?php
-	/** @var $user User */
-	?>
+<?php
+/**
+ * @var $user User
+ * @var $helper TimeHelper
+ */
 
+use Helper\TimeHelper;
+use Model\User;
+use Simfa\Framework\Application;
+
+$helper = Application::$APP->helper->getHelper(TimeHelper::class);
+?>
 	<div class="my-profile">
 		<div class="profile-cover"></div>
 		<div class="profile-logo"></div>
@@ -50,7 +58,7 @@
 										<img class="user-pic" src="/uploads/dps/<?=$user->getPicture()??'default.jpg'?>" alt="Logo">
 										<div class="pf-info">
 											<h5>{{ user->getName() }}</h5>
-											<span><i class="fa fa-clock-o"></i> <?=humanTiming(strtotime($post['created_at']))?> ago</span>
+											<span><i class="fa fa-clock-o"></i> <?=$helper->humanTiming(strtotime($post['created_at']))?> ago</span>
 										</div>
 									</div>
 									<span class="pf-menu"><img src="/assets/icon/more-icon.png" alt=""></span>

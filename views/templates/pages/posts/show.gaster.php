@@ -5,28 +5,22 @@
 
 	/** @var $post Post */
 
+	use Helper\TimeHelper;
 	use Model\Comments;
-	use Model\Like;
 	use Model\Post;
+	use Model\User;
 	use Simfa\Form\Form;
 	use Simfa\Framework\Application;
 
-
-	/** get author name */
-	$author = $post->author; //todo move to controller
-
-	/** get likes */
-	$likes = new Like();
-
-	$likesCount = $likes->getCount(['post' => $post->entityID, 'status' => 0]);
-	if (Application::$APP->user) {
-		$liked = $likes->findOne(['post' => $post->entityID, 'user' => Application::$APP->user->getId(), 'status' => 0]);
-		$liked = $liked->getId() ? $liked->getType() : -1;
-	} else
-		$liked = -1;
-
-
+	/**
+	 * @var TimeHelper $helper
+	 * @var User $author
+	 * @var int $likesCount
+	 * @var int $liked
+	 */
+	$helper = Application::$APP->helper->getHelper(TimeHelper::class);
 	?>
+
 	<div class="center">
 	    <h1 class="usernameTitle"><?=$post->title?>
 	        <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
@@ -39,7 +33,7 @@
 			        </a>
 		        </span>
 		        <span class="posting-time">
-		            <?=humanTiming(strtotime($post->created_at))?> ago
+		            <?=$helper->humanTiming(strtotime($post->created_at))?> ago
 		        </span>
 	        </div>
 		    <div class="post-comment">
@@ -77,7 +71,7 @@
 					<span<?= $liked == 5 ? ' class="angry-active"' : ''?>  onclick="likePost(<?=$post->entityID?>, this, 5)"><i class="fa fa-angry"></i></span>
 				</div>
 	        </span>
-			<?php if (Application::$APP->user && Application::$APP->user->entityID == $post->author->entityID):?>
+			<?php if (Application::$APP->user && Application::$APP->user->getId() == $post->author->getId()):?>
 				<a href="/post/delete/<?=$post->getSlug() . '?' . Application::$APP->session->getToken('post')?>"><span>Delete Post</span></a>		
 			<?php endif; ?>
 	    </span>
