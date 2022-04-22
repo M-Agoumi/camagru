@@ -20,12 +20,11 @@ use Simfa\Action\Controller;
 class ApiController extends Controller
 {
 
-   public function __construct()
-   {
-        // TODO implement your Controller
-   }
-
-   public function posts(Post $post)
+	/**
+	 * @param Post $post
+	 * @return false|string
+	 */
+   public function posts(Post $post): bool|string
    {
 	   $posts = $post->paginate([
 		   'order' => 'DESC',
@@ -36,6 +35,12 @@ class ApiController extends Controller
 	   return $this->json($posts);
    }
 
+	/**
+	 * @todo implement hashtags
+	 * @param array|null $posts
+	 * @param Post $post
+	 * @return array|null
+	 */
    private function generateHashtags(?array $posts, Post $post): ?array
    {
 	   for ($i = 0; $i < count($posts); $i++)
