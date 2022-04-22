@@ -10,7 +10,7 @@ class mg0007_creating_contact_us_table
 		Migration::create('contact_us', function (Schema $table) {
 			$table->id();
 			$table->smallInt('logged');
-			$table->int('user');
+			$table->int('user')->nullable();
 			$table->string('email')->nullable();
 			$table->string('title');
 			$table->int('ParentId')->nullable();
