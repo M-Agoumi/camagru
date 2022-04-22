@@ -29,15 +29,14 @@ abstract class Controller
     /** @var BaseMiddleware[] */
 	protected array $middlewares = [];
 
-    /** adding this method to avoid typing it in every method in our controllers
-     * @param string $view
-     * @param array $params
-     * @param array $layParams
-     * @return false|string|string[]
-     */
-	public function render(string $view, array $params = [], array $layParams = [])
+	/** adding this method to avoid typing it in every method in our controllers
+	 * @param string $view
+	 * @param array $params
+	 * @return string
+	 */
+	public function render(string $view, array $params = []): string
 	{
-		return Application::$APP->view->renderView($view, $params, $layParams);
+		return Application::$APP->view->renderView($view, $params);
 	}
 
     /**
@@ -72,7 +71,7 @@ abstract class Controller
 		    'X-Mailer: PHP/' . phpversion();
 
     	if (is_array($content)) {
-    		$body = $this->render('mails/' . $content[0], $content[1], ['title' => $subject]);
+    		$body = $this->render('mails/' . $content[0], $content[1]);
 
     		return $this->mailer($to, $subject, $body, $headers);
 	    } else

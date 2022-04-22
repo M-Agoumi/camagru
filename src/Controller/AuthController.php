@@ -140,7 +140,11 @@ class AuthController extends Controller
 					$email->update();
 				}
 
-				$data = ['verifyEmail', ['port' => $_SERVER['SERVER_PORT'], 'token' => $email->token]];
+				$data = ['verifyEmail', [
+					'port'  => $_SERVER['SERVER_PORT'],
+					'token' => $email->token,
+					'title' =>'Verify Your Email']
+				];
 				if ($this->mail($email->email, 'Verify Your Email', $data))
 					return render('messages/register_email', ['email' => $email->email]);
 				else
@@ -340,7 +344,7 @@ class AuthController extends Controller
 		return render('messages/logout', ['title' => 'you are logged out']);
 	}
 
-	/** todo more work here please
+	/**
 	 * @return mixed|null
 	 */
 	public function logoutSaveMe()
@@ -354,7 +358,7 @@ class AuthController extends Controller
 			if (!$users)
 				$users = array($token->token);
 			else
-				array_push($users, $token->token);
+				$users[] = $token->token;
 
 			Application::$APP->cookie->set('user', serialize($users), time() + (3600 * 24 * 30));
 			Application::$APP->session->unset('user_tmp');

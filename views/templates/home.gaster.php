@@ -1,11 +1,14 @@
 @layout('main')
 @section('title'){{ title }}@endsection
 @section('content')
+<div style="text-align: center;width: 100%;position: absolute;" id="loading"><?= lang("Content loading...")?></div>
+<div id="message">
+</div>
 <div class="gal-one grid" id="gallery">
-	<div style="text-align: center;width: 100%;position: absolute;" id="loading"><?= lang("Content loading...")?></div>
+
 </div>
 
-<div onclick="scrollToTop()" class="scrollTop">Top</div></div>
+<div onclick="scrollToTop()" class="scrollTop">Top</div>
 <script>
 
 	function scrollToTop() {
@@ -32,7 +35,7 @@
 
 			if (posts.length === 0) {
 				if (firstRun) {
-					document.getElementById('gallery').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no posts yet, start by creating the first one</h1>");
+					document.getElementById('message').insertAdjacentHTML('beforeend', "<h1 class='endOfPosts'>there is no posts yet, start by creating the first one</h1>");
 					firstRun = false;
 				}
 

@@ -62,21 +62,12 @@ abstract class DbModel extends Model
 	/**
 	 * get table name
 	 */
-	protected function tableName(): string
+	protected static function tableName(): string
 	{
-		$static = !(isset($this) && get_class($this) == __CLASS__);
+		if (static::$tableName != '')
+			return static::$tableName;
 
-		if ($static) {
-			if (static::$tableName != '')
-				return static::$tableName;
-
-			return (lcfirst((new ReflectionClass(static::class))->getShortName()));
-		}
-
-		if ($this->tableName != '')
-			return $this->tableName;
-
-		return lcfirst((new ReflectionClass($this))->getShortName());
+		return (lcfirst((new ReflectionClass(static::class))->getShortName()));
 	}
 
 	/**
@@ -172,8 +163,12 @@ abstract class DbModel extends Model
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
 			elseif ($attribute == 'created_at' && !$this->{$attribute})
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
-			else
-				$statement->bindValue(":$attribute", $this->{$attribute});
+			else {
+				if ($this->{$attribute} instanceof DbModel && $this->{$attribute} == '-1')
+					$statement->bindValue(":$attribute", null);
+				else
+					$statement->bindValue(":$attribute", $this->{$attribute});
+			}
 		}
 
 		$this->updated_at = date('Y-m-d H:i:s', time());
@@ -181,12 +176,13 @@ abstract class DbModel extends Model
 		return $statement->execute();
 	}
 
-    /**
-     * @param $key
-     * @param $value
-     * @return false|Model
-     */
-    public function getOneBy($key, $value = null, $object = 1)
+	/**
+	 * @param $key
+	 * @param null $value
+	 * @param int $object
+	 * @return bool|Model|array
+	 */
+    public function getOneBy($key, $value = null, int $object = 1): bool|Model|array
     {
         $tableName = $this->tableName();
 
@@ -237,10 +233,12 @@ abstract class DbModel extends Model
 		$class = static::class;
 		$class = new $class();
 
+
 		if ($data) {
 			foreach ($relations as $key => $value) {
 				$model = new $value;
-				$model->loadData($model->getOneBy($data[$key], '', false));
+				if ($data[$key])
+					$model->loadData($model->getOneBy($data[$key], '', false));
 				$data[$key] = $model;
 
 			}
@@ -381,7 +379,10 @@ abstract class DbModel extends Model
 	 */
 	public function __toString()
 	{
-		return (string)$this->getId();
+		if ($this->getId())
+			return (string)$this->getId();
+
+		return '-1';
 	}
 
 	/**

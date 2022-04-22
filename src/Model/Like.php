@@ -21,6 +21,6 @@ class Like extends DbModel
 	 */
 	public function rules(): array
 	{
-		// TODO: Implement rules() method.
+		return [];
 	}
 }

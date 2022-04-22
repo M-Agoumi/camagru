@@ -23,7 +23,15 @@ use Simfa\Framework\CLI\CLIApplication;
 
 class SimpleData extends BaseCommand
 {
+	/**
+	 * @var string
+	 */
 	protected static string $command = 'simpleData';
+
+	public function __construct()
+	{
+		CLIApplication::$CLI_APP->getApp();
+	}
 
 	public function post(): string
 	{

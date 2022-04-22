@@ -3,6 +3,7 @@
 namespace Controller;
 
 
+use Exception;
 use Middlewares\AuthMiddleware;
 use Model\Post;
 use Model\User;
@@ -77,8 +78,9 @@ class UserController extends Controller
 		]);
 	}
 
-	public function UpdatePassword(Request $request)
+	public function UpdatePassword(Request $request): ?string
 	{
+		/** @var User $user */
 		$user = Application::$APP->user;
 
 		if ($request->isPost()) {
@@ -110,13 +112,17 @@ class UserController extends Controller
 		    } else
 		    	$user->addError('password', 'password is wrong');
 		}
-		$user->password = '';
+		$user->setPassword('');
 
 		return render('pages/profile/updatePassword', ['user' => $user, 'title' => 'Update Password']);
 	}
 
-
-	public function preferences(Request $request)
+	/**
+	 * @param Request $request
+	 * @return string|null
+	 * @throws Exception
+	 */
+	public function preferences(Request $request): ?string
 	{
 		$pref = New Preference();
 		$user = Application::$APP->user->getId();
