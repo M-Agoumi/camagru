@@ -5,7 +5,6 @@
 # line of that file to be used as the name.  The Debian default
 # is /etc/mailname.
 #myorigin = /etc/mailname
-
 smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
 biff = no
 
@@ -19,7 +18,7 @@ readme_directory = no
 
 # See http://www.postfix.org/COMPATIBILITY_README.html -- default to 2 on
 # fresh installs.
-compatibility_level = 2
+compatibility_level = 3.6
 
 
 
@@ -39,7 +38,7 @@ alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
 mydestination = $myhostname, camagru.io, e8878e687274, localhost.localdomain, localhost
-relayhost = [smtp.mailtrap.io]:2525
+relayhost = [mailhog]:1025
 smtp_sasl_auth_enable = yes
 smtp_sasl_mechanism_filter = plain
 smtp_sasl_security_options = noanonymous

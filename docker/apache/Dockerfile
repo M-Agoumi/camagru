@@ -1,12 +1,13 @@
 FROM ubuntu
 
 ## set our build arguments
-ARG smtp
-ARG smtpPort
-ARG username
-ARG password
-ARG mail
+ARG SMTP
+ARG SMTP_POST
+ARG SMTP_USERNAME
+ARG SMTP_PASSWORD
+ARG SMTP_MAIL
 
+RUN echo hello
 ## set default timezone for zdate so it won't wait for input from user
 ENV TZ=Africa/Casablanca
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -38,19 +39,15 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN debconf-set-selections <<< "postfix postfix/mailname string admin@camagru.io"
 RUN debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 RUN apt install -y postfix mailutils
-RUN echo "${smtp} ${username}:${password}" > /etc/postfix/sasl_passwd
+RUN echo "${SMTP} ${SMTP_USERNAME}:${SMTP_PASSWORD}" > /etc/postfix/sasl_passwd
 RUN chmod 600 /etc/postfix/sasl_passwd
 RUN postmap /etc/postfix/sasl_passwd
-RUN service postfix restart
 
 ## copy our config files. context project root
 COPY ./docker/apache/apache2/apache2.conf /etc/apache2/
 COPY ./docker/apache/sites-available/000-default.conf /etc/apache2/sites-available/
 COPY ./docker/apache/php/php.ini /etc/php/7.4/apache2/
 COPY ./docker/apache/postfix/main.cf /etc/postfix/
-
-## restart postfix with the new settings
-RUN service postfix restart
 
 ## enable rewrite mod for our mvc structure
 RUN a2enmod rewrite
@@ -59,7 +56,7 @@ RUN a2enmod rewrite
 COPY ./ /var/www/camagru
 
 ## apply migration of our database
-# RUN cd /var/www/camagru && bin/console migrate:migrate
+RUN cd /var/www/camagru && bin/console migrate:migrate
 
 ## fix permissions
 # RUN useradd -G www-data,root -u $uid -d /home/$user $user
@@ -71,6 +68,9 @@ EXPOSE 587
 
 ## switch to our user
 ## USER $user
+
+## restart postfix with the new settings
+RUN service postfix restart
 
 ## run our apache server
 CMD service apache2 start && tail -F /var/log/apache2/error.log

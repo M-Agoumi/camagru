@@ -15,16 +15,26 @@ services:
             - ./docker/mysql:/docker-entrypoint-initdb.d
         networks:
             - camagru
+    mailhog:
+        image: mailhog/mailhog
+        container_name: mailhog
+        restart: unless-stopped
+        logging:
+            driver: 'none'  # disable saving logs
+        ports:
+           - "8025:8025"
+        networks:
+            - camagru
     apache:
         build:
             context: ./
             dockerfile: ./docker/apache/Dockerfile
             args:
-              - smtp=${smtp}
-              - smtpPort=${smtpPort}
-              - username=${username}
-              - password=${password}
-              - mail=${mail}
+              - smtp=${SMTP}
+              - smtpPort=${SMTP_POST}
+              - username=${SMTP_USERNAME}
+              - password=${SMTP_PASSWORD}
+              - mail=${SMTP_MAIL}
         container_name: apache
         restart: unless-stopped
         working_dir: /var/www/camagru
@@ -32,27 +42,6 @@ services:
             - ./:/var/www/camagru
         ports:
             - "80:80"
-            - "2525:2525"
-        networks:
-            - camagru
-    api:
-        build:
-            context: ./
-            dockerfile: ./docker/api/Dockerfile
-            args:
-                - smtp=${smtp}
-                - smtpPort=${smtpPort}
-                - username=${username}
-                - password=${password}
-                - mail=${mail}
-        container_name: api
-        restart: unless-stopped
-        working_dir: /var/www/camagru
-        volumes:
-            - ./:/var/www/camagru
-        ports:
-            - "8080:80"
-            - "2530:2525"
         networks:
             - camagru
 networks:
