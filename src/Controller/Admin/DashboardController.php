@@ -4,6 +4,7 @@
 namespace Controller\Admin;
 
 
+use Model\ContactUs;
 use Model\Emote;
 use Model\Post;
 use Model\User;
@@ -107,9 +108,9 @@ class DashboardController extends BaseController
 
 	public function posts(Post $post)
 	{
-		$posts = $post->findAll();
+		$posts = $post->paginate(['articles' => 20, 'order' => 'desc'],['allow_all']);
 
-		return render('admin/posts', ['posts' => $posts]);
+		return render('admin/posts', ['posts' => $posts, 'pst' => $post]);
 	}
 
 	public function deletePost(Post $post)
@@ -119,5 +120,24 @@ class DashboardController extends BaseController
 		if ($post->delete(1))
 			return render('admin/emotes/deleted');
 		return 'Something went wrong';
+	}
+
+	public function messages(ContactUs $contact)
+	{
+		$contacts = $contact->paginate(['articles' => 10, 'order' => 'desc'],['allow_all']);
+
+		return render('admin.messages', ['messages' => $contacts, 'msg' => $contact]);
+	}
+
+	public function showMessage(ContactUs $contactUs)
+	{
+		if (!isset($_GET[Application::$APP->session->getToken()]))
+			throw new ForbiddenException();
+
+		if (!$contactUs->updated_at)
+			$contactUs->update();
+
+
+		return $this->render('admin.showMessage', ['message' => $contactUs]);
 	}
 }

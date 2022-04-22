@@ -24,15 +24,15 @@
 	foreach ($posts as $post): ?>
 		<tr>
 			<th scope="row"><?=$post['entityID']?></th>
-			<td><img width="150" src="/uploads/<?=$post['picture']?>"/></td>
+			<td><a href="/post/<?=$post['slug']?>"><img width="150" src="/uploads/<?=$post['picture']?>"/></a></td>
 			<td><?=$post['title']?></td>
 			<?php
 				$user->getOneBy($post['author']);
 			?>
 			<td><?=$user->getUsername()?></td>
 			<td><?=$post['created_at']?></td>
-			<td class="btn btn-danger">
-				<a href="/dashboard/posts/delete/<?=$post['entityID']?>?<?= Application::$APP->session->getToken()?>">
+			<td class="d-flex">
+				<a class="btn btn-danger" href="/dashboard/posts/delete/<?=$post['entityID']?>?<?= Application::$APP->session->getToken()?>">
 					Delete
 				</a>
 			</td>
@@ -40,5 +40,11 @@
 	<?php endforeach; ?>
 	</tbody>
 </table>
-<a href="/dashboard/emotes/new" class="btn btn-info">New Emote</a>
+<?php foreach ($pst->pages() as $key => $page): ?>
+	<?php if (is_array($page)):?>
+		<a href="#" class="btn btn-danger"><?= $page['active']; ?></a>
+	<?php else: ?>
+		<a href="?page={{ page }}" class="btn btn-info"><?= $page; ?></a>
+	<?php endif;?>
+<?php endforeach;?>
 @endsection

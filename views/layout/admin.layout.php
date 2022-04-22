@@ -30,6 +30,7 @@
 				<a class="nav-link<?=\Simfa\Framework\Request::getSimpleUrl() == 'emotes' ? ' active' : ''?>" href="/dashboard/emotes">Emotes</a>
 				<a class="nav-link<?=\Simfa\Framework\Request::getSimpleUrl() == 'users' ? ' active' : ''?>" href="/dashboard/users">Users</a>
 				<a class="nav-link<?=\Simfa\Framework\Request::getSimpleUrl() == 'posts' ? ' active' : ''?>" href="/dashboard/posts">Posts</a>
+				<a class="nav-link<?=\Simfa\Framework\Request::getSimpleUrl() == 'messages' ? ' active' : ''?>" href="/dashboard/messages">Messages</a>
 			</nav>
 		</div>
 	</header>

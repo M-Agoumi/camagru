@@ -3,6 +3,7 @@
 
 namespace Model;
 
+use JetBrains\PhpStorm\ArrayShape;
 use Simfa\Framework\Db\DbModel;
 
 class ContactUs extends DbModel
@@ -10,7 +11,7 @@ class ContactUs extends DbModel
 
 	protected ?int $entityID = null;
 	protected ?int $logged = null;
-	protected ?int $user = null;
+	protected ?User $user = null;
 	protected ?string $email = null;
 	protected ?string $title = null;
 	protected ?string $content = null;
@@ -33,5 +34,13 @@ class ContactUs extends DbModel
 			'content' => [self::RULE_REQUIRED],
 			'email' => [self::RULE_EMAIL]
 		];
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function relationships(): array
+	{
+		return ['user' => User::class];
 	}
 }

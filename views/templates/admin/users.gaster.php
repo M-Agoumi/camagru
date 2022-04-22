@@ -23,8 +23,8 @@
 			<td><?=$user['email']?></td>
 			<td><?=$user['username']?></td>
 			<td><?=$user['created_at']?></td>
-			<td class="btn btn-danger">
-				<a href="/dashboard/users/delete/<?=$user['entityID']?>?<?=\Simfa\Framework\Application::$APP->session->getToken()?>">
+			<td class="d-flex">
+				<a class="btn btn-danger" href="/dashboard/users/delete/<?=$user['entityID']?>?<?=\Simfa\Framework\Application::$APP->session->getToken()?>">
 					Delete
 				</a>
 			</td>

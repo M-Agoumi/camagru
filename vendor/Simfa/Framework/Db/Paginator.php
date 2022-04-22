@@ -19,7 +19,7 @@ abstract class Paginator
 	{
 		/** @var $articlesNum int elements by page */
 		$articlesNum = $config['articles'] ?? 10;
-		$order = strtoupper($config['order']) ?? 'ASC';
+		$order = strtoupper($config['order'] ?? 'ASC');
 		$this->totalRecords = $this->getCount();
 		$this->currentPage = isset($config['autoPage'])  && $config['autoPage']
 			? $this->getPage() : intval($_GET['page'] ?? $_POST['page'] ?? 1);
@@ -31,7 +31,9 @@ abstract class Paginator
 
 		$result = $this->processData($this->findAll($limit, $order), $protected);
 
+
 		if (empty($result) && $this->firstCall) {
+			$this->firstCall = false;
 			$this->getPage(true);
 			return $this->paginate($config, $protected);
 		}
@@ -43,7 +45,7 @@ abstract class Paginator
 	{
 		$protected = [...$protected, ...static::$protected];
 
-		if (!empty($protected)) {
+		if (!empty($protected) && !in_array('allow_all', $protected)) {
 			foreach ($protected as $key) {
 				for($i = 0; $i < count($data); $i++) {
 					unset($data[$i][$key]);
