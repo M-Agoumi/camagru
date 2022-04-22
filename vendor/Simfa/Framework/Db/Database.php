@@ -38,13 +38,7 @@ class Database
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch(PDOException $e){
 			APPLICATION::$APP->response->setStatusCode(500);
-			if (Application::$ENV['ENV'] == 'dev')
-				 die ($e->getMessage() . PHP_EOL); // todo handle this one nicely (add a backtrack)
-			else
-				echo APPLICATION::$APP->view->renderView('error/__500', [ // todo this is not working
-					"title" => "500 Internal Server Error",
-					"errorCode" => "00001c"
-				]);
+		    die(APPLICATION::$APP->catcher->catch($e));
 		}
 	}
 

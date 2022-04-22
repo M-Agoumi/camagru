@@ -16,7 +16,7 @@ use Simfa\Framework\CLI\Commands\Setup;
 class CLIApplication
 {
 	public static CLIApplication $CLI_APP;
-	public static Application $APP;
+	public static ?Application $APP = null;
 	public int $argc;
 	public array $argv;
 	public static string $ROOT_DIR;
@@ -31,7 +31,6 @@ class CLIApplication
 	public function __construct(string $root, int $argc, array $argv)
 	{
 		self::$CLI_APP = $this;
-		self::$APP = new Application($root, 'CLI');
 		array_shift($argv);
 		$this->argc = $argc - 1;
 		$this->argv = $argv;
@@ -40,6 +39,14 @@ class CLIApplication
 
 		if (PHP_SAPI !== 'cli')
 			die('bin/console must be run as a CLI application' . PHP_EOL);
+	}
+
+	public function getApp(): ?Application
+	{
+		if (!self::$APP)
+			self::$APP = new Application(self::$ROOT_DIR, 'CLI');
+
+		return self::$APP;
 	}
 
 	/** our App heart

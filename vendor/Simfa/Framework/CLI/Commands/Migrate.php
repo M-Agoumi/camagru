@@ -69,7 +69,7 @@ class Migrate extends BaseCommand
 	 */
 	public function migrate()
 	{
-		$app = CLIApplication::$APP;
+		$app = CLIApplication::$CLI_APP->getApp();
 		$app->db->applyMigrations();
 	}
 
@@ -78,7 +78,7 @@ class Migrate extends BaseCommand
 	 */
 	public function down()
 	{
-		$app = CLIApplication::$APP;
+		$app = CLIApplication::$CLI_APP->getApp();
 		$app->db->downMigrations(intval(CLIApplication::$CLI_APP->argv[1] ?? 0));
 	}
 
@@ -87,8 +87,8 @@ class Migrate extends BaseCommand
 	 * @return array|false|null
 	 */
 	private function getDatabaseConfig() {
-		return file_exists(CLIApplication::$app->root . "/../config/db.conf") ?
-			parse_ini_file(CLIApplication::$app->root . "/../config/db.conf") : NULL;
+		return file_exists(CLIApplication::$ROOT_DIR . "/config/db.conf") ?
+			parse_ini_file(CLIApplication::$ROOT_DIR . "/config/db.conf") : NULL;
 	}
 
 	/**

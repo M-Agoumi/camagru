@@ -21,6 +21,12 @@ class View
 	private ?bool $isCacheEnabled;
 
 	/**
+	 * to know if it's a normal view file or system view file
+	 * @var bool
+	 */
+	private bool $systemCall = false;
+
+	/**
 	 * init $isCacheEnabled from config/App.php
 	 */
 	public function __construct()
@@ -31,23 +37,45 @@ class View
 
 
 	/**
-	 * @throws Exception
+	 * @param string $view
+	 * @param array $params
+	 * @param bool $return
+	 * @return string|null
 	 */
-	public function renderView(string $view, $params = [], $return = 0): ?string
+	public function renderView(string $view, array $params = [], bool $return = false): ?string
 	{
-		$this->rootDir = Application::$ROOT_DIR . '/';
-		if (!$this->isCacheEnabled)
-			return $this->setCacheContent($view, $params, 1);
+		$content = '';
 		try {
-			$content = $this->getCacheContent($view, $params);
+			$this->rootDir = Application::$ROOT_DIR . '/';
+			if (!$this->isCacheEnabled)
+				return $this->setCacheContent($view, $params, true);
+			try {
+				$content = $this->getCacheContent($view, $params);
+			} catch (Exception $e) {
+				return $this->setCacheContent($view, $params, true);
+			}
+
+			if (!$content)
+				$content = $this->setCacheContent($view, $params, $return);
 		} catch (Exception $e) {
-			return $this->setCacheContent($view, $params, 1);
+			Application::$APP->catcher->catch($e);
 		}
 
-		if (!$content)
-			$content = $this->setCacheContent($view, $params, $return);
-
 		return $content;
+	}
+
+	/**
+	 * @param string $view
+	 * @param array $params
+	 * @param bool $return
+	 * @return string|null
+	 * @throws Exception
+	 */
+	public function renderViewSystem(string $view, array $params = [], bool $return = false): ?string
+	{
+		$this->systemCall = true;
+
+		return $this->renderView($view, $params, $return);
 	}
 
 	/**
@@ -56,7 +84,10 @@ class View
 	private function getCacheContent(string $view, $params): ?string
 	{
 		/** retrieve the original file */
-		$srcFile = $this->rootDir . 'views/templates/' . str_replace('.', '/', $view ) . '.gaster.php';
+		if ($this->systemCall)
+			$srcFile = $this->rootDir . 'views/' . str_replace('.', '/', $view ) . '.gaster.php';
+		else
+			$srcFile = $this->rootDir . 'views/templates/' . str_replace('.', '/', $view ) . '.gaster.php';
 		if (file_exists($srcFile))
 			$hash = md5_file($srcFile);
 		else
@@ -83,10 +114,13 @@ class View
 	/**
 	 * @throws Exception
 	 */
-	private function setCacheContent(string $view, $params, $return = 0): ?string
+	private function setCacheContent(string $view, array $params, bool $return = false): ?string
 	{
 		$view = str_replace('.', '/', $view);
-		$file = $this->rootDir . 'views/templates/' . $view . '.gaster.php';
+		if ($this->systemCall)
+			$file = $this->rootDir . 'views/' . $view . '.gaster.php';
+		else
+			$file = $this->rootDir . 'views/templates/' . $view . '.gaster.php';
 
 		/** load view from the file */
 		if (file_exists($file))
@@ -98,7 +132,7 @@ class View
 	/**
 	 * @throws Exception
 	 */
-	private function renderOnlyView($view, $params, $return): ?string
+	private function renderOnlyView($view, array $params, bool $return): ?string
 	{
 		$content = file_get_contents($view[0]);
 
@@ -254,7 +288,10 @@ class View
 
 	private function cacheContent($view, $content)
 	{
-		$originalFile = $this->rootDir . 'views/templates/' . $view[1] . '.gaster.php';
+		if ($this->systemCall)
+			$originalFile = $this->rootDir . 'views/' . $view[1] . '.gaster.php';
+		else
+			$originalFile = $this->rootDir . 'views/templates/' . $view[1] . '.gaster.php';
 		$view = str_replace('/', '.', $view[1]);
 		$originalHash = md5_file($originalFile);
 

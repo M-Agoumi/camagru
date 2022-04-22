@@ -17,11 +17,18 @@ namespace Command;
 use Model\Role;
 use Model\User;
 use Simfa\Framework\CLI\BaseCommand;
+use Simfa\Framework\CLI\CLIApplication;
+
 class Admin extends BaseCommand
 {
 	protected static string $command = 'admin';
 
-	public function admin($argv)
+	public function __construct()
+	{
+		CLIApplication::$CLI_APP->getApp();
+	}
+
+	public function admin($argv): string
 	{
 		if (isset($argv[1])) {
 			$user = New User();
