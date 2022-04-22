@@ -3,13 +3,13 @@
 namespace Controller;
 
 
-use http\Exception;
+use Helper\TimeHelper;
 use Middlewares\DevMiddleware;
-use Model\Client;
 use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
+use Simfa\Framework\Helper;
 use Simfa\Framework\Request;
 use FakeData\FakeDataFactory;
 
@@ -55,9 +55,11 @@ class TestController extends Controller
 	/** a security breach to update password to any account cause im done with resetting my password everyday :)
 	 * todo remove this method
 	 * @param Request $request
-	 * @return false|string|string[]
+	 * @param User $user
+	 * @return string
+	 * @throws \Exception
 	 */
-	public function password(Request $request, User $user)
+	public function password(Request $request, User $user): string
 	{
 		if ($request->isPost()) {
 			$user->loadData($request->getBody());
@@ -93,27 +95,17 @@ class TestController extends Controller
 		return '';
 	}
 
-	public function viewEngine()
+	/**
+	 * @return string|null
+	 */
+	public function viewEngine(): ?string
 	{
 		return render('dev/engine_test', ['test' => 3]);
 	}
 
-	public function emailView()
+	public function emailView(): ?string
 	{
-		return render('mails/restorePassword', ['port' => 8000, 'token' => 'test123123123123']);
-	}
-
-	public function dbTest()
-	{
-		$user = new Client();
-
-		$user->setUsername('test');
-		$user->getOneBy(1);
-
-		var_dump($user);
-		die($user->getUsername());
-
-		return $user;
+		return render('mails/restorePassword', ['port' => 80, 'token' => 'test123123123123']);
 	}
 
 	/**
@@ -210,20 +202,6 @@ class TestController extends Controller
 		return "done";
 	}
 
-	public function getAllPosts()
-	{
-		$post = New Post();
-
-		$posts = $post->findAll();
-
-		foreach ($posts as $post)
-		{
-			echo '[' . $post['id'] . ']<br>';
-		}
-
-		die();
-	}
-
 	public function imageProcessor()
 	{
 		// Load the stamp and the photo to apply the watermark to
@@ -242,5 +220,22 @@ class TestController extends Controller
 		header('Content-type: image/png');
 		imagepng($im);
 		imagedestroy($im);
+	}
+
+	public function testAutowired(Post $post, User $user): string
+	{
+		$output = '<pre>';
+		$output .= print_r($post, 1);
+		$output .= print_r($user, 1);
+
+		return $output . '</pre>';
+	}
+
+	public function injector(): string
+	{
+		echo '<pre>';
+		$helper = Helper::getHelper(TimeHelper::class);
+		var_dump($helper);
+		return '<br>done';
 	}
 }

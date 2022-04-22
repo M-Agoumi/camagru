@@ -84,6 +84,8 @@ Router::get('/dashboard/users', [DashboardController::class, 'users']);
 Router::magic('/dashboard/users/delete/{entityID}', [DashboardController::class, 'DeleteUser']);
 Router::get('/dashboard/posts', [DashboardController::class, 'posts']);
 Router::magic('/dashboard/posts/delete/{entityID}', [DashboardController::class, 'DeletePost']);
+Router::get('/dashboard/messages', [DashboardController::class, 'messages']);
+Router::magic('/dashboard/message/{ContactUs}', [DashboardController::class, 'showMessage']);
 
 /** debug routes */
 Router::get('/dev/code', function (){return $_SESSION['email_code'] ?? 'no code found';});
@@ -100,19 +102,10 @@ Router::magic('/abah/{id}', [TestController::class, 'autoFetch']);
 Router::get('/phpinfo', [TestController::class, 'phpinfo']);
 Router::get('/pagination', [TestController::class, 'pagination']);
 Router::get('/view', [TestController::class, 'viewEngine']);
-Router::get('/loginChecker', function (){
-	return Application::isGuest();
-});
 Router::get('/mailview', [TestController::class, 'emailView']);
-Router::get('/setcookie', function (){
-	return Application::$APP->cookie->set('test', '1', time() + (86400 * 30), "/");
-});
-Router::get('/testabc' ,[TestController::class, 'dbTest']);
 Router::get('/fakeUser', [TestController::class, 'fakeUser']);
 Router::get('/fakePost', [TestController::class, 'fakePost']);
 Router::redirect('/redirect', '/hello');
-Router::get('/hello', function (){
-	$_SESSION['user'] = 1;
-	return 'hello world';
-});
 Router::request('/image',[TestController::class, 'imageProcessor']);
+Router::magic('/aabbcc/{entityID}', [TestController::class, 'testAutowired']);
+Router::get('/injector', [TestController::class, 'injector']);
