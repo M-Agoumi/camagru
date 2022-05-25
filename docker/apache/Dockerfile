@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:20.04
 
 ## set our build arguments
 ARG SMTP
@@ -17,28 +17,29 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # ARG user=magoumi
 
 ## install required packages for our server
-RUN apt install &&  apt update && apt upgrade -y && apt install -y  git curl libpng-dev libonig-dev libxml2-dev  zip unzip jq wget
+RUN apt install &&  apt update && apt-get upgrade -y && apt-get install -y  git curl libpng-dev libonig-dev libxml2-dev  zip unzip jq wget software-properties-common
 
 ## install vim to help when debugging
 RUN apt install -y vim
 
 ## some clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 ## reupdate our repositories
 RUN apt update -y && apt upgrade -y
 
 ## install php
-RUN apt install -y php-common php-mysql php-cli php-gd
+RUN add-apt-repository ppa:ondrej/php -y && apt update
+RUN apt install -y php8.1 php8.1-common php8.1-fpm php8.1-mysql php8.1-gmp php8.1-xml php8.1-xmlrpc php8.1-curl php8.1-mbstring php8.1-gd php8.1-dev php8.1-imap php8.1-opcache php8.1-readline php8.1-soap php8.1-zip php8.1-intl php8.1-cli libapache2-mod-php8.1
 
 ## install apache
-RUN apt install -y apache2  libapache2-mod-php
+RUN apt-get install -y apache2  libapache2-mod-php
 
 ## install postfix and config it
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN debconf-set-selections <<< "postfix postfix/mailname string admin@camagru.io"
 RUN debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
-RUN apt install -y postfix mailutils
+RUN apt-get install -y postfix mailutils
 RUN echo "${SMTP} ${SMTP_USERNAME}:${SMTP_PASSWORD}" > /etc/postfix/sasl_passwd
 RUN chmod 600 /etc/postfix/sasl_passwd
 RUN postmap /etc/postfix/sasl_passwd
