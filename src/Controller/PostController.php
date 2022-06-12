@@ -9,6 +9,7 @@ use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
+use Simfa\Framework\Db\QueryBuilder;
 use Simfa\Framework\Exception\ExpiredException;
 use Simfa\Framework\Exception\ForbiddenException;
 use Simfa\Framework\Request;
@@ -42,6 +43,11 @@ class PostController extends Controller
 		return render('pages/posts/show', $data);
 	}
 
+	/**
+	 * @param Post $post
+	 * @param Request $request
+	 * @return string
+	 */
 	public function like(Post $post, Request $request): string
 	{
 		if (Application::isGuest() || !$request->isPost())
@@ -78,7 +84,13 @@ class PostController extends Controller
 		return "\n";
 	}
 
-	public function showLikes(string $id, Request $request)
+	/**
+	 * @param string $id
+	 * @param Request $request
+	 * @return false|string
+	 * @throws ExpiredException
+	 */
+	public function showLikes(string $id, Request $request): bool|string
 	{
 		if ($request->isPost()) {
 			/** check if the user is logged or not */
@@ -114,6 +126,11 @@ class PostController extends Controller
 		throw New ExpiredException();
 	}
 
+	/**
+	 * @param Post $post
+	 * @return string
+	 * @throws ForbiddenException
+	 */
 	public function delete(Post $post)
 	{
 		if (!isset($_GET[Application::$APP->session->getToken('post')]))
@@ -127,15 +144,27 @@ class PostController extends Controller
 		return "Deleted :)"; 
 	}
 
-	public function hashtag($hashtag)
+	/**
+	 * @param $hashtag
+	 * @return string
+	 */
+	public function hashtag($hashtag): string
+	{
+		return $this->render('pages.posts.hashtag',['title' => $hashtag. ' - Camagru', 'hashtag' => $hashtag]);
+	}
+
+	/**
+	 * @param $hashtag
+	 * @return bool|string
+	 */
+	public function hashtagPost($hashtag): bool|string
 	{
 		$post = new Post();
 
 		$query = $post->queryBuilder();
 		$posts = $query->select('*')->where('comment', 'like', '#' . $hashtag, '%')->
-			limit(10)->offset(intval($_GET['page'] ?? 0))->order('title')->get();
-		echo '<pre>';
-		print_r($posts);
-		return $hashtag;
+			limit(10)->offset(intval($_POST['page'] * 10 ?? 0))->desc()->get();
+
+		return $this->json($posts);
 	}
 }

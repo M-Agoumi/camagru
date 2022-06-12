@@ -56,7 +56,7 @@ class DefaultController extends Controller
 			$contact->loadData($request->getBody());
 
 			$contact->setLogged(!Application::isGuest());
-			$contact->setUser($contact->getLogged() ? Application::$APP->user->getId() : NULL);
+			$contact->setUser($contact->getLogged() ? Application::$APP->user : NULL);
 
 			if ($contact->getLogged())
 				$contact->setEmail(Application::$APP->user->getEmail());

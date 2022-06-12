@@ -62,17 +62,20 @@ class Router
 	 * @param $path
 	 * @param $callback
 	 * @return Router|null
-	 * @throws Exception
 	 */
 	private static function registerRoute(string $method, $path, $callback): ?Router
 	{
-		$router = Application::$APP->router;
+		try {
+			$router = Application::$APP->router;
 
-		if (!isset($router->routes[$method][$path]))
-			$router->routes[$method][$path] = $callback;
-		else
-			throw new Exception("route $path is already used please update it");
-		$router->tmp = $path;
+			if (!isset($router->routes[$method][$path]))
+				$router->routes[$method][$path] = $callback;
+			else
+				throw new Exception("route $path is already used please update it");
+			$router->tmp = $path;
+		} catch (Exception $e) {
+			Application::$APP->catcher->catch($e);
+		}
 
 		return $router;
 	}
@@ -86,7 +89,6 @@ class Router
 	 *
 	 * does not return anything
 	 * @return Router
-	 * @throws Exception
 	 */
 	public static function post($path, $callback): Router
 	{
@@ -97,7 +99,6 @@ class Router
 	 * @param $path
 	 * @param $callback
 	 * @return Router
-	 * @throws Exception
 	 */
 
 	public static function magic($path, $callback): Router
@@ -136,34 +137,40 @@ class Router
 	/**
 	 * register a name for the current path
 	 * @param string $name
-	 * @throws Exception
 	 */
 	public function name(string $name)
 	{
-		if (!isset($this->paths[$name]))
-			$this->paths[$name] = $this->tmp;
-		else
-			throw new Exception("the path name [$name] is already used");
+		try {
+			if (!isset($this->paths[$name]))
+				$this->paths[$name] = $this->tmp;
+			else
+				throw new Exception("the path name [$name] is already used");
+		}catch (Exception $e) {
+			Application::$APP->catcher->catch($e);
+		}
 	}
 
 	/**
 	 * @param string $name
 	 * @param $var
 	 * @return string
-	 * @throws Exception
 	 */
 	public function path(string $name, $var = null): string
 	{
-		/** check if it's a magic link */
-		if (isset($this->paths[$name])) {
-			if ($var) {
-				$path = $this->paths[$name];
-				return preg_replace('~{.*}~', $var, $path);
-			} else
-				return $this->paths[$name];
-		}
+		try {
+			/** check if it's a magic link */
+			if (isset($this->paths[$name])) {
+				if ($var) {
+					$path = $this->paths[$name];
+					return preg_replace('~{.*}~', $var, $path);
+				} else
+					return $this->paths[$name];
+			}
 
-		throw new Exception("there is no path with the name $name", '0');
+			throw new Exception("there is no path with the name $name", '0');
+		}catch (Exception $e){
+			Application::$APP->catcher->catch($e);
+		}
 	}
 
 	/**

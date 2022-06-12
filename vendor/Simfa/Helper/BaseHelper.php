@@ -31,7 +31,6 @@ if (! function_exists('route')) {
 	 * @param $path
 	 * @param $var
 	 * @return string
-	 * @throws Exception
 	 */
 	function route($path, $var = null): string
 	{

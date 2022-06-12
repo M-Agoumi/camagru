@@ -24,6 +24,7 @@ Router::get('/javascript-disabled', 'error.__noJavascript');
 
 /** default Controller routes */
 Router::get('/', [DefaultController::class, 'index'])->name('home.index');
+Router::get('/home', [DefaultController::class, 'index']);
 Router::get('/contactus', [DefaultController::class, 'contactUs'])->name('contact.us');
 Router::post('/contactus', [DefaultController::class, 'contactUs']);
 
@@ -68,6 +69,7 @@ Router::magic('/post/{slug}', [PostController::class, 'show']);
 Router::magic('/post/delete/{slug}', [PostController::class, 'delete']);
 Router::magic('/post/like/{entityID}', [PostController::class, 'like'])->name('post.like');
 Router::magic('/hashtag/{hashtag}', [PostController::class, 'hashtag'])->name('hashtag');
+Router::magic('/posts/hashtag/{hashtag}', [PostController::class, 'hashtagPost']);
 
 /** API routes */
 Router::post('/posts', [ApiController::class, 'posts']);
@@ -110,4 +112,3 @@ Router::redirect('/redirect', '/hello');
 Router::request('/image',[TestController::class, 'imageProcessor']);
 Router::magic('/aabbcc/{entityID}', [TestController::class, 'testAutowired']);
 Router::get('/injector', [TestController::class, 'injector']);
-Router::get('/home', [TestController::class, 'home']);

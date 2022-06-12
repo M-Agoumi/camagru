@@ -11,6 +11,7 @@
 		<th scope="col">Email</th>
 		<th scope="col">Created</th>
 		<th scope="col">Action</th>
+		<th scope="col">admin</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -28,9 +29,16 @@
 					Delete
 				</a>
 			</td>
+			<td><?=$user['admin'] ? 'yes' : 'no'?></td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
 </table>
-<a href="/dashboard/emotes/new" class="btn btn-info">New Emote</a>
+<?php foreach ($usr->pages() as $key => $page): ?>
+	<?php if (is_array($page)):?>
+		<a href="#" class="btn btn-danger"><?= $page['active']; ?></a>
+	<?php else: ?>
+		<a href="?page={{ page }}" class="btn btn-info"><?= $page; ?></a>
+	<?php endif;?>
+<?php endforeach;?>
 @endsection

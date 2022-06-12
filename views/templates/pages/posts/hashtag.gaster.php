@@ -9,6 +9,10 @@
 <div class="container" id="gallery">
 	<?php /** @var array{title: string, picture: string, slug: string} $posts */?>
 </div>
+<div id="message"></div>
 <div onclick="scrollToTop()" class="scrollTop">Top</div>
-<script src="<?= asset("assets/js/gallery.js") ?>"></script>
+<script>
+	var url = '/posts/hashtag/{{ hashtag }}';
+</script>
+<script src="<?= asset("assets/js/hashtag.js") ?>"></script>
 @endsection

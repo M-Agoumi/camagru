@@ -18,7 +18,7 @@ class UserController extends Controller
 
 	public function __construct()
 	{
-		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'getName', 'preferences']));
+		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'preferences']));
 	}
 
 	public function index(User $user)
@@ -156,6 +156,9 @@ class UserController extends Controller
 
 	public function getName()
 	{
-		return Application::$APP->user->name;
+		if (Application::$APP->user)
+			return Application::$APP->user->name;
+
+		return 'guest';
 	}
 }

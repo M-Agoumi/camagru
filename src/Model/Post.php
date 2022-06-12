@@ -73,7 +73,7 @@ class Post extends DbModel
 	{
 		/** we do it the old fashion way, C way */
 		$i = 0; /** our increment  */
-		$newComment = $comment; /** where we save our changes */
+		$newComment = htmlspecialchars($comment, ENT_QUOTES, false); /** where we save our changes */
 		$commentLen = strlen($comment);
 
 		while ($i < $commentLen) {
@@ -81,12 +81,27 @@ class Post extends DbModel
 				$hashtagLen = $this->getHashtag($comment, $i + 1) - $i - 1;
 				$hashtag    = substr($comment, $i+1, $hashtagLen);
 				$link       = ' <a href="' . route('hashtag', $hashtag) . '">&#35;' . $hashtag . '</a>';
-				$newComment = str_replace(' #' . $hashtag, $link, $newComment);
+				$newComment = $this->str_replace_first('#' . $hashtag, $link, $newComment);
 			}
 			$i++;
 		}
 
 		return $newComment;
+	}
+
+	/**
+	 * @param $search
+	 * @param $replace
+	 * @param $subject
+	 * @return array|string
+	 */
+	private function str_replace_first($search, $replace, $subject): array|string
+	{
+		$pos = strpos($subject, $search);
+		if ($pos !== false) {
+			return substr_replace($subject, $replace, $pos, strlen($search));
+		}
+		return $subject;
 	}
 
 	/**

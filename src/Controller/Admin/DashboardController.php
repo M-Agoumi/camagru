@@ -7,6 +7,7 @@ namespace Controller\Admin;
 use Model\ContactUs;
 use Model\Emote;
 use Model\Post;
+use Model\Role;
 use Model\User;
 use Simfa\Framework\Application;
 use Simfa\Framework\Exception\ForbiddenException;
@@ -14,6 +15,12 @@ use Simfa\Framework\Request;
 
 class DashboardController extends BaseController
 {
+
+	/**
+	 * @param User $user
+	 * @param Post $post
+	 * @return string
+	 */
 	public function index(User $user, Post $post):string
 	{
 		$totalUsers = $user->getCount();
@@ -34,11 +41,20 @@ class DashboardController extends BaseController
 		]);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function emotes():string
 	{
 		return render('admin/emotes/emotes', ['emotes' => (new Emote())->findAll()]);
 	}
 
+	/**
+	 * @param Emote $emote
+	 * @param Request $request
+	 * @return string|null
+	 * @throws \Exception
+	 */
 	public function addEmote(Emote $emote, Request $request)
 	{
 		$errors= array();
@@ -83,6 +99,10 @@ class DashboardController extends BaseController
 		return render('admin/emotes/add', ['errors' => $errors, 'success' => $success]);
 	}
 
+	/**
+	 * @param Emote $emote
+	 * @return string|null
+	 */
 	public function deleteEmote(Emote $emote)
 	{
 		if ($emote->delete(1))
@@ -90,13 +110,32 @@ class DashboardController extends BaseController
 		return 'Something went wrong';
 	}
 
+	/**
+	 * @param User $user
+	 * @return string|null
+	 */
 	public function users(User $user)
 	{
-		$users = $user->findAll();
+		$users = $user->paginate(['articles' => 20, 'order' => 'desc'],['allow_all']);
 
-		return render('admin/users', ['users' => $users]);
+		foreach ($users as &$usr) {
+			$role = new Role();
+			$role->getOneBy('user', $usr['entityID']);
+			if ($role->getId())
+				$usr['admin'] = true;
+			else
+				$usr['admin'] = false;
+			unset($role);
+		}
+
+		return render('admin/users', ['users' => $users, 'usr' => $user]);
 	}
 
+	/**
+	 * @param User $user
+	 * @return string|null
+	 * @throws ForbiddenException
+	 */
 	public function deleteUser(User $user)
 	{
 		if (!isset($_GET[Application::$APP->session->getToken()]))
@@ -106,6 +145,10 @@ class DashboardController extends BaseController
 		return 'Something went wrong';
 	}
 
+	/**
+	 * @param Post $post
+	 * @return string|null
+	 */
 	public function posts(Post $post)
 	{
 		$posts = $post->paginate(['articles' => 20, 'order' => 'desc'],['allow_all']);
@@ -113,6 +156,11 @@ class DashboardController extends BaseController
 		return render('admin/posts', ['posts' => $posts, 'pst' => $post]);
 	}
 
+	/**
+	 * @param Post $post
+	 * @return string|null
+	 * @throws ForbiddenException
+	 */
 	public function deletePost(Post $post)
 	{
 		if (!isset($_GET[Application::$APP->session->getToken()]))
@@ -122,6 +170,10 @@ class DashboardController extends BaseController
 		return 'Something went wrong';
 	}
 
+	/**
+	 * @param ContactUs $contact
+	 * @return string|null
+	 */
 	public function messages(ContactUs $contact)
 	{
 		$contacts = $contact->paginate(['articles' => 10, 'order' => 'desc'],['allow_all']);
@@ -129,6 +181,11 @@ class DashboardController extends BaseController
 		return render('admin.messages', ['messages' => $contacts, 'msg' => $contact]);
 	}
 
+	/**
+	 * @param ContactUs $contactUs
+	 * @return string
+	 * @throws ForbiddenException
+	 */
 	public function showMessage(ContactUs $contactUs)
 	{
 		if (!isset($_GET[Application::$APP->session->getToken()]))

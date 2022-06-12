@@ -2303,7 +2303,7 @@ input[type=submit]:hover {
 
 .scrollTop {
 	position: fixed;
-	bottom: 30px;
+	bottom: 60px;
 	right: 30px;
 	padding: 10px 15px;
 	background-color: #000;
