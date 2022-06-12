@@ -67,6 +67,7 @@ Router::post('/camera/share', [CameraController::class, 'share'])->name('camera.
 Router::magic('/post/{slug}', [PostController::class, 'show']);
 Router::magic('/post/delete/{slug}', [PostController::class, 'delete']);
 Router::magic('/post/like/{entityID}', [PostController::class, 'like'])->name('post.like');
+Router::magic('/hashtag/{hashtag}', [PostController::class, 'hashtag'])->name('hashtag');
 
 /** API routes */
 Router::post('/posts', [ApiController::class, 'posts']);
@@ -109,3 +110,4 @@ Router::redirect('/redirect', '/hello');
 Router::request('/image',[TestController::class, 'imageProcessor']);
 Router::magic('/aabbcc/{entityID}', [TestController::class, 'testAutowired']);
 Router::get('/injector', [TestController::class, 'injector']);
+Router::get('/home', [TestController::class, 'home']);

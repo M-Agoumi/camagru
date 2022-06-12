@@ -21,8 +21,11 @@ abstract class Paginator
 		$articlesNum = $config['articles'] ?? 10;
 		$order = strtoupper($config['order'] ?? 'ASC');
 		$this->totalRecords = $this->getCount();
-		$this->currentPage = isset($config['autoPage'])  && $config['autoPage']
-			? $this->getPage() : intval($_GET['page'] ?? $_POST['page'] ?? 1);
+		if (isset($config['autoPage'])  && $config['autoPage'])
+			$this->currentPage = $this->getPage();
+		else
+			$this->currentPage = $config['page'] ?? intval($_GET['page'] ?? $_POST['page'] ?? 1);
+
 		$limit = ($this->currentPage - 1) * $articlesNum;
 		$limit = $limit < 0 ? 0 : $limit;
 		$limit = "$limit, " . ($articlesNum);

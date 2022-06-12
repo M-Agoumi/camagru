@@ -119,12 +119,23 @@ class PostController extends Controller
 		if (!isset($_GET[Application::$APP->session->getToken('post')]))
 			throw new ForbiddenException();
 
-		// if ($post->delete(1)) {
-		Application::$APP->session->setFlash('success', 'Post Deleted Successfully');
-		Application::$APP->response->redirect('/');
-		
-		// }
+		 if ($post->delete(1)) {
+			Application::$APP->session->setFlash('success', 'Post Deleted Successfully');
+			Application::$APP->response->redirect('/');
+		 }
 
 		return "Deleted :)"; 
+	}
+
+	public function hashtag($hashtag)
+	{
+		$post = new Post();
+
+		$query = $post->queryBuilder();
+		$posts = $query->select('*')->where('comment', 'like', '#' . $hashtag, '%')->
+			limit(10)->offset(intval($_GET['page'] ?? 0))->order('title')->get();
+		echo '<pre>';
+		print_r($posts);
+		return $hashtag;
 	}
 }

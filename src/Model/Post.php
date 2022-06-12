@@ -64,28 +64,28 @@ class Post extends DbModel
 		return rtrim($hashtags, ',');
 	}
 
+
 	/**
 	 * @param string $comment
-	 * @return array|mixed|string|string[]
+	 * @return array|string
 	 */
-	public function highlightHashtag(string $comment){
+	public function highlightHashtag(string $comment): array|string
+	{
 		/** we do it the old fashion way, C way */
 		$i = 0; /** our increment  */
 		$newComment = $comment; /** where we save our changes */
+		$commentLen = strlen($comment);
 
-
-		while ($i < strlen($comment)) {
-			if ($comment[$i] === '#') {
-				$tmp = $i + 1;
-				$len = $this->getHashtag($comment, $tmp + 1);
-				$hash = $this->printRange($comment, $tmp, $len);
-				$hashLink = "<a href='/hashtag/" . strtolower($hash) . "'>#" . $hash . "</a>";
-				$newComment = str_replace("#" . $hash, $hashLink, $comment);
-				$comment = $newComment;
-				$i += strlen($hashLink);
+		while ($i < $commentLen) {
+			if ($comment[$i] == '#') {
+				$hashtagLen = $this->getHashtag($comment, $i + 1) - $i - 1;
+				$hashtag    = substr($comment, $i+1, $hashtagLen);
+				$link       = ' <a href="' . route('hashtag', $hashtag) . '">&#35;' . $hashtag . '</a>';
+				$newComment = str_replace(' #' . $hashtag, $link, $newComment);
 			}
 			$i++;
 		}
+
 		return $newComment;
 	}
 
@@ -110,19 +110,4 @@ class Post extends DbModel
 		return $i;
 	}
 
-	/**
-	 * @param string $comment
-	 * @param int $from
-	 * @param int $to
-	 * @return string
-	 */
-	private function printRange(string $comment, int $from, int $to): string
-	{
-		$hashtag = '';
-		while ($from < $to) {
-			$hashtag .= $comment[$from++];
-		}
-
-		return $hashtag;
-	}
 }

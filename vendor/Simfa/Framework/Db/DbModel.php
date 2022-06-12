@@ -42,7 +42,7 @@ abstract class DbModel extends Model
 	/**
 	 * framework properties that aren't database table attributes
 	 */
-	private static array $privateProperties = ['primaryKey', 'tableName', 'nonAttributes', 'protected' , 'errors'];
+	private static array $privateProperties = ['primaryKey', 'tableName', 'nonAttributes', 'protected' , 'errors', 'queryBuilder'];
 
 	/**
 	 * child properties that aren't database table attributes
@@ -53,6 +53,10 @@ abstract class DbModel extends Model
 	 * @var array $protected properties from public shows like api
 	 */
 	protected static array $protected = [];
+	/**
+	 * @var QueryBuilder
+	 */
+	private QueryBuilder $queryBuilder;
 
 	public function getId(): ?int
 	{
@@ -411,5 +415,15 @@ abstract class DbModel extends Model
 		}
 
 		throw new \BadMethodCallException('method ' . $name . ' does not exist in class ' . get_class($this));
+	}
+
+	public function queryBuilder()
+	{
+		if (property_exists($this, 'queryBuilder'))
+			return $this->queryBuilder;
+
+		$this->queryBuilder = new QueryBuilder(static::tableName(), static::primaryKey());
+
+		return $this->queryBuilder();
 	}
 }
