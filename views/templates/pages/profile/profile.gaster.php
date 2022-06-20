@@ -19,14 +19,15 @@
 		<div class="profile-logo"></div>
 
 		<div class="profile-page">
-			<div class="profile-header">
+			<div class="profile-header" style="background-image: url('/uploads/cover/{{ cover }}')">
 				<div class="profile-header-logo">
 					<img src="/uploads/dps/<?=$user->getPicture()??'default.jpg'?>" alt="Logo">
 				</div>
 				<div class="profile-header-cover">
-					<i class="fa fa-camera"></i> 
-					<label for="files">Update cover picture</label>
-					<input type="file" name="file" id="files">
+<!--					<i class="fa fa-camera"></i> -->
+<!--					<label for="files">Update cover picture</label>-->
+<!--					<input type="file" name="file" id="files">-->
+<!--					<img src="/uploads/cover/{{ cover }}" alt="profile cover image" />-->
 				</div>
 			</div>
 			<div class="profile-body">
@@ -59,7 +60,7 @@
 							</div>
 							<div class="profile-post-image">
 								<a href="/post/{{ post['slug'] }}">
-									<img src="/uploads/{{ post['picture'] }}" alt="Picture">
+									<img src="/uploads/post/{{ post['picture'] }}" alt="Picture">
 								</a>
 							</div>
 						</div>

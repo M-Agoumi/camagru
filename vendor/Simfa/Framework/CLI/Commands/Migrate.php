@@ -142,8 +142,8 @@ class Migrate extends BaseCommand
 		$helperMessage    .= "database if it doesn't not exist --database fetched from config file" . PHP_EOL;
 		$helperMessage    .= self::printCommand("migrate") . "to apply migration from the migrations folder" . PHP_EOL;
 		$helperMessage    .= self::printCommand("down") . "revert all migrations" . PHP_EOL;
-		$helperMessage    .= self::printCommand("purge") . "purge all the tables" . PHP_EOL;
-		$helperMessage    .= CYAN . "       n" . RESET . "\t\t\tAccepts number of migrations to revert (migrate:down N)[migrate:down 1]";
+		$helperMessage    .= CYAN . "        n" . RESET . "\t\t\tAccepts number of migrations to revert (migrate:down N)[migrate:down 1]" . PHP_EOL;
+		$helperMessage    .= self::printCommand("purge") . "purge all the tables";
 
 
 		return $helperMessage;

@@ -14,11 +14,18 @@
 namespace Controller;
 
 
+use Middlewares\AuthMiddleware;
+use Model\Cover;
 use Model\Post;
 use Simfa\Action\Controller;
 
 class ApiController extends Controller
 {
+
+	public function __construct()
+	{
+		$this->registerMiddleware(new AuthMiddleware(['covers']));
+	}
 
 	/**
 	 * @param Post $post
@@ -36,7 +43,18 @@ class ApiController extends Controller
    }
 
 	/**
-	 * @todo implement hashtags
+	 * @param Cover $cover
+	 * @return bool|string
+	 */
+   public function covers(Cover $cover): bool|string
+   {
+	   $query = $cover->queryBuilder();
+	   $collection = $query->select('name, image')->get();
+
+		return $this->json($collection);
+   }
+
+	/**
 	 * @param array|null $posts
 	 * @param Post $post
 	 * @return array|null

@@ -1,5 +1,5 @@
 @layout('gallery')
-@section('title')testing gallery@endsection
+@section('title')Home@endsection
 @section('content')
 <style>
 

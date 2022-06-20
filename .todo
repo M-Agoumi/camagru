@@ -1,2 +1,11 @@
-+ implement caching for a faster reloading time and optimise performance
-+ a nice 500 internal server error page in case of anything wrong
+- work on profile cover
+	+ update cover
+		+ predefined image
+		+ custom image
+	+ see cover
+	+ delete cover
+- work on profile picture
++ cache application config for less load on db
++ add upload an image as post not just camera
++ close camera when not using
+

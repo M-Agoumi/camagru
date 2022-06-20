@@ -76,7 +76,11 @@ Router::post('/posts', [ApiController::class, 'posts']);
 Router::magic('/api/post/likes/{entityID}', [PostController::class, 'showLikes']); /** post fetch like */
 Router::magic('/api/post/comment/{slug}', [PostCommentController::class, 'add']); /** post add comments */
 Router::post('/api/user/name', [UserController::class, 'getName']); /** get logged user name */
-Router::get('/api/maincolor', function() {return '#FFF';});
+Router::post('/api/user/background', [UserController::class, 'updateBackground'])->name('cover-update');
+Router::post('/api/user/remove/background', [UserController::class, 'DeleteCover'])->name('cover-remove');
+Router::post('/api/user/dp', [UserController::class, 'updateProfilePicture'])->name('dp-update');
+Router::post('/api/user/remove/dp', [UserController::class, 'deleteDp'])->name('dp-remove');
+Router::post('/api/cover/collection', [ApiController::class, 'covers'])->name('cover-get');
 
 /** Admin dashboard routes */
 Router::get('/dashboard', [DashboardController::class, 'index']);
@@ -112,3 +116,4 @@ Router::redirect('/redirect', '/hello');
 Router::request('/image',[TestController::class, 'imageProcessor']);
 Router::magic('/aabbcc/{entityID}', [TestController::class, 'testAutowired']);
 Router::get('/injector', [TestController::class, 'injector']);
+Router::get('/cover', [TestController::class, 'cover']);

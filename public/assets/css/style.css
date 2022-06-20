@@ -8,6 +8,10 @@
 
 	--subColor: #565656;
 
+	--addColor: #00DDB3;
+
+	--thirdColor: #F9F871;
+
 }
 
 
@@ -562,6 +566,7 @@ nav .active {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	border-radius: 5px;
 }
 
 .profile-page .profile-header .profile-header-logo {
@@ -572,10 +577,15 @@ nav .active {
 
 .profile-page .profile-header .profile-header-logo > img {
 	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	object-position: 50% 50%;
 	position: absolute;
 	top: 50%;
 	left: 10%;
 	transform: translateY(-50%);
+	border-radius: 50%;
+	border: 2px solid var(--mainColor);
 }
 
 .profile-page .profile-header .profile-header-cover {
@@ -584,6 +594,8 @@ nav .active {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	overflow: hidden;
+	position: relative;
 }
 
 .profile-page .profile-header .profile-header-cover input {
@@ -592,10 +604,30 @@ nav .active {
 	visibility:hidden;
 }
 
+.profile-page .profile-header .profile-header-cover span{
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	padding: 5px 3px 3px;
+	background-color: #F6F6F6;
+	border: 1px solid #CCC;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
 .profile-page .profile-header .profile-header-cover i {
 	font-size: 1.5rem;
-	color: #5E5E5E;
-	margin-right: .5rem;
+	color: var(--mainColor);
+}
+.profile-page .profile-header .form {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: var(--subColor);
+	border: 1px solid var(--mainColor);
+	padding: 15px;
+	z-index: 5;
 }
 
 .profile-page .profile-header .profile-header-cover label {
@@ -652,6 +684,38 @@ nav .active {
 	border-radius: 8px;
 }
 
+.images-container .images-collection{
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+.custom_images {
+	display: none;
+}
+
+.profile_images {
+	display: none;
+}
+
+.images-container .images-collection .image-collection-child {
+	padding: 3px;
+	background-color: #F6F6F6;
+	border: 2px solid #CCC;
+	text-align: center;
+	float: left;
+	height: 280px;
+}
+
+.btn-danger {
+	background: #c82333 !important;
+}
+
+.images-container .images-collection .selected-image{
+	border: 2px solid var(--mainColor);
+}
+
 .profile-page .profile-body-info .profile-body-info-buttons a:first-of-type {
 	color: #FFF;
 	background-color: var(--mainColor);
@@ -701,6 +765,8 @@ nav .active {
 .profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header .profile-post-info-logo img {
 	width: 60px;
 	margin-right: .5rem;
+	border: 2px solid var(--mainColor);
+	border-radius: 5px;
 }
 
 .profile-page .profile-body-posts .profile-posts .profile-post .profile-post-info .profile-post-info-header .profile-post-info-logo .pf-info h5 {

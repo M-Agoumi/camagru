@@ -59,3 +59,15 @@ if (! function_exists('lang')) {
 		return Application::$APP->lang($string);
 	}
 }
+
+if (! function_exists('path')) {
+	/**
+	 * @param string $path
+	 * @param null $var
+	 * @return string
+	 */
+	function path(string $path, $var = null): string
+	{
+		return Application::$APP->path($path, $var);
+	}
+}

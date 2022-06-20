@@ -1,5 +1,105 @@
 @layout('main')
 @section('title'){{ title }} @endsection
+@section('head')
+<style>
+	.multiChoiceSelectButton {
+		all: unset;
+		background: var(--mainColor);
+		border: 1px solid darkblue;
+		color: #FFF;
+		padding: 10px;
+		font-size: 1.2em;
+		font-weight: bold;
+		border-radius: 5px;
+		cursor: pointer;
+		margin-top: 10px;
+	}
+
+	.profile-form {
+		display: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: #fcf8e3;
+		width: 80%;
+		height: 60%;
+		border: 2px solid #000000;
+		border-radius: 5px;
+		padding: 10px;
+		z-index: 2;
+	}
+
+	.profile-form .action {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.profile-form .container-relative {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: transparent;
+		height: 100%;
+		width: 100%;
+		overflow: auto;
+		display: none;
+		padding-top: 100px;
+	}
+
+	.profile-form .container-relative::-webkit-scrollbar {
+		display: none;
+	}
+	.profile-form .images-container {
+		position: relative;
+		padding: 10px;
+		text-align: center;
+	}
+
+	.profile-form .custom_images {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.profile-form .profile_images {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.profile-form #message {
+		font-size: 1.2em;
+		font-weight: bold;
+		text-align: center;
+		margin-top: 25px;
+		z-index: 5;
+	}
+	
+	.profile-form .images-collection {
+		position: static;
+		width: 100%;
+		height: 100%;
+		padding: 10px;
+	}
+
+	.black-screen {
+		background: rgba(0,0,0,0.6);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		display: none;
+	}
+</style>
+@endsection
 @section('content')
 <?php
 /**
@@ -18,14 +118,14 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 		<div class="profile-logo"></div>
 
 		<div class="profile-page">
-			<div class="profile-header">
+			<div class="profile-header" style="background-image: url('/uploads/cover/{{cover}}'); background-repeat: no-repeat; background-attachment: fixed;background-position: center;">
 				<div class="profile-header-logo">
-					<img src="/uploads/dps/<?=$user->getPicture()??'default.jpg'?>" alt="Logo">
+					<img src="/uploads/dps/<?=$user->getPicture() ?? 'default.jpg'?>" alt="Logo">
 				</div>
-				<div class="profile-header-cover">
-					<i class="fa fa-camera"></i> 
-					<label for="files">Update cover picture</label>
-					<input type="file" name="file" id="files">
+				<div class="profile-header-cover"">
+					<span onclick="showControl()">
+						<i class="fas fa-ellipsis-v"></i>
+					</span>
 				</div>
 			</div>
 			<div class="profile-body">
@@ -69,7 +169,7 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 							</div>
 							<div class="profile-post-image">
 								<a href="/post/{{ post['slug'] }}">
-									<img src="/uploads/{{ post['picture'] }}" alt="Picture">
+									<img src="/uploads/post/{{ post['picture'] }}" alt="Picture">
 								</a>
 							</div>
 						</div>
@@ -77,12 +177,55 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 					<?php endforeach; ?>
 				</div>
 			</div>
-				
-				
 		</div>
-		
 	</div>
 
+	<div class="black-screen" onclick="hideControl()"></div>
+	<div class="profile-form">
+		<div class="action">
+			<div id="first-action">
+				<button class="multiChoiceSelectButton" onclick="selectDp()">update profile picture</button>
+				<button class="multiChoiceSelectButton" onclick="selectCover()">update cover picture</button>
+			</div>
+			<div id="second-action" style="display: none">
+				<button class="multiChoiceSelectButton" onclick="selectDefinedImages()">From images</button>
+				<button class="multiChoiceSelectButton" onclick="selectCustomImage()">Custom image</button>
+				<button class="multiChoiceSelectButton btn-danger" onclick="deleteCover()">Delete cover</button>
+				<button class="multiChoiceSelectButton" onclick="backHome()">back</button>
+			</div>
+		</div>
+		<div class="container-relative">
+			<div class="images-container">
+				<button class="multiChoiceSelectButton" onclick="submitCover()">validate</button>
+				<button class="multiChoiceSelectButton" onclick="backToSecondAction()">back</button>
+				<div class="images-collection"></div>
+				<div style="clear: left"></div>
+			</div>
+		</div>
+		<div class="custom_images">
+			<label for="files">Update cover picture</label>
+			<input type="file" class="multiChoiceSelectButton" name="file" id="file">
+			<input type="button" id="btn_uploadfile"
+			       value="Upload"
+			       class="multiChoiceSelectButton"
+			       onclick="uploadFile();" >
+			<button class="multiChoiceSelectButton" onclick="backToSecondAction()">back</button>
+		</div>
+		<div class="profile_images">
+			<label for="files">Update profile picture</label>
+			<input type="file" class="multiChoiceSelectButton" name="file" id="dp-file">
+			<input type="button" id="btn_uploadfile"
+			       value="Upload"
+			       class="multiChoiceSelectButton"
+			       onclick="uploadProfilePic();" >
+			<button class="multiChoiceSelectButton btn-danger" onclick="deleteDp()">delete profile picture</button>
+			<button class="multiChoiceSelectButton" onclick="backHome()">back</button>
+		</div>
+		<div id="message">
+
+		</div>
+	</div>
+	<script src="<?= asset("assets/js/profile.js") ?>"
 @endsection
 
 

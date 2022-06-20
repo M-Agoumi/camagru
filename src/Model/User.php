@@ -21,6 +21,7 @@ use Simfa\Framework\Db\DbModel;
 /**
  * @method getPicture()
  * @method getUsername()
+ * @method setPicture(mixed $filename)
  */
 class User extends DbModel
 {

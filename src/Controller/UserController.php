@@ -5,6 +5,9 @@ namespace Controller;
 
 use Exception;
 use Middlewares\AuthMiddleware;
+use Model\Background;
+use Model\Config;
+use Model\Cover;
 use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
@@ -23,16 +26,44 @@ class UserController extends Controller
 
 	public function index(User $user)
 	{
+		/** get user cover image */
+		$bg = new Background();
+		$bg->getOneBy('user', $user->getId());
+		if (!$bg->getId()) {
+			$config = new Config();
+			$config->getOneBy('name', 'user/profile/cover');
+			$image = $config->getValue();
+		} else {
+			if (!$bg->getType())
+				$image = $bg->getImage();
+			else {
+				$cover = new Cover();
+				$cover->getOneBy($bg->getImage());
+				$image = $cover->getImage();
+			}
+		}
+
 		/** get all posts of the user */
 		$posts = NEW Post();
 		$posts = $posts->findAllBy(['author' => $user->getId()]);
 		if (!Application::isGuest())
-			if ($user->username === Application::$APP->user->username)
-				return $this->render('pages/profile/myProfile', ['user' => $user,
-					'title' => Application::$APP->user->name . " - Profile", 'posts' => $posts]);
+			if ($user->username === Application::$APP->user->getUsername())
+				return $this->render('pages/profile/myProfile',
+					[
+						'user' => $user,
+						'title' => Application::$APP->user->getName() . " Profile",
+						'posts' => $posts,
+						'cover' => $image,
+						'bg' => $bg,
+						'covers' => new Cover()
+					]);
 
-
-		return render('pages/profile/profile', ['user' => $user, 'title' => $user->name . " - Profile", 'posts' => $posts]);
+		return render('pages/profile/profile', [
+			'user' => $user,
+			'title' => $user->name . " Profile",
+			'posts' => $posts,
+			'cover' => $image
+		]);
 	}
 
 	/**
@@ -154,7 +185,142 @@ class UserController extends Controller
 		return render('pages/profile/preferences', ['pref' => $pref, 'title' => 'Preferences'] );
 	}
 
-	public function getName()
+	/**
+	 * @param Request $request
+	 * @return string
+	 */
+	public function updateBackground(Request $request): string
+	{
+		$status = false;
+		$data = $request->getBody();
+		$message = 'your preferences has been updated successfully';
+
+		if ($data['type'] == 1) {
+			$cover = new Cover();
+			$cover->getOneBy('image', $data['image']);
+			if ($cover->getId()) {
+				$bg = new Background();
+				$bg->setUser(Application::$APP->user);
+				$bg->setType(1);
+				$bg->setImage($cover->getId());
+				if ($bg->save())
+					$status = true;
+			} else {
+				$message = 'something went wrong, please try again, if the problem persist try again later';
+			}
+		} else {
+			$bg = new Background();
+
+			$bg->setUser(Application::$APP->user);
+			if(isset($_FILES['file']['name'])){
+				// file name
+				$filename = $_FILES['file']['name'];
+
+				$bg->setType(0);
+				$bg->setImage($filename);
+				// Location
+				$location = 'uploads/cover/'.$filename;
+
+				// file extension
+				$file_extension = pathinfo($location, PATHINFO_EXTENSION);
+				$file_extension = strtolower($file_extension);
+
+				// Valid extensions
+				$valid_ext = array("png","jpg","jpeg","svc", 'webp');
+
+				if(in_array($file_extension,$valid_ext)){
+					// Upload file
+					if (move_uploaded_file($_FILES['file']['tmp_name'],$location)) {
+						$bg->save();
+						return $this->json(1);
+					}
+				}
+				$message = 'file type is not supported';
+			} else
+				$message = 'file can\'t be empty';
+		}
+
+		return $this->json(['status' => $status, 'message' => $message]);
+	}
+
+	/**
+	 * @return bool|string
+	 */
+	public function updateProfilePicture(): bool|string
+	{
+		$user = Application::$APP->user;
+		$status = false;
+
+		if(isset($_FILES['file']['name'])){
+			// file name
+			$filename = $_FILES['file']['name'];
+
+			// Location
+			$location = 'uploads/dps/'.$filename;
+
+			// file extension
+			$file_extension = pathinfo($location, PATHINFO_EXTENSION);
+			$file_extension = strtolower($file_extension);
+
+			// Valid extensions
+			$valid_ext = array('png', 'jpg', 'jpeg', 'svc', 'webp');
+
+			if(in_array($file_extension,$valid_ext)){
+				// Upload file
+				if (move_uploaded_file($_FILES['file']['tmp_name'],$location)) {
+					if ($user->getPicture() && file_exists(Application::$ROOT_DIR . '/public/upload/dps/' . $user->getPicture()))
+						unlink(Application::$ROOT_DIR . '/public/upload/dps/' . $user->getPicture());
+					$user->setPicture($filename);
+					$user->update();
+					$status = true;
+					$message = 'your profile picture has been updated';
+				} else
+					$message = 'something went wrong';
+			} else
+				$message = 'file type is not supported';
+		} else
+			$message = 'file can\'t be empty';
+
+		return $this->json(['status' => $status, 'message' => $message]);
+	}
+
+	/**
+	 * @return false|string
+	 */
+	public function DeleteCover(): bool|string
+	{
+		$bg = new Background();
+
+		$bg->getOneBy('user', Application::$APP->user->getId());
+
+		if ($bg->getId()) {
+			if (!$bg->getType() && file_exists(Application::$ROOT_DIR . '/uploads/cover/' . $bg->getImage()))
+				unlink(Application::$ROOT_DIR . '/uploads/cover/' . $bg->getImage());
+			$bg->delete(1);
+		}
+
+		return $this->json(['status' => true, 'message' => 'cover image has been deleted']);
+	}
+
+	public function deleteDp()
+	{
+		$user = Application::$APP->user;
+
+		if ($user->getPicture()) {
+			if (file_exists(Application::$ROOT_DIR . '/uploads/dps/' . $user->getPicture()))
+				unlink(Application::$ROOT_DIR . '/uploads/dps/' . $user->getPicture());
+			$user->setPicture(null);
+
+			$user->update();
+		}
+
+		return $this->json(['status' => true, 'message' => 'profile picture has been deleted']);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string
 	{
 		if (Application::$APP->user)
 			return Application::$APP->user->name;

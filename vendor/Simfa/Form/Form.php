@@ -65,9 +65,9 @@ class Form
 		return $this->textArea;
 	}
 
-	public function select(Model $model, string $attribute, $elements): Select
+	public function select(Model $model, string $attribute, $elements, $show = null): Select
 	{
-		$this->select = new Select($model, $attribute, $elements);
+		$this->select = new Select($model, $attribute, $elements, $show);
 
 		return $this->select;
 	}

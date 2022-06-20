@@ -39,7 +39,7 @@ function loadPosts() {
 					post += '<a href="/post/' + posts[i].slug + '">';
 					post += '<div class="gallery-item">';
 					post += '<div class="image">';
-					post += '<img alt="' + posts[i].title + '" src="/uploads/' + posts[i].picture + '"/>';
+					post += '<img alt="' + posts[i].title + '" src="/uploads/post/' + posts[i].picture + '"/>';
 					post += '</div>';
 					post += '<div class="text">' + posts[i].title + '</div>';
 					post += '</div>';
@@ -84,7 +84,7 @@ function loadImage(id, url){
 		}
 	}
 
-	img.src = '/uploads/' + url;
+	img.src = '/uploads/post/' + url;
 }
 
 function imageOrientation(img) {

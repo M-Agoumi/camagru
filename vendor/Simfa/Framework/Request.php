@@ -80,37 +80,41 @@ class Request
 	 */
 	public function getBody(): array
 	{
-		$body = [];
-		if ($this->Method() === 'get') {
-			if (Application::getEnvValue('CSRF_VERIFICATION')) {
-				if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
-					if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
-						throw new \Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
-						please contact an admin", '401');
-				} else {
-					throw new \Exception("Form submitted without CSRF token", '401');
+		try {
+			$body = [];
+			if ($this->Method() === 'get') {
+				if (Application::getEnvValue('CSRF_VERIFICATION')) {
+					if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
+						if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
+							throw new \Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
+							please contact an admin", '401');
+					} else {
+						throw new \Exception("Form submitted without CSRF token", '401');
+					}
+				}
+				foreach ($_GET as $key => $value) {
+					$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
 				}
 			}
-			foreach ($_GET as $key => $value) {
-				$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-			}
-		}
-		if ($this->Method() === 'post') {
-			if (Application::getEnvValue('CSRF_VERIFICATION')) {
-				if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
-					if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
-						throw new \Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
-						please contact an admin", '401');
-				} else {
-					throw new \Exception("Form submitted without CSRF token", '401');
+			if ($this->Method() === 'post') {
+				if (Application::getEnvValue('CSRF_VERIFICATION')) {
+					if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
+						if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
+							throw new \Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
+							please contact an admin", '401');
+					} else {
+						throw new \Exception("Form submitted without CSRF token", '401');
+					}
+				}
+				foreach ($_POST as $key => $value) {
+					$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
 				}
 			}
-			foreach ($_POST as $key => $value) {
-				$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-			}
-		}
 
-		return $body;
+			return $body;
+		} catch (\Exception $e) {
+			Application::$APP->catcher->catch($e);
+		}
 	}
 
 	/**

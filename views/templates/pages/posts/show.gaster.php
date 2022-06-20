@@ -24,7 +24,7 @@
 	<div class="center">
 	    <h1 class="usernameTitle"><?=$post->title?>
 	        <sub><small><em><?=$post->updated_at ? '(Edited)' : ''?></em></small></sub></h1>
-	    <img src="/uploads/<?=$post->picture?>" style="max-width: 677px;" alt="<?=$post->comment ?? $post->title?>">
+	    <img src="/uploads/post/<?=$post->picture?>" style="max-width: 677px;" alt="<?=$post->comment ?? $post->title?>">
 	    <div class="usernameInfo">
 	        <div>
 		        <span class="authorName">

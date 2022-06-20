@@ -20,10 +20,6 @@ use PDOStatement;
 use ReflectionClass;
 use ReflectionProperty;
 
-/**
- * @method getType()
- * @method setType(int $type)
- */
 abstract class DbModel extends Model
 {
     public ?string $created_at = null;
@@ -254,9 +250,12 @@ abstract class DbModel extends Model
 	}
 
 	/** get all records of a specific entity
-	 * @return mixed
+	 * @param string $limit
+	 * @param string $order
+	 * @return array|bool
 	 */
-	public function findAll(string $limit = '', string $order = 'ASC'){
+	public function findAll(string $limit = '', string $order = 'ASC'): array|bool
+	{
 		$tableName = static::tableName();
 		$limit = !empty($limit) ? 'limit ' . $limit : '';
 		$primary = static::primaryKey();

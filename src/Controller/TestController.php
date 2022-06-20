@@ -5,6 +5,9 @@ namespace Controller;
 
 use Helper\TimeHelper;
 use Middlewares\DevMiddleware;
+use Model\Background;
+use Model\Config;
+use Model\Cover;
 use Model\Post;
 use Model\User;
 use Simfa\Action\Controller;
@@ -239,4 +242,32 @@ class TestController extends Controller
 		return '<br>done';
 	}
 
+	public function cover()
+	{
+		/** get user cover image */
+		$user = new User();
+		$user->getOneBy(22);
+		$bg = new Background();
+		$bg->getOneBy('user', $user->getId());
+		if (!$bg->getId()) {
+			$config = new Config();
+			$config->getOneBy('name', 'user/profile/cover');
+			$image = $config->getValue();
+		} else {
+			if (!$bg->getType())
+				$image = $bg->getImage();
+			else {
+				$cover = new Cover();
+				$cover->getOneBy($bg->getImage());
+				$image = $cover->getImage();
+			}
+		}
+
+		return $this->render('dev.testCover', [
+			'user' => $user,
+			'cover' => $image,
+			'bg' => $bg,
+			'covers' => (new Cover())->findAll()
+		]);
+	}
 }

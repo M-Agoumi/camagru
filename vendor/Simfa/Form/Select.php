@@ -16,14 +16,16 @@ class Select
 	public string $required;
 	public string $default;
 	public string $options;
+	private ?string $show;
 
-	public function __construct(Model $model, string $attribute, $elements)
+	public function __construct(Model $model, string $attribute, $elements, $show)
 	{
 		$this->model = $model;
 		$this->attribute = $attribute;
 		$this->disabled = '';
 		$this->required = '';
 		$this->default = '';
+		$this->show = $show;
 		$this->options = $this->toString($elements);
 	}
 
@@ -69,8 +71,11 @@ class Select
 
 			foreach ($options as $option) {
 				$string .= "<option value='" . $option[$primary] . "'";
-				$string .= $this->model->{$this->attribute} == $option[$primary] ? 'selected' : '';
-				$string .= ">" . $option[$this->attribute] . "</option>" . PHP_EOL;
+				$string .= $this->model->{'get' . ucfirst($this->attribute)}() == $option[$primary] ? 'selected' : '';
+				if ($this->show)
+					$string .= ">" . $option[$this->show] . "</option>" . PHP_EOL;
+				else
+					$string .= ">" . $option[$this->attribute] . "</option>" . PHP_EOL;
 			}
 		} else {
 			foreach ($elements as $value => $element) {
@@ -86,6 +91,7 @@ class Select
 
 	/**
 	 * @param string $label
+	 * @return Select
 	 */
 	public function setLabel(string $label)
 	{

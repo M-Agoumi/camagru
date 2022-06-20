@@ -5,6 +5,10 @@ namespace Model;
 
 use Simfa\Framework\Db\DbModel;
 
+/**
+ * @method getType()
+ * @method setType(int $type)
+ */
 class Like extends DbModel
 {
 

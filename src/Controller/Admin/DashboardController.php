@@ -53,15 +53,14 @@ class DashboardController extends BaseController
 	 * @param Emote $emote
 	 * @param Request $request
 	 * @return string|null
-	 * @throws \Exception
 	 */
-	public function addEmote(Emote $emote, Request $request)
+	public function addEmote(Emote $emote, Request $request): ?string
 	{
 		$errors= array();
 		$success = 0;
 		if ($request->isPost())
 		{
-			if(isset($_FILES['image'])){
+			if(isset($_FILES['image'])) {
 				$file_name = $_FILES['image']['name'];
 				$file_size = $_FILES['image']['size'];
 				$file_tmp = $_FILES['image']['tmp_name'];
@@ -69,14 +68,14 @@ class DashboardController extends BaseController
 				$tmp = explode('.',$_FILES['image']['name']);
 				$file_ext=strtolower(end($tmp));
 
-				$extensions= array("jpeg","jpg","png");
+				$extensions= array('jpeg','jpg','png', 'svg');
 
 				if(in_array($file_ext,$extensions)=== false){
 					$errors[]="extension not allowed, please choose a JPEG or PNG file.";
 				}
 
 				if($file_size > 2097152) {
-					$errors[]='File size must be excately 2 MB';
+					$errors[]='File size must be less 2 MB';
 				}
 
 				if(empty($errors)==true) {

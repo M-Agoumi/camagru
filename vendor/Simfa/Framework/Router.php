@@ -110,7 +110,6 @@ class Router
 	 * @param string $path
 	 * @param $callback
 	 * @return Router|null
-	 * @throws Exception
 	 */
 	public static function request(string $path, $callback): ?Router
 	{
