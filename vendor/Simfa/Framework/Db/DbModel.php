@@ -155,7 +155,6 @@ abstract class DbModel extends Model
 
 		$sql .= " WHERE " . $this->primaryKey() . "=" . $this->{$this->primaryKey()} . ";";
 
-
 		$statement = self::prepare($sql);
 
 		foreach ($attributes as $attribute) {
@@ -323,8 +322,6 @@ abstract class DbModel extends Model
 
 	public function random($count = 1)
 	{
-		/** SELECT * FROM tbl AS t1 JOIN (SELECT id FROM tbl ORDER BY RAND() LIMIT 10) as t2 ON t1.id=t2.id */
-		/** SELECT * FROM users AS t1 JOIN (SELECT id FROM users ORDER BY RAND() LIMIT 10) as t2 ON t1.id=t2.id */
 		$tableName = static::tableName();
 		$primary = static::primaryKey();
 

@@ -192,10 +192,16 @@ class UserController extends Controller
 	public function updateBackground(Request $request): string
 	{
 		$status = false;
-		$data = $request->getBody();
-		$message = 'your preferences has been updated successfully';
+		try {
+			$data = $request->getBody();
+		} catch (Exception $e) {
+			return $this->json(['status' => false, 'message' => 'form token is invalid']);
+		}
 
-		if ($data['type'] == 1) {
+		$message = 'your preferences has been updated successfully';
+		$type = $data['type'] ?? 0;
+
+		if ($type) {
 			$cover = new Cover();
 			$cover->getOneBy('image', $data['image']);
 			if ($cover->getId()) {
@@ -215,6 +221,7 @@ class UserController extends Controller
 			if(isset($_FILES['file']['name'])){
 				// file name
 				$filename = $_FILES['file']['name'];
+				$file_size = $_FILES['file']['size'];
 
 				$bg->setType(0);
 				$bg->setImage($filename);
@@ -229,11 +236,14 @@ class UserController extends Controller
 				$valid_ext = array("png","jpg","jpeg","svc", 'webp');
 
 				if(in_array($file_extension,$valid_ext)){
-					// Upload file
-					if (move_uploaded_file($_FILES['file']['tmp_name'],$location)) {
-						$bg->save();
-						return $this->json(1);
+					if ($file_size > Application::getAppConfig('post', 'max_file_size')) {
+						// Upload file
+						if (@move_uploaded_file($_FILES['file']['tmp_name'],$location)) {
+							$bg->save();
+							return $this->json(['status' => true, 'message' => 'Your cover image has been updated!']);
+						}
 					}
+					return $this->json(['status' => false, 'message' => 'Something went wrong in our side']);
 				}
 				$message = 'file type is not supported';
 			} else
@@ -244,11 +254,17 @@ class UserController extends Controller
 	}
 
 	/**
+	 * @param Request $request
 	 * @return bool|string
 	 */
-	public function updateProfilePicture(): bool|string
+	public function updateProfilePicture(Request $request): bool|string
 	{
 		$user = Application::$APP->user;
+		try {
+			$request->getBody();
+		} catch (Exception $e) {
+			return json_encode(['status' => false, 'message' => 'csrf token is not valid']);
+		}
 		$status = false;
 
 		if(isset($_FILES['file']['name'])){
@@ -281,7 +297,7 @@ class UserController extends Controller
 		} else
 			$message = 'file can\'t be empty';
 
-		return $this->json(['status' => $status, 'message' => $message]);
+		return $this->json(['status' => $status, 'message' => $message, 'token' => Application::$APP->session->getCsrf()]);
 	}
 
 	/**

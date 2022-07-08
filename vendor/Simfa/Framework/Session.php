@@ -11,17 +11,19 @@ namespace Simfa\Framework;
 class Session
 {
 	/** string to make sure we don't override any other session variable */
-	private const SALT = 'ankhs';
-	private const FLASH_KEY = 'flash_messages_' . self::SALT;
+	private string $salt;
+	private static string $FLASH_KEY;
 	
 	public function __construct()
 	{
+		$this->salt = Application::getAppConfig('session')['salt'] ?? 'flash_message_salt';
+		self::$FLASH_KEY = 'flash_messages_' . $this->salt;
 		session_start();
-		$flashMessages = $_SESSION[self::FLASH_KEY] ?? [];
+		$flashMessages = $_SESSION[self::$FLASH_KEY] ?? [];
 		foreach ($flashMessages as $key => &$flashMessage) {
 			$flashMessage['remove'] = true;
 		}
-		$_SESSION[self::FLASH_KEY] = $flashMessages;
+		$_SESSION[self::$FLASH_KEY] = $flashMessages;
 		if (!isset($_SESSION['__CSRF']))
 			$_SESSION['__CSRF'] = [];
 	}
@@ -46,8 +48,9 @@ class Session
 
 	/**
 	 * @param string $key to remove
+	 * @return void
 	 */
-	public function remove(string $key)
+	public function remove(string $key): void
 	{
 		unset($_SESSION[$key]);
 	}
@@ -58,7 +61,7 @@ class Session
 	 */
 	public function setFlash(string $key, string $message)
 	{
-		$_SESSION[self::FLASH_KEY][$key] = [
+		$_SESSION[self::$FLASH_KEY][$key] = [
 			'remove' => false,
 			'value' => $message
 		];
@@ -70,30 +73,39 @@ class Session
 	 */
 	public function getFlash(string $key): ?string
 	{
-		return $_SESSION[self::FLASH_KEY][$key]['value'] ?? false;
+		return $_SESSION[self::$FLASH_KEY][$key]['value'] ?? false;
 	}
 
 	/**
 	 * generate CSRF token
-	 * @throws \Exception
 	 */
-	public function generateCsrf()
+	public function generateCsrf(): void
 	{
-		array_push($_SESSION['__CSRF'], [0, bin2hex(random_bytes(16))]);
+		try {
+			$_SESSION['__CSRF'][] = [0, bin2hex(random_bytes(16)), time()];
+		} catch (\Exception $e) {
+			Application::$APP->catcher->catch($e);
+		}
 	}
 
-	public function array_search2d($needle, $haystack) {
+	/**
+	 * @param $needle
+	 * @param $haystack
+	 * @return bool|int
+	 */
+	public function array_search2d($needle, $haystack): bool|int
+	{
 		for ($i = 0, $l = count($haystack); $i < $l; ++$i) {
 			if (in_array($needle, $haystack[$i])) return $i;
 		}
 
 		return false;
 	}
+
 	/**
 	 * @param string $token
 	 * @return bool
 	 */
-
 	public function checkCsrf(string $token): bool
 	{
 		$index = $this->array_search2d($token, $_SESSION['__CSRF']);
@@ -108,9 +120,8 @@ class Session
 
 	/**
 	 * @return false|string csrf token if stored in session
-	 * @throws \Exception
 	 */
-	public function getCsrf()
+	public function getCsrf(): bool|string
 	{
 		$i = 0;
 		while ($i < count($_SESSION['__CSRF'])) {
@@ -132,22 +143,32 @@ class Session
 	 */
 	public function __destruct()
 	{
-		$flashMessages = $_SESSION[self::FLASH_KEY] ?? [];
+		$flashMessages = $_SESSION[self::$FLASH_KEY] ?? [];
 		
 		foreach ($flashMessages as $key => &$flashMessage) {
 			if ($flashMessage['remove']) {
 				unset($flashMessages[$key]);
 			}
 		}
-		
-		$_SESSION[self::FLASH_KEY] = $flashMessages;
+
+		$csrf_tokens = &$_SESSION['__CSRF'];
+		$csrf_tokens = $csrf_tokens ?? [];
+		$time = time();
+		$expireTime = Application::getAppConfig('session')['csrf'] ?? 60;
+		foreach ($csrf_tokens as $key => $token) {
+			if (($time - $token[2]) / 60 > $expireTime)
+				unset($csrf_tokens[$key]);
+		}
+		$_SESSION['__CSRF'] = array_values($_SESSION['__CSRF']);
+
+		$_SESSION[self::$FLASH_KEY] = $flashMessages;
 	}
 
 	/** unset session variable
 	 * @param string $key
 	 * @return void
 	 */
-	public function unset(string $key)
+	public function unset(string $key): void
 	{
 		unset($_SESSION[$key]);
 	}
@@ -155,7 +176,7 @@ class Session
 	/** get session token or generate it if it doesn't exist yet
 	 * @return mixed|null
 	 */
-	public function getToken($token = 'admin')
+	public function getToken($token = 'admin'): mixed
 	{
 		if ($this->get($token . '_token'))
 			return $this->get($token . '_token');

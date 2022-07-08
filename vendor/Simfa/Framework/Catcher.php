@@ -17,8 +17,8 @@ class Catcher
 	{
 		$this->app->response->setStatusCode($e->getCode());
 
-		if ($this->app->interface == 'api')
-			$this->apiLog($e);
+		if ($this->app->interface == 'API')
+			return $this->apiLog($e);
 		elseif ($this->app->interface == 'CLI')
 			$this->cliLog($e);
 		else
@@ -67,7 +67,7 @@ class Catcher
 
 	private function apiLog(Exception $e)
 	{
-		echo $e->getCode();
+		return $e->getCode();
 	}
 
 	private function getErrorCode($errorCode)

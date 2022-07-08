@@ -6,6 +6,8 @@ namespace Controller;
 
 
 
+use Exception;
+use GdImage;
 use Middlewares\AuthMiddleware;
 use Model\Emote;
 use Model\Post;
@@ -20,7 +22,10 @@ class CameraController extends Controller
         $this->registerMiddleware(New AuthMiddleware([]));
     }
 
-	public function index()
+	/**
+	 * @return string
+	 */
+	public function index(): string
 	{
 		$emotes = New Emote();
 		$emotes = $emotes->findAll();
@@ -28,6 +33,10 @@ class CameraController extends Controller
 		return $this->render('pages/camera', ['title' => 'Camera', 'emotes' => $emotes]);
 	}
 
+	/**
+	 * @return string|void
+	 * @throws Exception
+	 */
 	public function save()
 	{
 		$post = New Post();
@@ -55,7 +64,12 @@ class CameraController extends Controller
 		return $this->render('pages/cameraShare', ['post'=> $post, 'title' => 'share to the world']);
 	}
 
-	private function mergeEmotes($image, $emotes)
+	/**
+	 * @param $image
+	 * @param $emotes
+	 * @return GdImage|bool
+	 */
+	private function mergeEmotes($image, $emotes): GdImage|bool
 	{
 		$image = imagecreatefromjpeg($image);
 		// start merging images
@@ -71,18 +85,11 @@ class CameraController extends Controller
 		return $image;
 	}
 
-	private function resize_image($image, int $newWidth, int $newHeight) {
-		$newImg = imagecreatetruecolor($newWidth, $newHeight);
-		imagealphablending($newImg, false);
-		imagesavealpha($newImg, true);
-		$transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
-		imagefilledrectangle($newImg, 0, 0, $newWidth, $newHeight, $transparent);
-		$src_w = imagesx($image);
-		$src_h = imagesy($image);
-		imagecopyresampled($newImg, $image, 0, 0, 0, 0, $newWidth, $newHeight, $src_w, $src_h);
-		return $newImg;
-	}
-
+	/**
+	 * @param Request $request
+	 * @return string|void
+	 * @throws Exception
+	 */
 	public function share(Request $request)
 	{
 		$post = New Post();
@@ -91,7 +98,7 @@ class CameraController extends Controller
 
 		/** get image from tmp to our uploads */
 		$picture = Application::$ROOT_DIR .'/public/tmp/' . $post->picture;
-		if (!rename($picture, 'uploads/' . $post->picture))
+		if (!rename($picture, 'uploads/post/' . $post->picture))
 			die("error while saving your image");
 
 		/** generate slug */

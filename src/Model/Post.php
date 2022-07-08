@@ -115,7 +115,8 @@ class Post extends DbModel
 			if (
 				($comment[$i] <= 'z' && $comment[$i] >= 'a') ||
 				($comment[$i] <= 'Z' && $comment[$i] >= 'A') ||
-				($comment[$i] >= '0' && $comment[$i] <= '9')
+				($comment[$i] >= '0' && $comment[$i] <= '9') ||
+				($comment[$i] == '-' || $comment[$i] == '_')
 			)
 				$i++;
 			else

@@ -1,1 +1,1 @@
-rm public/uploads/*.jpg public/uploads/*.jpeg public/uploads/*.png public/uploads/*.1 public/uploads/*.2
+rm public/uploads/post/*.jpg public/uploads/post/*.jpeg public/uploads/post/*.png public/uploads/post/*.1 public/uploads/post/*.2 public/uploads/post/*.3 public/uploads/post/*.4 public/uploads/post/*.5

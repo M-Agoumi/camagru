@@ -188,6 +188,9 @@ class View
 			$content = $this->str_replace_first('@endif', '<?php endif; ?>', $content);
 		}
 
+		/** look for csrf tags */
+		$content = str_replace('@csrf', '<?= \Simfa\Framework\Application::$APP->session->getCsrf() ?>', $content);
+
 		/** merge layout with the view and return the result */
 		$content = $this->layoutContentMerge($layout, $content);
 
@@ -307,7 +310,7 @@ class View
 
 		/** create cache file */
 		$cacheFileName = $this->rootDir . 'var/cache/gaster/' . $view . '.endl.' . $originalHash . '.php';
-		$cachedFile = fopen($cacheFileName, "w");
+		$cachedFile = fopen($cacheFileName, "w") or die('could not open cache file for writing');
 
 		/** write content to the file */
 		fwrite($cachedFile, $content);

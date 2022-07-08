@@ -126,7 +126,7 @@ class SimpleData extends BaseCommand
 
 	private function getImages(): array
 	{
-		$uploads    = CLIApplication::$ROOT_DIR. 'public/uploads';
+		$uploads    = CLIApplication::$ROOT_DIR. 'public/uploads/post';
 		$ignoreFiles= ['.', '..', 'dps', 'index.php'];
 
 		return array_values(array_diff(scandir($uploads), $ignoreFiles));

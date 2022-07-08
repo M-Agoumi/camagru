@@ -115,20 +115,23 @@ class Application
 
 	/**
 	 * @param string $string
+	 * @param string $key
 	 * @return array|false|null
 	 */
-	public static function getAppConfig(string $string): ?array
+	public static function getAppConfig(string $string, string $key = ''): mixed
 	{
 		if (!self::$APP->appConfig)
 			self::$APP->appConfig = include(Application::$ROOT_DIR . '/config/config.php');
 
-		return self::$APP->appConfig[$string] ?? false;
+		if ($key)
+			return self::$APP->appConfig[$string][$key] ?? null;
+		return self::$APP->appConfig[$string] ?? null;
 	}
 
 	/**
 	 * calling the resolver method to handle our request
 	 */
-	public function run()
+	public function run(): void
 	{
 	    try {
 	    	$output = $this->router->resolve();

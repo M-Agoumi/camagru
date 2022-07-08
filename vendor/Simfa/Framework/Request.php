@@ -13,6 +13,8 @@
 
 namespace Simfa\Framework;
 
+use Exception;
+
 /**
  * Class Request
  */
@@ -77,44 +79,34 @@ class Request
 	 * handle the data coming from a form
 	 * and check for csrf token if its validation is enabled in env
 	 * @return array
+	 * @throws Exception
 	 */
 	public function getBody(): array
 	{
-		try {
-			$body = [];
-			if ($this->Method() === 'get') {
-				if (Application::getEnvValue('CSRF_VERIFICATION')) {
-					if (isset($_GET['__csrf']) && !empty($_GET['__csrf'])) {
-						if ($_GET['__csrf'] !== Application::$APP->session->getCsrf())
-							throw new \Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
-							please contact an admin", '401');
-					} else {
-						throw new \Exception("Form submitted without CSRF token", '401');
-					}
-				}
-				foreach ($_GET as $key => $value) {
-					$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-				}
-			}
-			if ($this->Method() === 'post') {
-				if (Application::getEnvValue('CSRF_VERIFICATION')) {
-					if (isset($_POST['__csrf']) && !empty($_POST['__csrf'])) {
-						if (!Application::$APP->session->checkCsrf($_POST['__csrf']))
-							throw new \Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
-							please contact an admin", '401');
-					} else {
-						throw new \Exception("Form submitted without CSRF token", '401');
-					}
-				}
-				foreach ($_POST as $key => $value) {
-					$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-				}
-			}
+		$csrf = $_SERVER['HTTP_CSRF'] ?? $_POST['__csrf'] ?? $_GET['__csrf'] ?? false;
+		$body = [];
 
-			return $body;
-		} catch (\Exception $e) {
-			Application::$APP->catcher->catch($e);
+		if (Application::getEnvValue('CSRF_VERIFICATION')) {
+			if ($csrf) {
+				if (!Application::$APP->session->checkCsrf($csrf))
+				throw new Exception("wrong CSRF token please refresh the form page and retry again, if the problem didn't go 
+						please contact an admin", '401');
+			} else {
+				throw new Exception("Form submitted without CSRF token", '401');
+			}
 		}
+
+		if ($this->Method() === 'get') {
+			foreach ($_GET as $key => $value) {
+				$body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+			}
+		} else {
+			foreach ($_POST as $key => $value) {
+				$body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+			}
+		}
+
+		return $body;
 	}
 
 	/**

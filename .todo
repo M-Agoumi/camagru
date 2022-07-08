@@ -5,7 +5,13 @@
 	+ see cover
 	+ delete cover
 - work on profile picture
-+ cache application config for less load on db
++ add CSRF check to profile pictures APIs
 + add upload an image as post not just camera
 + close camera when not using
++ put profile picture in the middle in the mobile view
+#[framework]
++ cache application config for less load on db
++ improve csrf token (allow for page refresh without error)
++ close session for writing when not using (enable parallel page loading)
++ adapt the routes/api so all routes there return json
 

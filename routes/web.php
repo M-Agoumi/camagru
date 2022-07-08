@@ -25,8 +25,7 @@ Router::get('/javascript-disabled', 'error.__noJavascript');
 /** default Controller routes */
 Router::get('/', [DefaultController::class, 'index'])->name('home.index');
 Router::get('/home', [DefaultController::class, 'index']);
-Router::get('/contactus', [DefaultController::class, 'contactUs'])->name('contact.us');
-Router::post('/contactus', [DefaultController::class, 'contactUs']);
+Router::request('/contactus', [DefaultController::class, 'contactUs'])->name('contact.us');
 
 /** Auth Controller routes */
 Router::get('/login', [AuthController::class, 'login'])->name("auth.login");
@@ -97,10 +96,10 @@ Router::magic('/dashboard/message/{ContactUs}', [DashboardController::class, 'sh
 /** debug routes */
 Router::get('/dev/code', function (){return $_SESSION['email_code'] ?? 'no code found';});
 Router::get('/session', function() {echo "<pre>"; var_dump($_SESSION); return '';});
-Router::get('/unset_session', function() {session_destroy();});
+Router::get('/unset-session', function() {session_destroy();});
+Router::get('/unset-csrf', function() {unset($_SESSION['__CSRF']);});
 Router::magic('/user/{id}', [DefaultController::class, 'user']);
-Router::get('/dev/set-password', [TestController::class, 'password']);
-Router::post('/dev/set-password', [TestController::class, 'password']);
+Router::request('/dev/set-password', [TestController::class, 'password']);
 Router::magic('/dev/link/{var}', [TestController::class, 'linkVar']);
 Router::get('/canvas', [TestController::class, 'imageCanvas']);
 Router::get('/mailer', [TestController::class, 'mailTest']);
@@ -117,3 +116,6 @@ Router::request('/image',[TestController::class, 'imageProcessor']);
 Router::magic('/aabbcc/{entityID}', [TestController::class, 'testAutowired']);
 Router::get('/injector', [TestController::class, 'injector']);
 Router::get('/cover', [TestController::class, 'cover']);
+Router::get('/json', function () {
+	return print_r(json_decode(file_get_contents(Application::$ROOT_DIR . '/var/source.json')), true);
+});

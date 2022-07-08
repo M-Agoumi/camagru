@@ -38,6 +38,7 @@ class Field
 	private ?string $submit = null;
 	private ?string $submitExtra;
 	private string $autoComplete = '';
+	private string $custom = '';
 
 	public function __construct(Model $model, string $attribute)
 	{
@@ -73,7 +74,7 @@ class Field
 						<label for="%s">%s</label>
 					</div>
 					<div class="col-75">
-						<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s>
+						<input type="%s" class="%s" id="%s" name="%s" value="%s" placeholder="%s" %s %s %s>
 						<div class="invalid-feedback">
 							%s
 						</div>
@@ -87,6 +88,7 @@ class Field
 				, $this->attribute
 				, $this->model->{'get' . ucfirst($this->attribute)}()
 				, !empty($this->holder) ? $this->holder : $this->attribute
+				, $this->custom
 				, $this->disabled
 				, $this->required
 				, $this->model->getFirstError($this->attribute)
@@ -288,9 +290,23 @@ class Field
 		return '';
 	}
 
-	public function noAutocomplete()
+	/**
+	 * @return $this
+	 */
+	public function noAutocomplete(): static
 	{
 		$this->autoComplete = self::AUTOCOMPLETE;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $custom
+	 * @return $this
+	 */
+	public function setCustom(string $custom): static
+	{
+		$this->custom = $custom;
 
 		return $this;
 	}

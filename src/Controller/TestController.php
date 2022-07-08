@@ -28,10 +28,11 @@ class TestController extends Controller
 		return $var;
 	}
 
-	public function imageCanvas(User $user)
+	/**
+	 * @return string|null
+	 */
+	public function imageCanvas(): ?string
 	{
-		Application::$APP->controller->layout = 'auth';
-
 		return render('test');
 	}
 
@@ -71,15 +72,17 @@ class TestController extends Controller
 
 			$updatedUser = $user->getOneBy('email', $user->email, 0);
 
-			$user->loadData((array)$updatedUser);
+			if ($user->getId()) {
+				$user->loadData((array)$updatedUser);
 
-			$user->password = $password;
-			$user->pass = true;
+				$user->password = $password;
+				$user->pass = true;
 
-			if ($user->update())
-				return 'done';
-
-			return 'something went wrong';
+				if ($user->update())
+					return 'done';
+				return 'something went wrong';
+			}
+			return 'user not found';
 		}
 
 		return render('pages/dev/resetPassword', ['user' => $user]);
