@@ -17,13 +17,13 @@
 
 	.profile-form {
 		display: none;
-		position: absolute;
+		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		background: #fcf8e3;
-		width: 80%;
-		height: 60%;
+		width: 80vw;
+		height: 60vh;
 		border: 2px solid #000000;
 		border-radius: 5px;
 		padding: 10px;
@@ -98,6 +98,56 @@
 		z-index: 1;
 		display: none;
 	}
+
+	.profile-page .profile-header{
+		position: relative;
+	}
+
+	@media only screen and (max-width: 900px) {
+		.profile-page .profile-header{
+			margin-bottom: 75px;
+		}
+
+		.profile-page .profile-body-info {
+			width: 100%;
+			max-width: 550px;
+			margin: auto;
+		}
+
+		.profile-page .profile-header .profile-header-logo {
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: auto;
+			height: auto;
+		}
+
+		.profile-page .profile-header .profile-header-logo > img {
+			position: initial;
+			width: 250px;
+			height: 250px;
+			transform: none;
+		}
+
+		.profile-body-info .profile-body-info-buttons {
+			flex-wrap: wrap;
+		}
+
+		.profile-body-info .profile-body-info-buttons a {
+			flex: 0 0 100%;
+			margin-bottom: 5px;
+		}
+
+		.profile-page .profile-body-info h4 {
+			text-align: center;
+			text-transform: capitalize;
+		}
+
+		.profile-page .profile-body-posts {
+			width: 100%;
+		}
+	}
 </style>
 @endsection
 @section('content')
@@ -114,19 +164,16 @@ use Simfa\Framework\Application;
 $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 ?>
 	<div class="my-profile">
-		<div class="profile-cover"></div>
-		<div class="profile-logo"></div>
-
 		<div class="profile-page">
 			<div class="profile-header" style="background-image: url('/uploads/cover/{{cover}}'); background-repeat: no-repeat; background-attachment: fixed;background-position: center;">
 				<div class="profile-header-logo">
 					<img src="/uploads/dps/<?=$user->getPicture() ?? 'default.jpg'?>" alt="Logo">
 				</div>
 				<div class="profile-header-cover"">
-					<span onclick="showControl()">
-						<i class="fas fa-ellipsis-v"></i>
-					</span>
 				</div>
+				<span onclick="showControl()">
+					<i class="fas fa-ellipsis-v"></i>
+				</span>
 			</div>
 			<div class="profile-body">
 				<div class="profile-body-info">
@@ -204,11 +251,11 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 		</div>
 		<div class="custom_images">
 			<label for="files">Update cover picture</label>
-			<input type="file" class="multiChoiceSelectButton" name="file" id="file">
+			<input type="file" class="multiChoiceSelectButton" name="file" id="file_id">
 			<input type="button" id="btn_uploadfile"
 			       value="Upload"
 			       class="multiChoiceSelectButton"
-			       onclick="uploadFile();" >
+			       onclick="uploadFile(1);" >
 			<button class="multiChoiceSelectButton" onclick="backToSecondAction()">back</button>
 		</div>
 		<div class="profile_images">
@@ -225,6 +272,10 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 
 		</div>
 	</div>
+	<input type="hidden" value="@csrf" id="csrf_profile"/>
+	<script>
+		var file_max_size = <?= Application::getAppConfig('post', 'max_file_size') ?>;
+	</script>
 	<script src="<?= asset("assets/js/profile.js") ?>"
 @endsection
 
