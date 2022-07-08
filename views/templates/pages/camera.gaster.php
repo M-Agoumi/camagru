@@ -1,6 +1,6 @@
 @layout('main')
 @section('title'){{ title }}@endsection
-@section('content')
+@section('head')
 <style>
 	#emote-control-container{
 		-webkit-touch-callout: none;
@@ -22,12 +22,36 @@
 		display: none;
 		z-index: 10;
 	}
-</style>
-	<h1>Smile to the camera</h1>
-	<div id="filler" onclick="hideFiller()">
 
+	.camera_container {
+		display: none;
+	}
+
+	.camera_upload_container {
+		display: none;
+	}
+</style>
+@endsection
+@section('content')
+	<h1>Smile to the camera</h1>
+	<div class="button-container">
+		<button onclick="getWebCam()">camera</button>
+		<button onclick="getUploadForm()">upload</button>
+	</div>
+	<div class="camera_upload_container">
+		<label for="files">chose a file</label>
+		<input type="file" class="multiChoiceSelectButton" name="file" id="file">
+		<input type="hidden" value="@csrf" />
+		<input type="button" id="btn_uploadfile"
+			   value="Upload"
+			   class="multiChoiceSelectButton"
+			   onclick="drawImage();" >
+		<img id="tmp-upload" style="display: none" />
 	</div>
 	<div class="camera_container">
+		<div id="filler" onclick="hideFiller()" style="display: none">
+
+		</div>
 	    <div class="camera" id="camera">
 	        <video autoplay="autoplay" id="video" width="650" height="490" poster="/assets/img/allow-access.gif">
 	        </video>
@@ -38,15 +62,15 @@
 
 	    </div>
 	    <div class="picture" id="picture">
-		    <div id="image" style="position:relative; height: 490px; width: 650px;">
-	            <canvas id="canvas" width="650" height="460"></canvas>
+		    <div id="image" style="position:relative;">
+	            <canvas id="canvas"></canvas>
 		    </div>
 		    <div id="emote-control-container" style="">
 
 		    </div>
-		    <div class="camera-emots">
+		    <div class="camera-emotes">
 			    <?php foreach ($emotes as $emote):?>
-			    <img src="/assets/img/<?=$emote['file']?>" width="100" onclick="addImage(this.src, '<?=$emote['name']?>')"/>
+			    <img src="/assets/img/<?=$emote['file']?>" width="100" onclick="addImage(this.src, '<?=$emote['name']?>')" alt="<?=$emote['name']?>"/>
 			    <?php endforeach;?>
 		    </div>
 	    <div class="btn-save">
@@ -71,8 +95,11 @@
 		{
 			const filler    = document.getElementById("filler");
 			const emote     = document.getElementById('emote_' + filler.dataset.id);
-			emote.style.border = "none";
-			filler.style.display='none';document.getElementById('emote-control-container').innerText=''
+			if (filler.dataset.id) {
+				emote.style.border = "none";
+				filler.style.display = 'none';
+				document.getElementById('emote-control-container').innerText = ''
+			}
 		}
         /** add pictures to the canvas **/
 		let emoteNumber = 1;
@@ -187,6 +214,37 @@
 			}
 		}
 
+		document.getElementById('file').addEventListener("change", uploadImage, true);
+
+		function uploadImage()
+		{
+			const file = document.getElementById('file').files[0];
+			const img = document.getElementById('tmp-upload');
+
+			if (file) {
+				img.src = URL.createObjectURL(file);
+			}
+		}
+
+		function drawImage()
+		{
+			const canvas = document.getElementById('canvas');
+			let context = canvas.getContext('2d');
+			const img = document.getElementById('tmp-upload');
+			canvas.width = img.naturalWidth;
+			canvas.height = img.naturalHeight;
+			context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+			if (img.naturalWidth >= 1080) {
+				canvas.style.width = '1080px';
+			} else {
+				canvas.style.width = img.naturalWidth;
+			}
+
+			document.getElementById('picture').style.display = 'block';
+			document.getElementById('camera').style.display = 'none';
+
+			document.getElementsByClassName('camera_container')[0].style.display = 'block';
+		}
 	</script>
 @endsection
 

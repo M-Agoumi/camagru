@@ -455,6 +455,7 @@ nav .nav {
 
 	box-shadow: 0px 18px 30px rgb(0 0 0 / 8%);
 
+	height: 55px;
 }
 
 
@@ -560,7 +561,7 @@ nav .active {
 .profile-page .profile-header {
 	width: 100%;
 	background-color: #BCBCBC;
-	height: 200px;
+	height: 320px;
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;
@@ -604,7 +605,7 @@ nav .active {
 	visibility:hidden;
 }
 
-.profile-page .profile-header .profile-header-cover span{
+.profile-page .profile-header span{
 	position: absolute;
 	right: 10px;
 	top: 10px;
@@ -615,7 +616,7 @@ nav .active {
 	cursor: pointer;
 }
 
-.profile-page .profile-header .profile-header-cover i {
+.profile-page .profile-header span i {
 	font-size: 1.5rem;
 	color: var(--mainColor);
 }
@@ -719,7 +720,7 @@ nav .active {
 .profile-page .profile-body-info .profile-body-info-buttons a:first-of-type {
 	color: #FFF;
 	background-color: var(--mainColor);
-	border: 1px solid var(--mainColor);
+	border: 2.5px solid var(--mainColor);
 }
 
 .profile-page .profile-body-info .profile-body-info-buttons a:nth-of-type(2) {
@@ -1168,8 +1169,6 @@ input[type=submit]:hover {
 
 	display: none;
 
-	width: 640px;
-
 	max-width: 80%;
 
 	margin: auto;
@@ -1224,12 +1223,7 @@ input[type=submit]:hover {
 
 	border-radius: 4px;
 
-	width: 640px;
-
-	max-width: 100%;
-
-	min-height: 480px;
-
+	max-width: 1080px;
 }
 
 
@@ -2083,7 +2077,7 @@ input[type=submit]:hover {
 
 
 
-/* START RESPONSIVE GALLERY [MEDUIM] */
+/* START RESPONSIVE GALLERY [MEDIUM] */
 
 
 

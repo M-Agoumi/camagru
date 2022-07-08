@@ -19,9 +19,9 @@
     <button>
         <a id="grayscale">grayscale</a>
     </button>
-    <img style="display: none" src="/uploads/diwali_sweets.jpg" id="SourceImage" height=""/>
+    <img style="display: none" src="/uploads/cover/boobies.png" id="SourceImage" height=""/>
     <div class="video-container"></div>
-    <canvas id="canvas" width="400px" height="400px"></canvas>
+    <canvas id="canvas" style="width: 1080px"></canvas>
     <br>
     <script>
 
@@ -32,7 +32,7 @@
         const image = document.getElementById('SourceImage');
 
         // function to read the image from our source and draw it
-        // to the our canvas
+        // to the canvas
         function drawImage() {
             canvas = document.getElementById('canvas');
             context = canvas.getContext('2d');
