@@ -3,7 +3,7 @@ if [ "$#" -ne 1 ]; then
 	cat "var/source.json" | \
 	jq -r '.data.children | map(.data.url_overridden_by_dest)[] | select(.)' | \
 	grep -E "(jpg|jpeg|png|mp4)$" | \
-	xargs wget -P "public/uploads" -U "reddit downloader"
+	xargs wget -P "public/uploads/post" -U "reddit downloader"
 else
 	for var in "$@"
     do
@@ -11,6 +11,6 @@ else
     	cat "var/source.json" | \
         jq -r '.data.children | map(.data.url_overridden_by_dest)[] | select(.)' | \
         grep -E "(jpg|jpeg|png|mp4)$" | \
-        xargs wget -P "public/uploads" -U "reddit downloader"
+        xargs wget -P "public/uploads/post" -U "reddit downloader"
     done
 fi

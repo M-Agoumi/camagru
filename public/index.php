@@ -13,12 +13,12 @@
 
 /**
  * coded on php 7.4.3 environment compatible with php 8.0*
- * (*)has not been tested on it yet
+ * (*)later updated to 8.1 no more compatible with 7.4
  * check if php version is meet
  */
 
-if (version_compare(phpversion(), '7.4.0', '<='))
-	die('php version is too old, this scripts require php >=  v7.4');
+if (version_compare(phpversion(), '8.1.0', '<='))
+	die('php version is too old, this scripts require php >=  v8.1');
 
 /**
  * start counting execution time
@@ -91,7 +91,7 @@ $app = new Application(dirname(__DIR__));
  * register shutdown function
  */
 
-function shutdown($start)
+function shutdown($start): void
 {
 	/**
 	 * todo: write to a file and retrieve it using api
