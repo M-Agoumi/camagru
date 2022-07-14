@@ -25,14 +25,6 @@ function stopWebCam() {
 	video.src = "";
 }
 
-// DEALING WITH MENU BUTTON
-let menuBtn  = document.querySelector(".menu");
-let navBar = document.querySelector(".nav .nav-left");
-
-
-menuBtn.onclick = function(e) {
-    navBar.classList.toggle("show");
-}
 
 async function capture() {
 	const canvas = document.getElementById('canvas');
