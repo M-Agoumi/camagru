@@ -110,7 +110,6 @@ function getScrollPercent() {
 
 document.addEventListener('DOMContentLoaded', function(e) {
 	document.addEventListener('scroll', function(e) {
-		// console.log(getScrollPercent());
 		if (firstRun)
 			firstRun = false;
 		else
