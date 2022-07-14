@@ -544,6 +544,47 @@ nav .active {
 
 }
 
+/* @media screen and (max-width: 700px) {
+	nav .nav  {
+		height: 100vh !important;
+		width: 100% !important;
+		background-color: #333;
+		color: #FFF;
+		position: fixed;
+		top: 0;
+		left: 0;
+		padding: 40px 0;
+		text-align: center;
+		padding-top: 90px;
+		transition: all 1s ease-in-out;
+		display: block;
+		/* clip-path: circle(150px at 90% -30%);
+		z-index: 999;
+	}
+
+	.menu-burger {
+		display: none !important;
+	}
+
+	nav .nav .nav-right {
+		display: none;
+	}
+
+	nav .nav .nav-left {
+		display: block
+	}
+
+	nav .nav .nav-left li {
+		display: block
+	}
+
+	nav .nav .nav-left li a {
+		color: #FFF !important;
+	}
+
+} */
+
+
 
 
 /* .nav .nav-left.show {
