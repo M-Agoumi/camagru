@@ -225,3 +225,11 @@ function getUserName() {
         xhr.send();
     });
 }
+
+const menuBtn = document.querySelector(".c-menu");
+
+const cNav = document.querySelector(".c-nav");
+
+menuBtn.onclick = () => {
+	cNav.classList.toggle("open");
+}
