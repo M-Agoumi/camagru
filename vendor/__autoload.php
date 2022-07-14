@@ -5,7 +5,6 @@ set_include_path(dirname(__DIR__) . '/');
 spl_autoload_register('autoloader');
 
 function autoloader($class_name) {
-
 	$file_name 	= NULL;
 	$root		= get_include_path();
 	$class_name = str_replace("\\", "/", $class_name);
@@ -18,7 +17,7 @@ function autoloader($class_name) {
 		$file_name = $root . 'src/' . $class_name . '.php';
 
 	if ($file_name) {
-		$file_name = str_replace("//", "/", $file_name);
+		$file_name = str_replace("\\", "/", $file_name);
 		require($file_name);
 		return ;
 	}
