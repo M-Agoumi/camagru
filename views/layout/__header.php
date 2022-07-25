@@ -20,7 +20,7 @@ use Simfa\Framework\Application;
 
 				<?php if (Application::isGuest()): ?>
 					<li>
-						<a href="<?= Application::path('auth.login') ?>?ref=<?= urlencode(Application::$APP->request->getPath()) ?>"><?= $this->lang('login'); ?></a>
+						<a href="<?= Application::path('auth.login') ?><?=Application::$APP->request->getPath() ? '?ref=' . urlencode(Application::$APP->request->getPath(true)) : '' ?>"><?= $this->lang('login'); ?></a>
 					</li>
 					<li><a href="<?= Application::path('auth.signup') ?>"><?= $this->lang('register'); ?></a></li>
 				<?php else: ?>

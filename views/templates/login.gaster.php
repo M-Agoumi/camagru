@@ -11,7 +11,7 @@
     ?>
     <h1>Sign In</h1>
     <?php
-    $url = $_GET['ref'] ?? '/';
+    $url = $_GET['ref'] ?? '';
     $form = Form::begin(Application::path('auth.auth') . "?ref=" . $url, "POST", "login-form");
 	    echo $form->field($user, 'username')->required()
 		    ->setHolder('John Dracula')->setLabel('Username OR Email');
@@ -25,16 +25,20 @@
     </h1>
     <?php if(!empty($users)):?>
         <h1>login to saved accounts</h1>
-        <?php
-        /** @var array $users */
-        foreach ($users as $user): ?>
-            <div>
-                <h3>
-                    <a href="<?=route('auth.magic.login', $user->token)?>">
-                        <?=$user->user->name?>
-                    </a>
-                </h3>
-            </div>
-        <?php endforeach;?>
-    <?php endif;?>
+		<div class="login-cards">
+			<?php
+			/** @var $users Simfa\Model\UserToken[] */
+			foreach ($users as $token): ?>
+				<div class="profile-card">
+					<a href="<?=route('auth.magic.login', $token->getToken())?>">
+						<img src="/uploads/dps/boobies.png" alt="Avatar" style="width:100%">
+						<div class="profile-card-container">
+							<h4><b><?=$token->getUser()->getName()?></b></h4>
+							<p><?=$token->getUser()->getUsername()?></p>
+						</div>
+					</a>
+				</div>
+			<?php endforeach;?>
+		</div>
+	<?php endif;?>
 @endsection
