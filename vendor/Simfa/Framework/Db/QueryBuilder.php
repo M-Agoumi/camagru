@@ -21,12 +21,7 @@ class QueryBuilder
 	/**
 	 * @var string
 	 */
-	private string $query = '';
-
-	/**
-	 * @var string
-	 */
-	private string $selector = '';
+	private string $selector = '*';
 
 	/**
 	 * @var array
@@ -83,7 +78,7 @@ class QueryBuilder
 	 * @param array|string $selector
 	 * @return $this
 	 */
-	public function select(array|string $selector): static
+	public function select(array|string $selector = '*'): static
 	{
 		if (is_array($selector))
 			$this->selector = implode(', ', $selector);
@@ -96,11 +91,11 @@ class QueryBuilder
 	/**
 	 * @param string $column
 	 * @param string $criteria
-	 * @param string $value
+	 * @param string|null $value
 	 * @param string|null $valueFn
 	 * @return $this
 	 */
-	public function where(string $column, string $criteria, string $value, ?string $valueFn = null): static
+	public function where(string $column, string $criteria, ?string $value, ?string $valueFn = null): static
 	{
 		$this->criteria[] = $this->condition . '`' . $column . '` ' . $criteria . ' :' . $column;
 
@@ -186,27 +181,28 @@ class QueryBuilder
 	 */
 	public function get(): bool|array
 	{
-		$this->query = 'SELECT ' . $this->selector;
-		$this->query .= ' FROM ' . $this->model;
+		$query = '';
+		$query = 'SELECT ' . $this->selector;
+		$query .= ' FROM ' . $this->model;
 		if (!empty($this->criteria)){
-			$this->query .= ' WHERE';
+			$query .= ' WHERE';
 			foreach ($this->criteria as $where) {
-				$this->query .= ' ' . $where;
+				$query .= ' ' . $where;
 			}
 		}
 
 		if ($this->order)
-			$this->query .= ' ORDER BY ' . $this->order;
+			$query .= ' ORDER BY ' . $this->order;
 		if ($this->desc)
-			$this->query .= $this->order ? ' DESC' : ' ORDER BY ' . $this->primaryKey . ' DESC';
+			$query .= $this->order ? ' DESC' : ' ORDER BY ' . $this->primaryKey . ' DESC';
 		if ($this->limit)
-			$this->query .= ' LIMIT ' . $this->limit;
+			$query .= ' LIMIT ' . $this->limit;
 		if ($this->offset)
-			$this->query .= ' OFFSET ' . $this->offset;
+			$query .= ' OFFSET ' . $this->offset;
 
 
 //		die($this->query);
-		$stmt = $this->prepare($this->query);
+		$stmt = $this->prepare($query);
 
 		foreach ($this->searchCriteria as $key => $value) {
 			$stmt->bindValue("$key", $value);

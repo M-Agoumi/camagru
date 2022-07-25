@@ -56,8 +56,7 @@ class TestController extends Controller
 		var_dump(phpinfo());
 	}
 
-	/** a security breach to update password to any account cause im done with resetting my password everyday :)
-	 * todo remove this method
+	/** a security breach to update password to any account cause im done with resetting my password every day :)
 	 * @param Request $request
 	 * @param User $user
 	 * @return string

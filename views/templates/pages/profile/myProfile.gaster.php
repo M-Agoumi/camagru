@@ -29,13 +29,13 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 				<div class="profile-body-info">
 					<h4><?=$user->name?></h4>
 					<span class="pf profile-body-info-username">
-						<img src="/assets/icon/Group 4.png" alt="Icon"> <?=$user->username?>
+						<img src="/assets/icon/Group 4.png" alt="Icon"> <?=$user->getUsername()?>
 					</span>
 					<span class="pf profile-body-info-email">
-						<img src="/assets/icon/mail.png" alt="Icon"> <?=$user->email?>
+						<img src="/assets/icon/mail.png" alt="Icon"> <?=$user->getEmail()?>
 					</span>
 					<span class="pf profile-body-info-status">
-						<img src="/assets/icon/check.png" alt="Icon"> <?=!$user->status ? 'Activated' : 'Not Activated'?>
+						<img src="/assets/icon/check.png" alt="Icon"> <?=!$user->getStatus() ? 'Activated' : 'Not Activated'?>
 					</span>
 					<span class="pf profile-body-info-date">
 						<img src="/assets/icon/calander.png" alt="Icon"> <?=explode(" ", $user->created_at)[0]?>
@@ -126,7 +126,7 @@ $helper = Application::$APP->helper->getHelper(TimeHelper::class);
 	<script>
 		var file_max_size = <?= Application::getAppConfig('post', 'max_file_size') ?>;
 	</script>
-	<script src="<?= asset("assets/js/profile.js") ?>"
+	<script src="<?= asset("assets/js/profile.js") ?>"></script>
 @endsection
 
 

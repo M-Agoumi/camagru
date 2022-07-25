@@ -2,15 +2,28 @@
 
 namespace Simfa\Framework\Db;
 
+use Closure;
 use Simfa\Framework\Application;
 use Simfa\Framework\Db\Migration\Schema;
 
 abstract class Migration
 {
+	/**
+	 * @var string
+	 */
 	private static string $table = '';
+
+	/**
+	 * @var Database|null
+	 */
 	private static ?Database $db = null;
 
-	public static function  create(string $tableName, \Closure $closure)
+	/**
+	 * @param string $tableName
+	 * @param Closure $closure
+	 * @return void
+	 */
+	public static function create(string $tableName, Closure $closure): void
 	{
 		self::$table = $tableName;
 		$schema = $closure(new Schema());
@@ -23,13 +36,21 @@ abstract class Migration
 		self::$db->pdo->exec($sql);
 	}
 
-	public static function drop(string $tableName)
+	/**
+	 * @param string $tableName
+	 * @return void
+	 */
+	public static function drop(string $tableName): void
 	{
 		/** get database connection */
 		self::$db = Application::$APP->db;
 		self::$db->pdo->exec('DROP TABLE IF EXISTS `' . $tableName . '`');
 	}
 
+	/**
+	 * @param $schema
+	 * @return string
+	 */
 	private static function objectToSQL($schema): string
 	{
 		$sql = 'CREATE TABLE `' . self::$table . '` (' . PHP_EOL;
@@ -48,7 +69,13 @@ abstract class Migration
 		return $sql . PHP_EOL;
 	}
 
-	abstract function up();
+	/**
+	 * @return void
+	 */
+	abstract function up(): void;
 
-	abstract function down();
+	/**
+	 * @return void
+	 */
+	abstract function down(): void;
 }

@@ -116,7 +116,7 @@ class Application
 	/**
 	 * @param string $string
 	 * @param string $key
-	 * @return array|false|null
+	 * @return mixed
 	 */
 	public static function getAppConfig(string $string, string $key = ''): mixed
 	{
@@ -250,7 +250,7 @@ class Application
 	 * @param DbModel $user
 	 * @param string $redirect
 	 */
-	public function login(DbModel $user, string $redirect)
+	public function login(DbModel $user, string $redirect): void
 	{
 		$this->user = $user;
 		$primaryKey = 'get' . ucfirst($user->primaryKey());

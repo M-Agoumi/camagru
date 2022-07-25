@@ -41,6 +41,9 @@ class Post extends DbModel
 		];
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public function relationships(): array
 	{
 		return ['author' => User::class];

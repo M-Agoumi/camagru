@@ -22,7 +22,7 @@ function sleep(ms) {
 
 async function dismissMessage() {
     let source = document.getElementById('flash_message');
-    source.classList.toggle('fade');
+    source.classList.toggle('slideUp');
     await sleep(1000);
     source.style.display = "none";
 }

@@ -43,7 +43,7 @@ if (! function_exists('redirect')) {
 	 * @param $path
 	 * @return void
 	 */
-	function redirect($path = null)
+	function redirect($path = null): void
 	{
 		Application::$APP->response->redirect($path);
 	}

@@ -12,14 +12,19 @@ use Simfa\Framework\Exception\NotFoundException;
 class Injector
 {
 
+	/**
+	 * @var bool
+	 */
 	private bool $autowired = false;
 
 	/**
 	 * @param $class
 	 * @param string $method
-	 * @return false|object
+	 * @return false|mixed|object|null
+	 * @throws ExpiredException
+	 * @throws NotFoundException
 	 */
-	public function getInstance($class, string $method = '__construct')
+	public function getInstance($class, string $method = '__construct'): mixed
 	{
 		if ($method == '__construct' && !method_exists($class, $method))
 			return new $class();
@@ -41,7 +46,9 @@ class Injector
 	 * @param $method
 	 * @param string|null $key
 	 * @param string|null $value
-	 * @return array
+	 * @return array|null
+	 * @throws ExpiredException
+	 * @throws NotFoundException
 	 */
 	public function getDependencies($class, $method, ?string $key = null, ?string $value = null): ?array
 	{
@@ -71,10 +78,14 @@ class Injector
 	/**
 	 * @param $type
 	 * @param $name
+	 * @param $key
+	 * @param $value
 	 * @return mixed
+	 * @throws ExpiredException
+	 * @throws NotFoundException
 	 * @throws ReflectionException
 	 */
-	protected function injectClassOrModule($type, $name, $key, $value)
+	protected function injectClassOrModule($type, $name, $key = null, $value = null): mixed
 	{
 		if (Application::isAppProperty($name) && $name != 'user') /** todo: make dynamic instead of user */
 			return Application::$APP->$name;
@@ -84,9 +95,12 @@ class Injector
 
 	/** inject module
 	 * @param $type
+	 * @param $key
+	 * @param $value
 	 * @return object
+	 * @throws ExpiredException
+	 * @throws NotFoundException
 	 * @throws ReflectionException
-	 * @throws Exception
 	 */
 	private function injectModule($type, $key, $value): object
 	{
@@ -143,6 +157,10 @@ class Injector
 	}
 
 	/**
+	 * @param string $type
+	 * @return array|null
+	 * @throws ExpiredException
+	 * @throws NotFoundException
 	 * @throws ReflectionException
 	 */
 	private function getClassConstructorArguments(string $type): ?array

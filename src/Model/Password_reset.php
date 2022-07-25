@@ -7,7 +7,7 @@ use Simfa\Framework\Db\DbModel;
 
 class Password_reset extends DbModel
 {
-	public ?int $id = null;
+	public ?int $entityID = null;
 	public ?string $email = null;
 	public ?string $token = null;
 	public ?int $used = null;
@@ -15,7 +15,7 @@ class Password_reset extends DbModel
 	/**
 	 * @var string table primary key
 	 */
-	protected static string $primaryKey = 'id';
+	protected static string $primaryKey = 'entityID';
 
 
 	/**

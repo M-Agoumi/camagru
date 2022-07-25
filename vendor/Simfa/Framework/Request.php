@@ -28,14 +28,24 @@ class Request
 	}
 
 	/**
+	 * gets the current page path(url)
+	 * @param bool $firstSlash doesn't return first slash in case of true localhost/bar returns 'bar' instead of '/bar'
 	 * @return string the current path of the application
 	 */
-	public function getPath(): string
+	public function getPath(bool $firstSlash = false): string
 	{
-		$path = $_SERVER['REQUEST_URI'] ?? '/';
+		$path = $_SERVER['REQUEST_URI'] ?? '';
+
+		if ($path == '/')
+			return '';
 		$position = strpos($path, '?');
-		if (substr($path, -1) === '/' && $path != '/')
+
+		if (str_ends_with($path, '/'))
 			$path = substr_replace($path ,"", -1);
+
+		if ($firstSlash)
+			if ($path && $path[0] === '/')
+				$path = substr($path, 1);
 
 		if ($position === false)
 			return $path;
@@ -112,7 +122,7 @@ class Request
 	/**
 	 * @return array|bool
 	 */
-	public function magicPath()
+	public function magicPath(): bool|array
 	{
 		$routes = $this->getRoutes();
 		$path = $this->getMagicPath($this->getPath());
@@ -131,6 +141,9 @@ class Request
 		return $return ?? false;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getRoutes(): array
 	{
 		$routes = Application::$APP->router->routes['magic'] ?? [];
@@ -138,36 +151,45 @@ class Request
 
 		foreach ($routes as $key => $value) {
 			$url_variable = $this->getStringBetween($key);
-			/** this is a zombie code don't bring it to life please
-			 * $key = preg_replace('~\{.*\}~', "", $key);
-			 * $key = substr_replace($key, "", -1);
-			 */
 			$key = str_replace('/{'.$url_variable . '}', "", $key);
 			if (is_array($value))
-				array_push($value, $url_variable);
+				$value[] = $url_variable;
 			$newRoutes[] = array($key => $value);
 		}
 
 		return $newRoutes;
 	}
 
-	private function getStringBetween($string){
+	/**
+	 * @param $string
+	 * @return string
+	 */
+	private function getStringBetween($string): string
+	{
 		$string = ' ' . $string;
 		$ini = strpos($string, '{');
 		if ($ini == 0) return '';
 		$ini += strlen('{');
 		$len = strpos($string, '}', $ini) - $ini;
+
 		return substr($string, $ini, $len);
 	}
 
-	private function getMagicPath(string $path)
+	/**
+	 * @param string $path
+	 * @return string
+	 */
+	private function getMagicPath(string $path): string
 	{
 		$position = strrpos($path, '/');
 
 		return substr($path, 0, $position);
 	}
 
-	private function getPathVar()
+	/**
+	 * @return string
+	 */
+	private function getPathVar(): string
 	{
 		$path = $this->getPath();
 		$position = strrpos($path, '/');
@@ -176,12 +198,10 @@ class Request
 	}
 
 	/**
-	 * get user ip address
-	 * picture    varchar(255) NULL ,
-	 * ip_address  varchar(45) NULL ,
-	 * @return mixed
+	 * @return mixed|string
 	 */
-	public function getUserIpAddress(){
+	public function getUserIpAddress(): mixed
+	{
 		if(!empty($_SERVER['HTTP_CLIENT_IP'])){
 			//ip from share internet
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -189,7 +209,7 @@ class Request
 			//ip pass from proxy
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		}else
-			$ip = $_SERVER['REMOTE_ADDR'];
+			$ip = $_SERVER['REMOTE_ADDR'] ?? '';
 
 		return $ip;
 	}

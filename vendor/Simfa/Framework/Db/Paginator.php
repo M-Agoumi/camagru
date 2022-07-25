@@ -7,14 +7,16 @@ use Simfa\Framework\Session;
 
 abstract class Paginator
 {
-	private Session $session;
+	/**
+	 * @var bool
+	 */
 	private bool    $firstCall = true;
 
-	public function __construct()
-	{
-		$this->session = Application::$APP->session;
-	}
-
+	/**
+	 * @param array $config
+	 * @param array $protected
+	 * @return array
+	 */
 	public function paginate(array $config = [], array $protected = []): array
 	{
 		/** @var $articlesNum int elements by page */
@@ -44,6 +46,11 @@ abstract class Paginator
 		return $result;
 	}
 
+	/**
+	 * @param array $data
+	 * @param $protected
+	 * @return array
+	 */
 	private function processData(array $data, $protected): array
 	{
 		$protected = [...$protected, ...static::$protected];
@@ -59,7 +66,10 @@ abstract class Paginator
 		return $data;
 	}
 
-	public function pages()
+	/**
+	 * @return array|int
+	 */
+	public function pages(): array|int
 	{
 		if (isset($this->totalRecords)) {
 			$totalPages = ceil($this->totalRecords / $this->articlesByPage);
@@ -77,20 +87,32 @@ abstract class Paginator
 		return 0;
 	}
 
+	/**
+	 * @param bool $reset
+	 * @return int|mixed
+	 */
 	private function getPage(bool $reset = false)
 	{
 		if (!$reset) {
-			if ($this->session->get('page')) {
-				$this->session->set('page', $this->session->get('page') + 1);
-				return $this->session->get('page');
+			if ($this->getSession()->get('page')) {
+				$this->getSession()->set('page', $this->getSession()->get('page') + 1);
+				return $this->getSession()->get('page');
 			}
 		} else {
-			$this->session->set('page', 0);
+			$this->getSession()->set('page', 0);
 			return 0;
 		}
 
-		$this->session->set('page', 1);
+		$this->getSession()->set('page', 1);
 
 		return 1;
+	}
+
+	/**
+	 * @return Session|null
+	 */
+	private function getSession(): ?Session
+	{
+		return Application::$APP->session;
 	}
 }
