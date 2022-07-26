@@ -11,7 +11,7 @@
 /*                                                                                                  */
 /* ************************************************************************************************ */
 
-namespace   Model;
+namespace Model;
 /**
  * Class User
  */
@@ -21,7 +21,12 @@ use Simfa\Framework\Db\DbModel;
 /**
  * @method getPicture()
  * @method getUsername()
+ * @method getPassword()
  * @method setPicture(mixed $filename)
+ * @method setPass(bool $status)
+ * @method setPassword(string $string)
+ * @method setUsername(string $string)
+ * @method getStatus()
  */
 class User extends DbModel
 {
@@ -29,10 +34,9 @@ class User extends DbModel
 	const STATUS_ACTIVE = 1;
 	const STATUS_DELETED = 2;
 
-    public ?int $entityID = null;
+	public ?int $entityID = null;
 	public ?string $name = null;
 	public ?string $username = null;
-	public ?string $email = null;
 	public ?string $password = null;
 	public ?int $status = self::STATUS_INACTIVE;
 	public ?string $picture = null;
@@ -57,7 +61,7 @@ class User extends DbModel
 		$this->status = self::STATUS_INACTIVE;
 		$this->password = password_hash($this->password, PASSWORD_BCRYPT);
 
-	    return parent::save();
+		return parent::save();
 	}
 
 	/** hash password before updating
@@ -72,17 +76,57 @@ class User extends DbModel
 	}
 
 	/**
-     * @return array[]
-     */
-    public function rules(): array
-    {
-        return [
-            'name' => [self::RULE_REQUIRED],
-            'username' => [self::RULE_REQUIRED, [
-            	self::RULE_UNIQUE, 'class' => self::class
-            ]],
-            'email' => [[self::RULE_UNIQUE, 'class' => self::class], self::RULE_REQUIRED, self::RULE_EMAIL],
-            'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 32]]
-        ];
-    }
+	 * @param string $email
+	 * @return void
+	 */
+	public function setEmail(string $email): void
+	{
+		$mailObj = new Email();
+		$mailObj->getOneBy('email', $email);
+		if (!$mailObj->getId()) {
+			$mailObj->setEmail('email');
+			$mailObj->setUser($this);
+			$mailObj->save();
+		} else {
+			$mailObj->setUser($this);
+			$mailObj->update();
+		}
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getEmail(): ?string
+	{
+		$email = new Email();
+		$query = $email->queryBuilder();
+		$result = $query->select('email')->where('prime', 'like', '1')->and()
+			->where('user', '=', $this->getId())->get();
+
+		if (count($result))
+			return $result[0]['email'];
+
+		return '';
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function rules(): array
+	{
+		return [
+			'name' => [self::RULE_REQUIRED],
+			'username' => [self::RULE_REQUIRED, [
+				self::RULE_UNIQUE, 'class' => self::class
+			]],
+			'password' => [
+				self::RULE_NOT_ALL_NUMBER,
+				self::RULE_REQUIRED,
+				self::RULE_ONE_UPPERCASE,
+				self::RULE_ONE_LOWERCASE,
+				[self::RULE_MIN, 'min' => 8],
+				[self::RULE_MAX, 'max' => 32]
+			]
+		];
+	}
 }

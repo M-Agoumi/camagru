@@ -32,16 +32,14 @@ Router::get('/login', [AuthController::class, 'login'])->name("auth.login");
 Router::post('/login', [AuthController::class, 'auth'])->name('auth.auth');
 Router::magic('/magic-login/{token}', [AuthController::class, 'magicLogin'])->name('auth.magic.login');
 
-Router::get('/signup', [AuthController::class, 'signup'])->name('auth.signup');
-Router::post('/signup', [AuthController::class, 'verifyEmail'])->name('auth.verifyEmail');
+Router::request('/signup', [AuthController::class, 'signup'])->name('auth.signup');
 Router::magic('/verify-email/{token}', [AuthController::class, 'register'])->name('auth.register');
 Router::post('/registration', [AuthController::class, 'insertUser'])->name('auth.insertUser');
 
 Router::get('/restore_password', [AuthController::class, 'restore']);
 Router::post('/restore_password', [AuthController::class, 'restore'])->name('auth.restore');
-Router::magic("/verify-token/{token}", [AuthController::class, 'checkToken']);
-Router::get("/set_new_password", [AuthController::class, 'updatePassword'])->name('auth.updatePassword');
-Router::post("/set_new_password", [AuthController::class, 'updatePassword']);
+Router::magic("/set-new-password/{token}", [AuthController::class, 'updatePassword'])->name('auth.updatePassword');
+//Router::request("/set-new-password", [AuthController::class, 'updatePassword']);
 
 Router::post('/logout', [AuthController::class, 'logout'])->name('app.logout');
 Router::get('/logout-message', [AuthController::class, 'logoutMessage'])->name('app.logoutMessage');
@@ -53,6 +51,7 @@ Router::get('/profile', [UserController::class, 'myProfile'])->name('user.profil
 Router::get('/me', [UserController::class, 'myProfile']);
 Router::get('/profile/edit', [UserController::class, 'edit'])->name('user.edit');
 Router::post('/profile/edit', [UserController::class, 'update'])->name('user.update');
+Router::magic('/confirm-email/{token}', [UserController::class, 'confirmEmail'])->name('confirm-email');
 Router::get('/profile/edit/password', [UserController::class, 'UpdatePassword'])->name('user.update.password');
 Router::post('/profile/edit/password', [UserController::class, 'UpdatePassword']);
 Router::get('/profile/preferences', [UserController::class, 'preferences'])->name('user.preferences');

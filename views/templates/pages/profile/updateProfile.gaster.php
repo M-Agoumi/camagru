@@ -9,7 +9,7 @@
 	/** @var $user Model\User */
 	?>
 	<h1>Edit profile <?=$user->name?></h1>
-	<?php $form = Form::begin(Application::path('user.update'), "POST", "update-form");
+	<?php $form = Form::begin(Application::path('user.edit'), "POST", "update-form");
 	echo $form->field($user, 'name');
 	echo $form->field($user, 'username');
 	echo $form->field($user, 'email');

@@ -4,17 +4,18 @@ namespace Controller;
 
 
 use Exception;
-use Middlewares\AuthMiddleware;
-use Model\Background;
-use Model\Config;
-use Model\Cover;
 use Model\Post;
 use Model\User;
-use Simfa\Action\Controller;
-use Simfa\Framework\Application;
-use Simfa\Framework\Request;
+use Model\Cover;
+use Model\Email;
+use Model\Config;
+use Model\Background;
 use Simfa\Model\Language;
 use Simfa\Model\Preference;
+use Simfa\Framework\Request;
+use Simfa\Action\Controller;
+use Middlewares\AuthMiddleware;
+use Simfa\Framework\Application;
 
 class UserController extends Controller
 {
@@ -73,7 +74,7 @@ class UserController extends Controller
 	public function myProfile()
 	{
 		if (Application::$APP->user)
-			Application::$APP->response->redirect('/user/' . Application::$APP->user->username);
+			Application::$APP->response->redirect('/user/' . Application::$APP->user->getUsername());
 		else
 			Application::$APP->response->redirect(Application::path('auth.login'));
 	}
@@ -86,27 +87,152 @@ class UserController extends Controller
 		]);
 	}
 
+	/**
+	 * add verification for the new email
+	 * @param Request $request
+	 * @return string|void|null
+	 * @throws Exception
+	 */
 	public function update(Request $request)
 	{
-		$user = Application::$APP->user;
-
+		/** @var User $user */
+		$user = clone Application::$APP->user;
 		$user->loadData($request->getBody());
+		$newEmail = $request->getBody()['email'] ?? '';
 
 		$user->validate();
 
 		$valid = 1;
+		/** check email */
+		$this->updateEmail($user, $newEmail);
 
-		if (sizeof($user->errors) == 1 && !isset($user->errors['password']))
+		if (sizeof($user->errors) > 1 || (sizeof($user->errors) == 1 && !isset($user->errors['password'])))
 			$valid = 0;
 		if ($valid && $user->update()) {
 			Application::$APP->session->setFlash('success', 'Your information has been updated');
-			return Application::$APP->response->redirect(Application::path('user.profile'));
+			return Application::$APP->response->redirect('/user/' . $user->getUsername());
 		}
 
 		return render('pages/profile/updateProfile', [
 			'user' => $user,
-			'title' => Application::$APP->user->name . " - Edit Profile"
+			'title' => $user->getName() . " - Edit Profile"
 		]);
+	}
+
+	private function updateEmail($user, $newEmail)
+	{
+		$email = new Email();
+		$mainEmail = $email->queryBuilder()->select('email')->where('user', '=', $user->getId())->and()
+			->where('prime', '=', '1')->get();
+
+		if (count($mainEmail) && ($mainEmail[0]['email'] != $newEmail)) {
+			if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL))
+				$user->addError('email', 'Failed to change email, entered email isn\'t valid');
+			else {
+				/** check if email already exists */
+				$email->getOneBy('email', $newEmail);
+				if (!$email->getId()) {
+					$email->setEmail($newEmail);
+					$email->setUser($user);
+					$email->setToken($this->generateToken());
+					$email->setPrime(0);
+
+					$data = ['confirmEmail', [
+						'port'  => $_SERVER['SERVER_PORT'],
+						'token' => $email->getToken(),
+						'title' =>'Confirm Your Email']
+					];
+
+					if ($email->save()){
+						if ($this->mail($email->getEmail(), 'Confirm Your Email', $data)){
+//							Application::$APP->session->setFlash('success', 'Please confirm you email, we sent you a link');
+							Application::$APP->session->setFlash('success', 'email has been updated, please follow the link sent to your email to complete the update');
+							return redirect('/user/' . $user->getUsername());
+						} else
+							return render('messages/register_email_failed');
+					}
+				} else {
+					$this->updateExistingEmail($email, $user);
+				}
+			}
+		}
+	}
+
+	private function setEmailAsPrimary(User $user, Email $email)
+	{
+		$oldEmail = new Email();
+		$oldEmail->getOneBy('email', $user->getEmail());
+		$oldEmail->setPrime(0);
+		$oldEmail->update();
+
+		$email->setPrime(1);
+		$email->setConfirmed(1);
+		$email->setUser($user);
+		$email->setActive(1);
+		$email->update();
+
+	}
+
+	private function updateExistingEmail(Email $email, User $user): void
+	{
+		if ($email->getConfirmed() && $email->getUser()->getId() == $user->getId()){
+			$this->setEmailAsPrimary($user, $email);
+			return;
+		}
+
+		if ($email->getUser()->getId() != Application::$APP->user->getId())
+			return;
+		$email->setToken($this->generateToken());
+		$data = ['confirmEmail', [
+			'port'  => $_SERVER['SERVER_PORT'],
+			'token' => $email->getToken(),
+			'title' =>'Confirm Your Email']
+		];
+
+		if ($email->update()) {
+			if ($this->mail($email->getEmail(), 'Confirm Your Email', $data)){
+//				Application::$APP->session->setFlash('success', 'Please confirm you email, we sent you a link');
+				Application::$APP->session->setFlash('success', 'email has been updated, please follow the link sent to your email to complete the update');
+				redirect('/user/' . $user->getUsername());
+				return;
+			}
+		}
+
+		render('messages/register_email_failed');
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function generateToken(): string
+	{
+		/** Generate a random string. */
+		$token = openssl_random_pseudo_bytes(16);
+		/** Convert the binary data into hexadecimal representation. */
+
+		return bin2hex($token);
+	}
+
+	public function confirmEmail(Email $email): string
+	{
+		if ($email->getUser()->getId() == Application::$APP->user->getId()) {
+			$oldEmail = new Email();
+			$oldEmail->getOneBy('email', $email->getUser()->getEmail());
+			$oldEmail->setPrime(0);
+			$oldEmail->update();
+
+			$email->setPrime(1);
+			$email->setConfirmed(1);
+			$email->setActive(1);
+			$email->update();
+			echo '<pre>';
+			print_r($oldEmail);
+		}
+
+		Application::$APP->session->setFlash('error', 'something went wrong please try again later');
+
+		return redirect('/');
 	}
 
 	public function UpdatePassword(Request $request): ?string
@@ -163,7 +289,6 @@ class UserController extends Controller
 		if ($request->isPost()) {
 			$pref->loadData($request->getBody());
 
-			/** todo add preference for sending an email on command or disabling it */
 			if ($pref->entityID) {
 				if ($pref->validate() && $pref->update()){
 					Application::$APP->session->set('lang_main', (Language::getLang($pref->language))->language);
@@ -177,7 +302,7 @@ class UserController extends Controller
 				if ($pref->validate() && $pref->save()) {
 					Application::$APP->session->set('lang_main', (Language::getLang($pref->language))->language);
 					Application::$APP->session->setFlash('success', 'your preferences has been updated');
-					Application::$APP->response->redirect(Application::path('user.preferences'));
+					redirect(Application::path('user.preferences'));
 				}
 			}
 		}
@@ -339,7 +464,7 @@ class UserController extends Controller
 	public function getName(): string
 	{
 		if (Application::$APP->user)
-			return Application::$APP->user->name;
+			return Application::$APP->user->getName();
 
 		return 'guest';
 	}

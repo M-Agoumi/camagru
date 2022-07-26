@@ -14,7 +14,7 @@
 namespace Simfa\Form;
 
 
-use Simfa\Model\Model;
+use Simfa\Framework\Db\DbModel;
 
 class Field
 {
@@ -26,21 +26,22 @@ class Field
 	public const REQUIRED = 'required="required"';
 	private const AUTOCOMPLETE = 'autocomplete="off"';
 
-	private Model $model;
-	private string $attribute;
+	private DbModel 	$model;
+	private string 	$attribute;
 	private ?string $label;
-	private string $type;
-	private string $holder;
-	private string $disabled;
-	private string $required;
-	private string $default;
-	private string $class;
+	private string 	$type;
+	private string 	$holder;
+	private string 	$disabled;
+	private string 	$required;
+	private string 	$default;
+	private string 	$class;
 	private ?string $submit = null;
 	private ?string $submitExtra;
-	private string $autoComplete = '';
-	private string $custom = '';
+	private string 	$autoComplete = '';
+	private string 	$custom = '';
+	private mixed 	$value = null;
 
-	public function __construct(Model $model, string $attribute)
+	public function __construct(DbModel $model, string $attribute)
 	{
 		$this->model = $model;
 		$this->attribute = $attribute;
@@ -80,13 +81,13 @@ class Field
 						</div>
 					</div>
 				</div>
-				', !($this->type == self::TYPE_HIDDEN) ? $this->attribute : ''
+				', !($this->type == self::TYPE_HIDDEN) ? ucfirst($this->attribute) : ''
 				, $this->type != self::TYPE_HIDDEN ? (!empty($this->label) ? $this->label : ucfirst($this->attribute)) : ''
 				, $this->type
 				, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
 				, $this->attribute
 				, $this->attribute
-				, $this->model->{'get' . ucfirst($this->attribute)}()
+				, $this->value ?: $this->model->{'get' . ucfirst($this->attribute)}()
 				, !empty($this->holder) ? $this->holder : $this->attribute
 				, $this->custom
 				, $this->disabled
@@ -113,13 +114,13 @@ class Field
 				</div>
 				%s
 			</div>
-			', !($this->type == self::TYPE_HIDDEN) ? $this->attribute : ''
+			', !($this->type == self::TYPE_HIDDEN) ? ucfirst($this->attribute) : ''
 			, $this->type != self::TYPE_HIDDEN ? (!empty($this->label) ? $this->label : ucfirst($this->attribute)) : ''
 			, $this->type
 			, $this->class . ' ' . ($this->model->hasError($this->attribute) ? 'is-invalid' : '')
 			, $this->attribute
 			, $this->attribute
-			, $this->model->{'get' . ucfirst($this->attribute)}()
+			, $this->value ?: $this->model->{'get' . ucfirst($this->attribute)}()
 			, !empty($this->holder) ? $this->holder : $this->attribute
 			, $this->disabled . ' ' . $this->autoComplete
 			, $this->required
@@ -307,6 +308,17 @@ class Field
 	public function setCustom(string $custom): static
 	{
 		$this->custom = $custom;
+
+		return $this;
+	}
+
+	/**
+	 * @param $value mixed will override any other value (default and model value)
+	 * @return $this
+	 */
+	public function value(mixed $value): static
+	{
+		$this->value = $value;
 
 		return $this;
 	}

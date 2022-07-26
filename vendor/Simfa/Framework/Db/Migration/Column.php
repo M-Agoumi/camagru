@@ -85,7 +85,7 @@ class Column
 			/** column primary */
 			$sql .= $this->primary ? ' PRIMARY KEY AUTO_INCREMENT' : '';
 			/** column default */
-			$sql .= $this->default ? ' DEFAULT ' . $this->default : '';
+			$sql .= strlen($this->default) ? ' DEFAULT ' . $this->default : '';
 		} else {
 			$sql = 'FOREIGN KEY (' . $this->foreign . ') REFERENCES ' . $this->referencesTable;
 			$sql .= ' (' . $this->references . ')';

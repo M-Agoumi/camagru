@@ -54,9 +54,21 @@ abstract class DbModel extends Model
 	 */
 	private QueryBuilder $queryBuilder;
 
+	/**
+	 * @return int|null
+	 */
 	public function getId(): ?int
 	{
 		return $this->{$this->primaryKey()};
+	}
+
+	/**
+	 * @param $id
+	 * @return void
+	 */
+	public function setId($id): void
+	{
+		$this->{$this->primaryKey()} = $id;
 	}
 
 	/**
@@ -105,18 +117,29 @@ abstract class DbModel extends Model
 		$tableName = $this->tableName();
 		$attributes = $this->attributes();
 
+		if (!$this->getId())
+			if (($key = array_search(static::primaryKey(), $attributes)) !== false) {
+				unset($attributes[$key]);
+			}
+
 		$params = array_map(fn($m) => ":$m", $attributes);
+		$attrs = array_map(fn($m) => "`$m`", $attributes);
 		$statement = self::prepare(
-			"INSERT INTO `$tableName` (". implode(", ", $attributes) . ") values (
+			"INSERT INTO `$tableName` (". implode(", ", $attrs) . ") values (
 				" . implode(", ", $params) . ")"
 		);
 
 		foreach ($attributes as $attribute) {
+//			echo 'binding ' . $this->{$attribute} . ' to ' . $attribute . '<br>';
 			if ($attribute == 'created_at' && !$this->{$attribute})
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
 			else
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
+
+//		echo '<pre>';
+//		print_r($statement->debugDumpParams());
+//		die();
 
 		$done = $statement->execute();
 
@@ -146,14 +169,14 @@ abstract class DbModel extends Model
 		$first = 1;
 		foreach ($attributes as $attr) {
 			if (!$first)
-				$sql .= ", " . $attr . " = :" . $attr;
+				$sql .= ', `' . $attr . '` = :' . $attr;
 			else {
-				$sql .= $attr . " = :" . $attr;
+				$sql .= '`' . $attr . '` = :' . $attr;
 				$first = 0;
 			}
 		}
 
-		$sql .= " WHERE " . $this->primaryKey() . "=" . $this->{$this->primaryKey()} . ";";
+		$sql .= ' WHERE ' . $this->primaryKey() . '=' . $this->{$this->primaryKey()} . ';';
 
 		$statement = self::prepare($sql);
 
@@ -179,10 +202,10 @@ abstract class DbModel extends Model
 	 * @param $key
 	 * @param null $value
 	 * @param int $object
-	 * @return bool|Model|array
+	 * @return mixed
 	 */
-    public function getOneBy($key, $value = null, int $object = 1): bool|Model|array
-    {
+    public function getOneBy($key, $value = null, int $object = 1): mixed
+	{
         $tableName = $this->tableName();
 
         if ($value) {
@@ -191,7 +214,11 @@ abstract class DbModel extends Model
         } else {
         	$primary = $this->primaryKey();
         	$statement = self::prepare("SELECT * FROM $tableName WHERE $primary = :key");
-	        $statement->bindParam(":key", $key);
+			if ($key instanceof $this) {
+				$id = $key->getId();
+				$statement->bindParam(":key", $id);
+			} else
+	        	$statement->bindParam(":key", $key);
         }
 	    $statement->execute();
 
@@ -202,14 +229,15 @@ abstract class DbModel extends Model
 			        $relations = $this->relationships();
 			        foreach ($relations as $key => $value) {
 				        $model = new $value;
-				        $model->loadData($model->getOneBy($data[$key], '', false));
+						if ($data[$key])
+				        	$model->loadData($model->getOneBy($data[$key], '', false));
 				        $data[$key] = $model;
 			        }
 		        }
 
 		        $this->loadData($data);
 	        }
-            return $statement->fetchObject();
+            return $this;
         }
 
         return $statement->fetch(2);
@@ -393,6 +421,8 @@ abstract class DbModel extends Model
 	 */
 	public function __call($name, $arguments)
 	{
+		if ($name == 'set')
+			die('here');
 		if (substr($name, 0, 3 ) === "get")
 		{
 			$name = lcfirst(ltrim($name, 'get'));
@@ -413,7 +443,10 @@ abstract class DbModel extends Model
 		throw new \BadMethodCallException('method ' . $name . ' does not exist in class ' . get_class($this));
 	}
 
-	public function queryBuilder()
+	/**
+	 * @return QueryBuilder
+	 */
+	public function queryBuilder(): QueryBuilder
 	{
 		if (property_exists($this, 'queryBuilder'))
 			return $this->queryBuilder;
@@ -421,5 +454,13 @@ abstract class DbModel extends Model
 		$this->queryBuilder = new QueryBuilder(static::tableName(), static::primaryKey());
 
 		return $this->queryBuilder();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function relationships(): array
+	{
+		return [];
 	}
 }

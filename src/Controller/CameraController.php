@@ -34,6 +34,7 @@ class CameraController extends Controller
 	}
 
 	/**
+	 * todo add support for gifs
 	 * @return string|void
 	 * @throws Exception
 	 */
@@ -41,6 +42,8 @@ class CameraController extends Controller
 	{
 		$post = New Post();
 		$imgCode = Application::$APP->request->getBody()['picture'];
+		if (!base64_decode($imgCode, true))
+			throw new Exception('Image is not valid, therefore I\'m a teapot ', 418);
 		$emotesPost = $_POST['emote'] ?? [];
 		$emotes = []; // processed input
 		foreach ($emotesPost as $key => $emote) {

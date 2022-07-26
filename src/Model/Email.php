@@ -11,66 +11,50 @@
 /*                                                                                                  */
 /* ************************************************************************************************ */
 
-namespace   Model;
-/**
- * Class User
- */
+namespace Model;
 
-use JetBrains\PhpStorm\ArrayShape;
 use Simfa\Framework\Db\DbModel;
 
 /**
- * @method getUser(): Model\User
- * @method setUser(DbModel $user)
- * @method setType(int $type)
- * @method getType(): int
- * @method setImage(string $image)
- * @method getImage()
+ * Class Email for User emails
+ * @method getEmail()
+ * @method void setUser(User $user)
+ * @method void setEmail(string $string)
+ * @method void setActive(int $int)
+ * @method void setToken(string $string)
+ * @method string getToken()
+ * @method int getUsed()
+ * @method void setUsed(int $int)
+ * @method User|null getUser()
+ * @method void setPrime(int $int)
+ * @method int getPrime()
+ * @method setConfirmed(int $int)
+ * @method getConfirmed()
  */
-class Background extends DbModel
+class Email extends DbModel
 {
-    protected ?int $entityID = null;
-	protected ?User $user = null;
-	protected ?int $type = 0;
-	protected ?string $image = null;
+	/**
+	 * @var int|null
+	 */
+	protected ?int 		$entityID 	= null;
+	protected ?string 	$email 		= null;
+	protected ?User 	$user 		= null;
+	protected string 	$token 		= '';
+	protected int 		$used 		= 0;
+	protected int 		$confirmed 	= 0;
+	protected int 		$active		= 0;
+	protected int 		$prime		= 1;
 
 	/**
-	 * @var string
+	 * @return array[]
 	 */
-	protected static string $tableName = 'user_background';
-
-	/**
-	 * @var array|string[] protected attributes from public sharing (Ex:API...)
-	 */
-	protected static array $protected = ['EntityID'];
-
-	public function save(): bool
+	public function rules(): array
 	{
-		$bg = new Background();
-		$bg->getOneBy('user', $this->user->getId());
-//		var_dump($bg);
-//		die();
-		if ($bg->getId()) {
-			$bg->setType($this->type);
-			$bg->setImage($this->image);
-			return $bg->update();
-		}
-		return parent::save();
+		return ['email' => [self::RULE_REQUIRED, self::RULE_EMAIL]];
 	}
 
-	/**
-	 * @return string[]
-	 */
-	#[ArrayShape(['user' => "string"])]
-	public function relationShips(): array
+	public function relationships(): array
 	{
 		return ['user' => User::class];
 	}
-	/**
-     * @return array[]
-     */
-    public function rules(): array
-    {
-        return [];
-    }
 }

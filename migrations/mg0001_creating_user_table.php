@@ -20,7 +20,6 @@ class mg0001_creating_user_table
 	{
 		Migration::create('user', function(Schema $table) {
 			$table->id();
-			$table->string('email');
 			$table->string('name')->nullable();
 			$table->string('username')->nullable();
 			$table->string('password')->nullable();
