@@ -1036,7 +1036,6 @@ main h1{
 }
 
 
-
 input[type=text], input[type=password],input[type=email], textarea {
 
 	width: 100%;
@@ -1099,6 +1098,49 @@ input[type=submit]:hover {
 
 }
 
+.login-cards{
+	width: 100%;
+	text-align: center;
+}
+
+.profile-card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	transition: 0.3s;
+	width: 200px;
+	text-align: center;
+	display: inline-block;
+	/*float: left;*/
+	margin: auto 10px;
+	color: var(--mainColor);
+}
+
+.profile-card img {
+	border-radius: 4px 4px 0 0;
+}
+
+.profile-card h4 {
+	margin: 0;
+}
+
+.profile-card p {
+	margin: 0;
+	padding: 5px 0 10px;
+	color: var(--subColor);
+}
+
+.profile-card a {
+	text-decoration: none;
+	color: var(--mainColor);
+}
+
+.profile-card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.profile-card-container {
+	padding: 2px 16px;
+}
+
 
 
 .is-invalid {
@@ -1135,7 +1177,7 @@ input[type=submit]:hover {
 
 	width: 25%;
 
-	margin-top: 20px;
+	margin-top: 15px;
 
 }
 
@@ -1146,9 +1188,6 @@ input[type=submit]:hover {
 	float: left;
 
 	width: 75%;
-
-	margin-top: 20px;
-
 }
 
 
@@ -1173,15 +1212,17 @@ input[type=submit]:hover {
 
 	width: fit-content;
 
-	margin: auto;
-
 	border: 1px solid transparent;
 
 	border-radius: 4px;
 
 	opacity: 1;
 
-	transition: opacity 1s;
+	overflow:hidden;
+
+	margin: auto auto 10px;
+
+	height: 25px;
 
 }
 
@@ -1189,6 +1230,13 @@ input[type=submit]:hover {
 
 	opacity: 0;
 
+}
+
+.slideUp {
+	transition: all 1s cubic-bezier(0, 0.25, 0.5, 1);
+	height: 0;
+	padding: 0;
+	border: none;
 }
 
 
