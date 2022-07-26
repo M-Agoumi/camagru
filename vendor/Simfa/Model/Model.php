@@ -23,12 +23,23 @@ use Simfa\Framework\Db\Paginator;
 
 abstract class Model extends Paginator
 {
+	/**
+	 * group of predefined rules to check for while validating a model
+	 * @todo move this validation to a validator class
+	 */
     public const RULE_REQUIRED = 'required';
     public const RULE_EMAIL = 'email';
     public const RULE_MIN = 'min';
     public const RULE_MAX = 'max';
     public const RULE_UNIQUE = 'unique';
     public const RULE_WRONG = 'wrong';
+	public const RULE_ONE_UPPERCASE = 'one_up';
+	public const RULE_ONE_LOWERCASE = 'one_low';
+	public const RULE_UPPERCASE = 'upper';
+	public const RULE_LOWERCASE = 'lower';
+	public const RULE_NUMBER = 'number';
+	public const RULE_NOT_ALL_NUMBER = 'not_all_number';
+
     /**
      * @var array to save errors to obtain later to show in the form
      */
@@ -65,14 +76,20 @@ abstract class Model extends Paginator
 	        $value = $this->{$attribute};
 	        foreach ($rules as $rule) {
                 $ruleName = $rule;
-                // if $rule name is an array so we dont have an error in next lines
+                // if $rule name is an array, so we don't have an error in next lines
                 if (!is_string($ruleName)) {
                     $ruleName = $ruleName[0];
                 }
                 // required? then check for null
                 if ($ruleName === self::RULE_REQUIRED && !$value)
                     $this->addErrorForRules($attribute, self::RULE_REQUIRED);
-                // email? fine check if it's a valid email syntax
+				// at lest one letter uppercase
+				if ($ruleName == self::RULE_ONE_UPPERCASE && strtolower($value) === $value)
+					$this->addErrorForRules($attribute, self::RULE_ONE_UPPERCASE);
+				// at lest one letter lowercase
+				if ($ruleName == self::RULE_ONE_LOWERCASE && strtoupper($value) === $value)
+					$this->addErrorForRules($attribute, self::RULE_ONE_LOWERCASE);
+				// email? fine check if it's a valid email syntax
                 if ($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL))
                     $this->addErrorForRules($attribute, self::RULE_EMAIL);
                 // min? check the strlen()
@@ -81,6 +98,12 @@ abstract class Model extends Paginator
                 // max? check the strlen()
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max'])
                     $this->addErrorForRules($attribute, self::RULE_MAX, $rule);
+				// is number
+				if ($ruleName === self::RULE_NUMBER && !is_numeric($value))
+					$this->addErrorForRules($attribute, self::RULE_NUMBER);
+				// is all number
+				if ($ruleName === self::RULE_NOT_ALL_NUMBER && is_numeric($value))
+					$this->addErrorForRules($attribute, self::RULE_NOT_ALL_NUMBER);
 
 				// is it unique? let's check our records
                 if ($ruleName === self::RULE_UNIQUE) {
@@ -147,12 +170,16 @@ abstract class Model extends Paginator
     private function errorMessages(): array
     {
         return [
-            self::RULE_REQUIRED => $this->lang('RULE_REQUIRED'),
-            self::RULE_EMAIL => $this->lang('RULE_EMAIL'),
-            self::RULE_MIN => $this->lang('RULE_MIN'),
-            self::RULE_MAX => $this->lang('RULE_MAX'),
-            self::RULE_UNIQUE => $this->lang('RULE_UNIQUE'),
-            self::RULE_WRONG => $this->lang('RULE_WRONG'),
+            self::RULE_REQUIRED 		=> $this->lang('RULE_REQUIRED'),
+            self::RULE_EMAIL 			=> $this->lang('RULE_EMAIL'),
+            self::RULE_MIN 				=> $this->lang('RULE_MIN'),
+            self::RULE_MAX 				=> $this->lang('RULE_MAX'),
+            self::RULE_UNIQUE 			=> $this->lang('RULE_UNIQUE'),
+            self::RULE_WRONG 			=> $this->lang('RULE_WRONG'),
+			self::RULE_ONE_UPPERCASE 	=> $this->lang('RULE_ONE_UPPERCASE'),
+			self::RULE_ONE_LOWERCASE 	=> $this->lang('RULE_ONE_LOWERCASE'),
+			self::RULE_NUMBER 			=> $this->lang('RULE_NUMBER'),
+			self::RULE_NOT_ALL_NUMBER 	=> $this->lang('RULE_NOT_ALL_NUMBER')
         ];
     }
 
