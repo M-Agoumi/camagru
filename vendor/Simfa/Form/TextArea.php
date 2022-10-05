@@ -11,13 +11,13 @@ class TextArea
 	public const DISABLED = 'disabled="disabled"';
 	public const REQUIRED = 'required="required"';
 
-	public Model $model;
-	public string $attribute;
-	public string $label;
-	public string $holder;
-	public string $disabled;
-	public string $required;
-	public string $default;
+	private Model $model;
+	private string $attribute;
+	private string $label;
+	private string $holder;
+	private string $disabled;
+	private string $required;
+	private string $default;
 	private string $class;
 
 	/**

@@ -27,6 +27,7 @@ use Simfa\Framework\Db\DbModel;
  * @method setPassword(string $string)
  * @method setUsername(string $string)
  * @method getStatus()
+ * @method setName(mixed $name)
  */
 class User extends DbModel
 {
@@ -84,7 +85,7 @@ class User extends DbModel
 		$mailObj = new Email();
 		$mailObj->getOneBy('email', $email);
 		if (!$mailObj->getId()) {
-			$mailObj->setEmail('email');
+			$mailObj->setEmail($email);
 			$mailObj->setUser($this);
 			$mailObj->save();
 		} else {
@@ -94,14 +95,17 @@ class User extends DbModel
 	}
 
 	/**
+	 * @param null $id
 	 * @return string|null
 	 */
-	public function getEmail(): ?string
+	public function getEmail($id = null): ?string
 	{
+		if (!$id)
+			$id = $this->getId();
 		$email = new Email();
 		$query = $email->queryBuilder();
 		$result = $query->select('email')->where('prime', 'like', '1')->and()
-			->where('user', '=', $this->getId())->get();
+			->where('user', '=', $id)->get();
 
 		if (count($result))
 			return $result[0]['email'];

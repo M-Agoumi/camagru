@@ -8,10 +8,14 @@
 
 namespace Model;
 
+use Service\Mailer;
 use Simfa\Framework\Application;
 use Simfa\Framework\Db\DbModel;
 
 
+/**
+ * @method getPassword()
+ */
 class LoginForm extends DbModel
 {
 	protected string $id = '';
@@ -29,22 +33,33 @@ class LoginForm extends DbModel
 			'password' => [self::RULE_REQUIRED]
 		];
 	}
-	
-	public function login(string $ref)
+
+	/**
+	 * @param string $ref
+	 * @return bool|null
+	 */
+	public function login(string $ref): ?bool
 	{
-		$user = User::findOne(['username' => $this->username]);
-		if (!$user) {
-			$user = User::findOne(['email' => $this->username]);
-			if (!$user) {
+		$user = User::findOne(['username' => $this->getUsername()]);
+		if (!$user->getId()) {
+			$user = User::findOne(['email' => $this->getUsername()]);
+			if (!$user->getId()) {
 				$this->addError('username', 'There is no such user');
 				return FALSE;
 			}
 		}
-		if (!password_verify($this->password, $user->password)) {
+		if (!password_verify($this->getPassword(), $user->getPassword())) {
 			$this->addError('password', 'Password is wrong');
 			return false;
 		}
-		
+
+		$mailer = new Mailer();
+		$mailer->mail($user->getEmail(), 'New Login to your account', ['login-alert', [
+			'time' => (new \DateTime('now'))->format('d-m-y H:i'),
+			'name' => $user->getName(),
+			'link' => Application::getEnvValue('URL') . route('auth.restore')
+		]]);
+
 		return Application::$APP->login($user, $ref);
  	}
 

@@ -9,8 +9,8 @@
     <h1>Reset your password</h1>
 
     <?php
-    $form = Form::begin('', 'POST');
-        echo $form->field($password, 'email')->emailField()->required();
+    $form = Form::begin($password, '', 'POST');
+        echo $form->field('email')->emailField()->required();
         echo $form->submit('restore');
     $form::end();
     ?>

@@ -13,8 +13,7 @@
 
 namespace Simfa\Form;
 
-
-use Simfa\Framework\Db\DbModel;
+use Simfa\Model\Model;
 
 class Field
 {
@@ -26,7 +25,7 @@ class Field
 	public const REQUIRED = 'required="required"';
 	private const AUTOCOMPLETE = 'autocomplete="off"';
 
-	private DbModel 	$model;
+	private Model 	$model;
 	private string 	$attribute;
 	private ?string $label;
 	private string 	$type;
@@ -41,7 +40,7 @@ class Field
 	private string 	$custom = '';
 	private mixed 	$value = null;
 
-	public function __construct(DbModel $model, string $attribute)
+	public function __construct(Model $model, string $attribute)
 	{
 		$this->model = $model;
 		$this->attribute = $attribute;

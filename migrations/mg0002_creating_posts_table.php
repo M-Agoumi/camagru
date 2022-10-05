@@ -14,6 +14,7 @@ class mg0002_creating_posts_table
 			$table->string('picture');
 			$table->string('slug')->unique();
 			$table->smallInt('status')->default(0);
+			$table->smallInt('spoiler')->default(0);
 			$table->int('author');
 			$table->timestamps();
 			$table->foreign('author')->references('entityID')->on('user')->onUpdate('cascade')->onDelete('cascade');

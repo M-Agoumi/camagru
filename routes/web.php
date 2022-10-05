@@ -58,9 +58,20 @@ Router::get('/profile/preferences', [UserController::class, 'preferences'])->nam
 Router::post('/profile/preferences', [UserController::class, 'preferences']);
 
 /** Camera Controller routes */
-Router::get('/camera', [CameraController::class, 'index'])->name('camera.index');
-Router::post('/camera', [CameraController::class, 'save'])->name('camera.save');
+//Router::get('/camera', [CameraController::class, 'index'])->name('camera.index');
+Router::get('/camera/test', [CameraController::class, 'save'])->name('camera.save');
 Router::post('/camera/share', [CameraController::class, 'share'])->name('camera.share');
+
+Router::get('/camera', [TestController::class, 'camera'])->name('camera.index');
+Router::post('/camera/animated', [TestController::class, 'animated']);
+Router::post('/camera/picture', [TestController::class, 'savePicture']);
+Router::post('/camera/picture/camera',[TestController::class, 'saveCamera']);
+Router::get('/camera/share', [TestController::class, 'saveAnimated']);
+Router::get('/camera/process', 'pages.test.imageProcess');
+Router::post('/camera/getData', [TestController::class, 'processImage']);
+//Router::post('/camera/create', [TestController::class, 'createPost']);
+Router::post('/camera/create', [TestController::class, 'processImage']);
+Router::get('/dismiss-post', [CameraController::class, 'dismiss']);
 
 /** post Controller routes */
 Router::magic('/post/{slug}', [PostController::class, 'show']);

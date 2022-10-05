@@ -4,7 +4,7 @@
 use Simfa\Framework\Db\Migration;
 use Simfa\Framework\Db\Migration\Schema;
 
-class mg0015_add_emote_table extends Migration
+class mg0015_add_emote_table
 {
 	public function up()
 	{
@@ -12,6 +12,7 @@ class mg0015_add_emote_table extends Migration
 			$table->id();
 			$table->string('name')->unique();
 			$table->string('file')->unique();
+			$table->smallInt('type')->default('0');
 			$table->timestamps();
 
 			return $table;

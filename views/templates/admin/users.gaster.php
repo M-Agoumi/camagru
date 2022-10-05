@@ -21,7 +21,7 @@
 		<tr>
 			<th scope="row"><?=$user['entityID']?></th>
 			<td><?=$user['name']?></td>
-			<td><?=$user['email']?></td>
+			<td><?=$usr->getEmail($user['entityID'])?></td>
 			<td><?=$user['username']?></td>
 			<td><?=$user['created_at']?></td>
 			<td class="d-flex">

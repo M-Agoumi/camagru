@@ -47,7 +47,7 @@ RUN postmap /etc/postfix/sasl_passwd
 ## copy our config files. context project root
 COPY ./docker/apache/apache2/apache2.conf /etc/apache2/
 COPY ./docker/apache/sites-available/000-default.conf /etc/apache2/sites-available/
-COPY ./docker/apache/php/php.ini /etc/php/7.4/apache2/
+COPY ./docker/apache/php/php.ini /etc/php/8.1/apache2/
 COPY ./docker/apache/postfix/main.cf /etc/postfix/
 
 ## enable rewrite mod for our mvc structure

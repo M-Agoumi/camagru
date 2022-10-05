@@ -18,7 +18,8 @@
 	<?= $form->field($post, 'picture')->hiddenField()?>
 	<?= $form->field($post, 'title')->setHolder('If you want it to have one :D') ?>
 	<?= $form->text($post, 'comment')->setHolder('beautiful day in the beach?') ?>
-
+	<?= $form->checkbox($post, 'spoiler') ?>
+	<p class="onoff"><input type="checkbox" value="1" id="checkboxID"><label for="checkboxID"></label></p>
 	<?= $form->submit('Post'); ?>
 	<?php Form::end();?>
 @endsection

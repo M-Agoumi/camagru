@@ -130,16 +130,11 @@ abstract class DbModel extends Model
 		);
 
 		foreach ($attributes as $attribute) {
-//			echo 'binding ' . $this->{$attribute} . ' to ' . $attribute . '<br>';
 			if ($attribute == 'created_at' && !$this->{$attribute})
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
 			else
 				$statement->bindValue(":$attribute", $this->{$attribute});
 		}
-
-//		echo '<pre>';
-//		print_r($statement->debugDumpParams());
-//		die();
 
 		$done = $statement->execute();
 
@@ -176,8 +171,7 @@ abstract class DbModel extends Model
 			}
 		}
 
-		$sql .= ' WHERE ' . $this->primaryKey() . '=' . $this->{$this->primaryKey()} . ';';
-
+		$sql .= ' WHERE ' . $this->primaryKey() . ' = ' . $this->{$this->primaryKey()} . ';';
 		$statement = self::prepare($sql);
 
 		foreach ($attributes as $attribute) {
@@ -186,13 +180,12 @@ abstract class DbModel extends Model
 			elseif ($attribute == 'created_at' && !$this->{$attribute})
 				$statement->bindValue(":$attribute", date('Y-m-d H:i:s', time()));
 			else {
-				if ($this->{$attribute} instanceof DbModel && $this->{$attribute} == '-1')
-					$statement->bindValue(":$attribute", null);
+				if ($this->{$attribute} instanceof DbModel && $this->{$attribute} == '-1'){
+					$statement->bindValue(":$attribute", null);}
 				else
 					$statement->bindValue(":$attribute", $this->{$attribute});
 			}
 		}
-
 		$this->updated_at = date('Y-m-d H:i:s', time());
 
 		return $statement->execute();
@@ -293,7 +286,8 @@ abstract class DbModel extends Model
 	}
 
 	/**
-	 * @param array $where
+	 * @param array $where where => ['column' => 'value we need', 'column_b' => 'value b']
+	 * 		the above example will be where `column` = 'value we need' and `column_b` = 'value b'
 	 * @param string $limit
 	 * @return array
 	 */

@@ -35,7 +35,7 @@ class Admin extends BaseCommand
 			$user->getOneBy('username', $argv[1]);
 
 			if (!$user->getId())
-				return YELLOW . "User with such a username doesn't exist" . RESET . PHP_EOL;
+				return YELLOW . "User with such username doesn't exist" . RESET . PHP_EOL;
 			$role = new Role();
 			$role->getOneBy('user', $user->getId());
 			if ($role->getId())

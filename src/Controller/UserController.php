@@ -22,7 +22,7 @@ class UserController extends Controller
 
 	public function __construct()
 	{
-		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'preferences']));
+		$this->registerMiddleware(New AuthMiddleware(['edit', 'update', 'preferences', 'updateBackground', 'updateProfilePicture']));
 	}
 
 	public function index(User $user)
@@ -126,6 +126,7 @@ class UserController extends Controller
 			->where('prime', '=', '1')->get();
 
 		if (count($mainEmail) && ($mainEmail[0]['email'] != $newEmail)) {
+
 			if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL))
 				$user->addError('email', 'Failed to change email, entered email isn\'t valid');
 			else {
@@ -145,7 +146,6 @@ class UserController extends Controller
 
 					if ($email->save()){
 						if ($this->mail($email->getEmail(), 'Confirm Your Email', $data)){
-//							Application::$APP->session->setFlash('success', 'Please confirm you email, we sent you a link');
 							Application::$APP->session->setFlash('success', 'email has been updated, please follow the link sent to your email to complete the update');
 							return redirect('/user/' . $user->getUsername());
 						} else
@@ -180,8 +180,6 @@ class UserController extends Controller
 			return;
 		}
 
-		if ($email->getUser()->getId() != Application::$APP->user->getId())
-			return;
 		$email->setToken($this->generateToken());
 		$data = ['confirmEmail', [
 			'port'  => $_SERVER['SERVER_PORT'],
@@ -191,7 +189,6 @@ class UserController extends Controller
 
 		if ($email->update()) {
 			if ($this->mail($email->getEmail(), 'Confirm Your Email', $data)){
-//				Application::$APP->session->setFlash('success', 'Please confirm you email, we sent you a link');
 				Application::$APP->session->setFlash('success', 'email has been updated, please follow the link sent to your email to complete the update');
 				redirect('/user/' . $user->getUsername());
 				return;
@@ -216,23 +213,23 @@ class UserController extends Controller
 
 	public function confirmEmail(Email $email): string
 	{
-		if ($email->getUser()->getId() == Application::$APP->user->getId()) {
-			$oldEmail = new Email();
-			$oldEmail->getOneBy('email', $email->getUser()->getEmail());
+		echo '<pre>';
+		$oldEmail = new Email();
+		$oldEmail->getOneBy('email', $email->getUser()->getEmail());
+		if ($oldEmail->getId()) {
 			$oldEmail->setPrime(0);
 			$oldEmail->update();
-
-			$email->setPrime(1);
-			$email->setConfirmed(1);
-			$email->setActive(1);
-			$email->update();
-			echo '<pre>';
-			print_r($oldEmail);
 		}
 
-		Application::$APP->session->setFlash('error', 'something went wrong please try again later');
+		$email->setPrime(1);
+		$email->setConfirmed(1);
+		$email->setActive(1);
+		$email->setToken('');
+		$email->update();
 
-		return redirect('/');
+		Application::$APP->session->setFlash('success', 'your email has been confirmed');
+
+		return redirect(route('home.index'));
 	}
 
 	public function UpdatePassword(Request $request): ?string
@@ -359,9 +356,10 @@ class UserController extends Controller
 
 				// Valid extensions
 				$valid_ext = array("png","jpg","jpeg","svc", 'webp');
+				$info = getimagesize($_FILES['file']['tmp_name']);
 
-				if(in_array($file_extension,$valid_ext)){
-					if ($file_size > Application::getAppConfig('post', 'max_file_size')) {
+				if(in_array($file_extension,$valid_ext) && $info){
+					if ($file_size < Application::getAppConfig('post', 'max_file_size')) {
 						// Upload file
 						if (@move_uploaded_file($_FILES['file']['tmp_name'],$location)) {
 							$bg->save();

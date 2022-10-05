@@ -6,7 +6,7 @@ use Simfa\Framework\Application;
 	<div class="c-container">
 		<div class="c-header-stl">
 			<div class="c-logo">
-				<h1>Camagru</h1>
+				<a href="<?= route('home.index') ?>"><h1>Camagru</h1></a>
 			</div>
 			<div class="c-nav">
 				<li><a class="active co" href="<?= Application::path('home.index') ?>"><?= $this->lang('home'); ?></a>

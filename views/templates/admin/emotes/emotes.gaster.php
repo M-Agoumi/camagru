@@ -9,6 +9,7 @@
 			<th scope="col">Emote</th>
 			<th scope="col">Name</th>
 			<th scope="col">File</th>
+			<th scope="col">Type</th>
 			<th scope="col">Action</th>
 		</tr>
 		</thead>
@@ -19,9 +20,14 @@
 		foreach ($emotes as $emote): ?>
 		<tr>
 			<th scope="row"><?=$i++?></th>
-			<td><img src="/assets/img/<?=$emote['file']?>" width="100"/></td>
+			<?php if($emote['type']): ?>
+				<td><img src="/assets/img/borders/<?=$emote['file']?>" width="100"/></td>
+			<?php else: ?>
+				<td><img src="/assets/img/emotes/<?=$emote['file']?>" width="100"/></td>
+			<?php endif; ?>
 			<td><?=$emote['name']?></td>
 			<td><?=$emote['file']?></td>
+			<td><?=$emote['type'] ? 'border' : 'emote'?></td>
 			<td class="btn btn-danger"><a href="/dashboard/emotes/delete/<?=$emote['entityID']?>">Delete</a></td>
 		</tr>
 		<?php endforeach; ?>

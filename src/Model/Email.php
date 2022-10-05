@@ -39,7 +39,7 @@ class Email extends DbModel
 	protected ?int 		$entityID 	= null;
 	protected ?string 	$email 		= null;
 	protected ?User 	$user 		= null;
-	protected string 	$token 		= '';
+	protected ?string 	$token 		= '';
 	protected int 		$used 		= 0;
 	protected int 		$confirmed 	= 0;
 	protected int 		$active		= 0;

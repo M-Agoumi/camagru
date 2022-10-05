@@ -1,5 +1,5 @@
-@layout('auth')
-@section('titles'){{ title }}@endsection
+@layout('main')
+@section('title'){{ title }}@endsection
 @section('content')
     <?php
     /** @var $user User */
@@ -12,10 +12,10 @@
     <h1>Sign In</h1>
     <?php
     $url = $_GET['ref'] ?? '';
-    $form = Form::begin(Application::path('auth.auth') . "?ref=" . $url, "POST", "login-form");
-	    echo $form->field($user, 'username')->required()
+    $form = Form::begin($user,Application::path('auth.auth') . "?ref=" . $url, "POST", "login-form");
+	    echo $form->field('username')->required()
 		    ->setHolder('John Dracula')->setLabel('Username OR Email');
-	    echo $form->field($user, 'password')->passwordField();
+	    echo $form->field('password')->passwordField();
 	    echo $form->submit('Sign in');
 
     Form::end();

@@ -20,7 +20,9 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function dismissMessage() {
+async function dismissMessage(dissmissPost = 0) {
+	if (dissmissPost)
+		fetch('/dismiss-post').then(r => console.log('dismissed'));
     let source = document.getElementById('flash_message');
     source.classList.toggle('slideUp');
     await sleep(1000);
@@ -182,6 +184,7 @@ function addComment(e, slug) {
         let response = JSON.parse(xhr.responseText);
 
 		document.getElementById('csrf_comment').value = response.token;
+		console.log(response)
 		if (response.code === -2)
 			loginPopUp();
 		if (response.code === -1) {
@@ -233,3 +236,7 @@ const cNav = document.querySelector(".c-nav");
 menuBtn.onclick = () => {
 	cNav.classList.toggle("open");
 }
+
+setTimeout(console.log.bind(console, '\n%c' + "STOP!\n", "color: red; font-size: 48px"));
+setTimeout(console.log.bind(console, '\n%c' + "This is a browser feature intended for developers. If someone told you to copy and paste something here to enable a feature or \"hack\" someone's account, it is a scam and will give them access to your account.\n", "font-size: 18px"));
+setTimeout(console.log.bind(console, '\n%c' + "see https://en.wikipedia.org/wiki/Self-XSS for more information\n", "font-size: 20px"));

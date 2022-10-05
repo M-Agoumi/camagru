@@ -86,11 +86,8 @@ class Application
 		if ($primaryValue) {
 			$primaryKey = self::$APP->userCLass::primaryKey();
 			$user = self::$APP->userCLass::findOne([$primaryKey =>  $primaryValue]);
-			if ($user->getId()) {
-				$user->ip_address = Application::$APP->request->getUserIpAddress();
-				$user->update();
+			if ($user->getId())
 				return $user;
-			}
 		}
 
 		return NULL;
@@ -256,6 +253,8 @@ class Application
 		$primaryKey = 'get' . ucfirst($user->primaryKey());
 		$primaryValue = $user->{$primaryKey}();
 		$this->session->set('user', $primaryValue);
+		if (str_starts_with($redirect, '/'))
+			$this->response->redirect(self::getEnvValue('URL') . $redirect);
 		$this->response->redirect(self::getEnvValue('URL') . '/' . $redirect);
 	}
 

@@ -12,7 +12,7 @@ class Preference extends DBModel
 	public ?int $entityID = null;
 	public ?int $user = null;
 	public ?int $language = null;
-	public ?int $mail = null;
+	public ?int $mail = 1;
 
 	/**
 	 * the rules should be respect by each child model

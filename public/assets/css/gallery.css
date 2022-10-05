@@ -59,6 +59,14 @@ body {
 	width: 90%;
 }
 
+.spoiler-post img{
+	filter: blur(50px) grayscale(70%);
+	animation: paused;
+}
+
+.spoiler-post img:hover{
+	filter: none;
+}
 
 .w-1{
 	grid-column: span 1;

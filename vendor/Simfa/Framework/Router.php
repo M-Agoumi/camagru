@@ -136,8 +136,9 @@ class Router
 	/**
 	 * register a name for the current path
 	 * @param string $name
+	 * @return Router
 	 */
-	public function name(string $name)
+	public function name(string $name): static
 	{
 		try {
 			if (!isset($this->paths[$name]))
@@ -147,6 +148,8 @@ class Router
 		}catch (Exception $e) {
 			Application::$APP->catcher->catch($e);
 		}
+
+		return $this;
 	}
 
 	/**
@@ -180,13 +183,12 @@ class Router
 	 * @return false|mixed|string|string[]
 	 * @throws NotFoundException|ReflectionException
 	 */
-	public function resolve()
+	public function resolve(): mixed
 	{
 		$callback = $this->getCallbackOrFail();
-		$this->callback = $callback;
 
 		if (is_string($callback)){
-			if (strlen($callback) > 612) // too long? that's a view to show otherwise is a file need to be showed
+			if (strlen($callback) > 124) // too long? that's a view to show otherwise is a file need to be showed
 				return $callback;
 			return render($callback);
 		}
@@ -244,7 +246,6 @@ class Router
 		}
 
 		$callback[0] = $controller;
-
 		if (!method_exists($callback[0], $callback[1]))
 			throw new Exception('method [' . $callback[1] . '] not found in class [' . get_class($callback[0]) . ']');
 

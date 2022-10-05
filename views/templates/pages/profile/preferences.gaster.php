@@ -12,9 +12,9 @@
 	<h1>Preferences</h1>
 
 	<?php
-	$form = Form::begin();
-	echo $form->select($pref, 'language', $lang);
-	echo $form->select($pref, 'mail', ['1' => 'yes', '0' => 'no'])->setLabel('receive notification emails');
+	$form = Form::begin($pref);
+	echo $form->select('language', $lang);
+	echo $form->select('mail', ['1' => 'yes', '0' => 'no'])->setLabel('receive notification emails')->setDefault('1');
 	echo $form->submit('Save');
 	$form::end();
 	?>

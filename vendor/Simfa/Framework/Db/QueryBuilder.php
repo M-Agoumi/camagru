@@ -181,7 +181,6 @@ class QueryBuilder
 	 */
 	public function get(): bool|array
 	{
-		$query = '';
 		$query = 'SELECT ' . $this->selector;
 		$query .= ' FROM ' . $this->model;
 		if (!empty($this->criteria)){
@@ -190,7 +189,6 @@ class QueryBuilder
 				$query .= ' ' . $where;
 			}
 		}
-
 		if ($this->order)
 			$query .= ' ORDER BY ' . $this->order;
 		if ($this->desc)
@@ -201,7 +199,6 @@ class QueryBuilder
 			$query .= ' OFFSET ' . $this->offset;
 
 
-//		die($this->query);
 		$stmt = $this->prepare($query);
 
 		foreach ($this->searchCriteria as $key => $value) {

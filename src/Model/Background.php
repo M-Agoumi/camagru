@@ -48,8 +48,6 @@ class Background extends DbModel
 	{
 		$bg = new Background();
 		$bg->getOneBy('user', $this->user->getId());
-//		var_dump($bg);
-//		die();
 		if ($bg->getId()) {
 			$bg->setType($this->type);
 			$bg->setImage($this->image);

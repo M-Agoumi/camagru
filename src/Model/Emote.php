@@ -30,6 +30,7 @@ class Emote extends DbModel
 	protected ?int $entityID = null;
 	protected ?string $name = NULL;
 	protected ?string $file = NULL;
+	protected int $type = 0;
 
 	/**
 	 * @return array[]
@@ -38,7 +39,8 @@ class Emote extends DbModel
 	{
 		return [
 		    'name' => [self::RULE_REQUIRED,[self::RULE_MAX, 'max' => 255]],
-			'file' => [self::RULE_REQUIRED,[self::RULE_MAX, 'max' => 255]]
+			'file' => [self::RULE_REQUIRED,[self::RULE_MAX, 'max' => 255]],
+			'type' => [self::RULE_NUMBER]
 		];
 	}
 }

@@ -109,4 +109,9 @@ abstract class Controller
 	{
 		return json_encode($value);
 	}
+
+	protected function getAuthenticatedUser()
+	{
+		return Application::$APP->user;
+	}
 }

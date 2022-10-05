@@ -13,6 +13,8 @@ use Simfa\Framework\Db\DbModel;
  * @method getSlug():string
  * @method getStatus():int
  * @method getAuthor(): Model\User
+ * @method setPicture(mixed $get)
+ * @method setTitle(string $string)
  */
 class Post extends DbModel
 {
@@ -23,6 +25,7 @@ class Post extends DbModel
 	public ?string $picture = null;
 	public ?string $slug = null;
 	public ?int $status = null;
+	protected int $spoiler = 0;
 	public ?User $author = null;
 
 
@@ -38,6 +41,7 @@ class Post extends DbModel
 	{
 		return [
 			'picture' => [self::RULE_REQUIRED],
+			'spoiler' => [self::RULE_REQUIRED]
 		];
 	}
 

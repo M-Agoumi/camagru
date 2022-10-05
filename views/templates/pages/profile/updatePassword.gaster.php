@@ -11,8 +11,8 @@
 	?>
 	<h1>Update Password</h1>
 	<?php
-	$form = Form::begin(Application::path('user.update.password'));
-	echo $form->field($user, 'password')->setLabel('Old password')->passwordField();
+	$form = Form::begin($user, Application::path('user.update.password'));
+	echo $form->field('password')->setLabel('Old password')->passwordField();
 	?>
 	<div class="row">
 	    <div class="col-25">

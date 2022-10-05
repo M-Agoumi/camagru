@@ -11,13 +11,13 @@ use Simfa\Framework\Application;
 
     <?php
     /** @var ContactUs $contact */
-    $form = Form::begin(Application::path('contact.us'));
-    echo $form->field($contact, 'title')->required();
+    $form = Form::begin($contact,Application::path('contact.us'));
+    echo $form->field('title')->required();
     if (Application::isGuest())
-        echo $form->field($contact, 'email')->required();
+        echo $form->field('email')->required();
     else
-        echo $form->field($contact, 'email')->disabled()->default(Application::$APP->user->email);
-    echo $form->text($contact, 'content')->setLabel('Message')->required();
+        echo $form->field('email')->disabled()->default(Application::$APP->user->getEmail());
+    echo $form->text('content')->setLabel('Message')->required();
     echo $form->submit('Send');
     $form::end();
 

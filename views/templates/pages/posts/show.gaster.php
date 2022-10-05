@@ -80,11 +80,12 @@
 					<?php
 		            $comment = New Comments();
 		            $form = Form::begin(
+							$comment,
 			            '/api/post/comment/' . $post->slug, 'POST', '',
 			            'onsubmit="return addComment(event, \'' . $post->slug . '\')" id="addCommentForm"',
 					'csrf_comment'
 		            );
-		            echo $form->field($comment, 'content')
+		            echo $form->field('content')
 			            ->setHolder('Comment Content')->noLabel()->addSubmit('comment')->noAutocomplete();
 		            $form::end();
 

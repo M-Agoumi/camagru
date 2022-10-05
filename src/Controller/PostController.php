@@ -32,6 +32,9 @@ class PostController extends Controller
 		} else
 			$liked = -1;
 
+		if (!$post->getTitle())
+			$post->setTitle($post->getAuthor()->getUsername() . ' post');
+
 		$data = [
 			'post'      => $post,
 			'title'     => $post->title,

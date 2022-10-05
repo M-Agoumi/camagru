@@ -18,18 +18,20 @@ use Simfa\Model\Model;
 
 class Form
 {
-	public Field $field;
-	public TextArea $textArea;
-	public Select $select;
+	private static Model $model;
 
 	/** echo the start of a form
+	 * @param Model $model
 	 * @param string $action
 	 * @param string $method
 	 * @param string $class
-	 * @return Form instance so we can access it's method to generate a form
+	 * @param string|null $event
+	 * @param string $id
+	 * @return Form instance so we can access its method to generate a form
 	 */
-	public static function begin(string $action = '', string $method = 'POST', string $class = '', string $event = null, string $id = ''): Form
+	public static function begin(Model $model, string $action = '', string $method = 'POST', string $class = '', string $event = null, string $id = ''): Form
 	{
+		self::$model = $model;
 		if (!$action)
 			$action = Application::$APP->request->getPath();
 		echo sprintf('<form action="%s" method="%s" class="form %s" %s>', $action, $method, $class, $event);
@@ -52,33 +54,34 @@ class Form
 	 * @param string $label
 	 * @return Field
 	 */
-	public function field(Model $model, string $attribute): Field
+	public function field(string $attribute): Field
 	{
-		$this->field = new Field($model, $attribute);
-		return $this->field;
+		return new Field(self::$model, $attribute);
 	}
 
-	public function text(Model $model, string $attribute): TextArea
+	public function text(string $attribute): TextArea
 	{
-		$this->textArea = new TextArea($model, $attribute);
-
-		return $this->textArea;
+		return new TextArea(self::$model, $attribute);
 	}
 
-	public function select(Model $model, string $attribute, $elements, $show = null): Select
+	public function select(string $attribute, $elements, $show = null): Select
 	{
-		$this->select = new Select($model, $attribute, $elements, $show);
-
-		return $this->select;
+		return new Select(self::$model, $attribute, $elements, $show);
 	}
 
-	/** return a submit type input
+	/** return submit type input
 	 * @param string $value
+	 * @param string $extra
 	 * @return string
 	 */
 	public function submit(string $value = 'submit', string $extra = ''): string
 	{
 		return '<div class="row"><input type="submit" ' . $extra . ' value="' . $value . '"></div>';
 	}
+
+    public function checkbox(Model $model, string $attribute): Checkbox
+	{
+		return new Checkbox($model, $attribute);
+    }
 
 }

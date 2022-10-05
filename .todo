@@ -9,9 +9,8 @@
 + add upload an image as post not just camera
 + close camera when not using
 + put profile picture in the middle in the mobile view
-#[framework]
-+ cache application config for less load on db
-+ improve csrf token (allow for page refresh without error)
-+ close session for writing when not using (enable parallel page loading)
-+ adapt the routes/api so all routes there return json
+- add spoiler to image sharing page
+- fix post page title when post has no title
+- navbar doesn't fully show in mobile device if screen height is too small
+
 

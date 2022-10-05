@@ -29,7 +29,7 @@ class PostCommentController extends Controller
 	public function add(Post $post, Request $request):string
 	{
 		if (Application::isGuest())
-			return "-2";
+			return $this->json(['code' => -2]);
 
 		$postTmp = $post;
 
@@ -52,12 +52,13 @@ class PostCommentController extends Controller
 			$preferences->getOneBy('user', $post->author->entityID);
 
 			if ($comment->save()) {
-				if ($preferences->mail != '0') {
+				if (is_null($preferences->getId()) || $preferences->mail != '0') {
 					/** fill email data */
-					$authorEmail = $post->author->email;
-					$emailSubject = Application::$APP->user->username . " commented on your post";
+					$authorEmail = $post->getAuthor()->getEmail();
+					error_log("email: " . print_r($post->getAuthor(), 1)."\n", 3, "/var/www/camagru/runtime/logs/logs.log");
+					$emailSubject = Application::$APP->user->getUsername() . " commented on your post";
 					$emailContent = ['postComment', [
-						'name' => Application::$APP->user->username,
+						'name' => Application::$APP->user->getUsername(),
 						'postUrl' => Application::getEnvValue('APP_PROTOCOL') . Application::getEnvValue('APP_URL') . '/post/' . $postTmp->slug
 					]];
 					$fromEmail = 'notification@camagru.io';

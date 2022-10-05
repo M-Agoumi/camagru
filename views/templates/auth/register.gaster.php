@@ -10,8 +10,8 @@
     <title><?=$title ?? ''?></title>
     <h1>Sign Up</h1>
     <?php
-    $form = Form::begin('', "POST", "login-form");
-	echo $form->field($user, 'email')->emailField()->required()->setHolder('Example@email.com')
+    $form = Form::begin($user, '', "POST", "login-form");
+	echo $form->field('email')->emailField()->required()->setHolder('Example@email.com')
 		->setLabel('Email');
     echo $form->submit('Sign up');
     Form::end();

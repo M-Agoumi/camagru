@@ -5,9 +5,9 @@
 
     use Simfa\Form\Form;
 
-    $form = Form::begin();
-    echo $form->field($user, 'email')->required()->emailField();
-    echo $form->field($user, 'password')->required()->passwordField();
+    $form = Form::begin($user);
+    echo $form->field('username')->required();
+    echo $form->field('password')->required()->passwordField();
     echo $form->submit('set');
     $form::end();
     ?>

@@ -7,8 +7,8 @@
     ?>
     <h1>Update Password</h1>
     <?php
-        $form = Form::begin();
-            echo $form->field($user, 'password')->passwordField()->required();
+        $form = Form::begin($user);
+            echo $form->field('password')->passwordField()->required();
             echo $form->submit('update');
         $form::end();
     ?>

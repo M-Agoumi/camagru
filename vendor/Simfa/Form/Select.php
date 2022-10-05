@@ -17,6 +17,7 @@ class Select
 	public string $default;
 	public string $options;
 	private ?string $show;
+	private $elements;
 
 	public function __construct(Model $model, string $attribute, $elements, $show)
 	{
@@ -26,7 +27,7 @@ class Select
 		$this->required = '';
 		$this->default = '';
 		$this->show = $show;
-		$this->options = $this->toString($elements);
+		$this->elements = $elements;
 	}
 
 	public function __toString(): string
@@ -52,7 +53,7 @@ class Select
 			, $this->attribute
 			, $this->disabled
 			, $this->required
-			, $this->options
+			, $this->toString($this->elements)
 			, $this->model->getFirstError($this->attribute)
 		);
 	}
@@ -61,7 +62,7 @@ class Select
 	 * @param array|Model $elements
 	 * @return string
 	 */
-	public function toString($elements): string
+	public function toString(array|Model $elements): string
 	{
 		$string = '';
 
@@ -79,12 +80,15 @@ class Select
 			}
 		} else {
 			foreach ($elements as $value => $element) {
-				if ($this->model->{$this->attribute} == $value)
+				error_log('default: ' . gettype($this->default) . "\nvalue: " . $value . "\n", 3, '/var/www/camagru/runtime/logs/logs.log');
+				if ($this->default == $value || $this->model->{$this->attribute} == $value)
 					$string .= "<option value='" . $value . "' selected='selected'>" . $element . "</option>" . PHP_EOL;
 				else
 					$string .= "<option value='" . $value . "'>" . $element . "</option>" . PHP_EOL;
 			}
+			error_log("------------------------------\n", 3, '/var/www/camagru/runtime/logs/logs.log');
 		}
+
 
 		return $string;
 	}
@@ -99,4 +103,11 @@ class Select
 
 		return $this;
 	}
+
+    public function setDefault(string $string)
+    {
+		$this->default = $string;
+
+		return $this;
+    }
 }

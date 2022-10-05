@@ -69,11 +69,12 @@ class SimpleData extends BaseCommand
 		for ($i = 0; $i < $users_number; $i++)
 		{
 			$user = new User();
-			$user->name = $fake->name;
-			$user->username = $fake->username($user->name);
-			$user->email = $fake->email($user->name);
-			$user->password = "P@ssw0rd!";
+			$user->setName($fake->name);
+			$user->setUsername($fake->username($user->name));
+			$user->setPassword("P@ssw0rd!");
 			$user->save();
+			$user->setEmail($fake->email($user->name));
+
 		}
 
 		return (BLUE . 'Users generating completed' . PHP_EOL . RESET);

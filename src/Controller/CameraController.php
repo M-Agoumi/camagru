@@ -14,6 +14,7 @@ use Model\Post;
 use Simfa\Action\Controller;
 use Simfa\Framework\Application;
 use Simfa\Framework\Request;
+use Simfa\Framework\Session;
 
 class CameraController extends Controller
 {
@@ -30,70 +31,28 @@ class CameraController extends Controller
 		$emotes = New Emote();
 		$emotes = $emotes->findAll();
 
-		return $this->render('pages/camera', ['title' => 'Camera', 'emotes' => $emotes]);
+		return $this->render('pages.camera.camera', ['title' => 'Camera', 'emotes' => $emotes]);
 	}
 
 	/**
-	 * todo add support for gifs
 	 * @return string|void
 	 * @throws Exception
 	 */
-	public function save()
+	public function save(Session $session)
 	{
 		$post = New Post();
-		$imgCode = Application::$APP->request->getBody()['picture'];
-		if (!base64_decode($imgCode, true))
-			throw new Exception('Image is not valid, therefore I\'m a teapot ', 418);
-		$emotesPost = $_POST['emote'] ?? [];
-		$emotes = []; // processed input
-		foreach ($emotesPost as $key => $emote) {
-			$coordination = explode('/', $emote);
-			$emotes[$key] = [
-				'y' => 	intval($coordination[0] ?? 0),
-				'x' => intval($coordination[1] ?? 0),
-				'z' => intval($coordination[2] ?? 0)
-			];
-		}
-		// sort by z-index
-		uasort($emotes, function($a, $b) {
-			return $a['z'] <=> $b['z'];
-		});
-		$image = $this->mergeEmotes($imgCode, $emotes);
-		$imageFileName = 'image_' . uniqid() . '.png';
-		$imageWrapper = fopen(Application::$ROOT_DIR . '/public/tmp/' . $imageFileName , "w") or die("Can't create file");
-		imagepng($image, $imageWrapper);
-		$post->picture = $imageFileName;
+		$post->picture = $session->get('post-tmp-image');
 
-		return $this->render('pages/cameraShare', ['post'=> $post, 'title' => 'share to the world']);
+		return $this->render('pages.test.cameraShare', ['post'=> $post, 'title' => 'share to the world']);
 	}
 
-	/**
-	 * @param $image
-	 * @param $emotes
-	 * @return GdImage|bool
-	 */
-	private function mergeEmotes($image, $emotes): GdImage|bool
-	{
-		$image = imagecreatefromjpeg($image);
-		// start merging images
-		$emoteEntity = new Emote();
-		foreach ($emotes as $key => $emote) {
-			$emoteEntity->getOneBy('name', $key);
-			if ($emoteEntity->getId()) {
-				$stamp = imagecreatefrompng(Application::$ROOT_DIR . '/public/assets/img/' . $emoteEntity->getFile());
-				imagecopy($image, $stamp, $emote['x'], $emote['y'], 0, 0, imagesx($stamp), imagesy($stamp));
-			}
-		}
-
-		return $image;
-	}
 
 	/**
 	 * @param Request $request
 	 * @return string|void
 	 * @throws Exception
 	 */
-	public function share(Request $request)
+	public function share(Request $request, Session $session)
 	{
 		$post = New Post();
 
@@ -116,9 +75,18 @@ class CameraController extends Controller
 
 		$post->status = 0;
 
+		$session->unset('post-tmp-image');
 		if ($post->validate() && $post->save())
 			return Application::$APP->response->redirect('/post/' . $post->slug);
 
 		return "Ops";
+	}
+
+	public function dismiss()
+	{
+		$image = Application::$APP->session->get('post-tmp-image');
+		if (file_exists(Application::$ROOT_DIR . '/runtime/tmp/' . $image))
+			unlink(Application::$ROOT_DIR . '/runtime/tmp/' . $image);
+		Application::$APP->session->unset('post-tmp-image');
 	}
 }

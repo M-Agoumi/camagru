@@ -59,7 +59,7 @@ class AuthController extends Controller
 				$users[] = $token;
 		}
 
-		return render('login', [
+		return render('auth.login', [
 				'user' => New User(),
 				'users' => $users,
 				'title' => 'Login'
@@ -96,12 +96,14 @@ class AuthController extends Controller
 		$loginForm->loadData($request->getBody());
 
 		if (!($loginForm->validate() && $loginForm->login($_GET['ref'] ?? '')))
-			return render('login', ['user' => $loginForm]);
-		exit(1);
+			return render('auth.login', ['title' => 'login', 'user' => $loginForm]);
+		return '';
 	}
 
 	/** render the signup form
 	 * @route('get' => '/signup')
+	 * @param Request $request
+	 * @param Email $email
 	 * @return string
 	 * @throws Exception
 	 */
@@ -143,7 +145,7 @@ class AuthController extends Controller
 			}
 		}
 
-		return render('register', ['user' => New User]);
+		return render('auth.register', ['user' => New User]);
 	}
 
 	/** get the verification code sent to the user email if it's valid
@@ -197,7 +199,7 @@ class AuthController extends Controller
 			$email->setUser($user);
 			$email->update();
 			Application::$APP->session->setFlash('success', 'Your account has been created successfully');
-			return Application::$APP->login($user,'/');
+			return Application::$APP->login($user,'');
 		}
 
 		return render('forms/register', ['email' => $_SESSION['user_email'], 'user' => $user]);

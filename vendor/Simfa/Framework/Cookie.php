@@ -48,11 +48,11 @@ class Cookie
 		}
 	}
 
-	public function set(string $key, string $value, int $expires = null): bool
+	public function set(string $key, string $value, int $expires = null, string $sameSite = 'strict'): bool
 	{
 		if ($expires === 0)
 			$expires = time() + 3600;
-		return (setcookie($key, $value, ['expires' => $expires, 'path' => '/', 'httponly' => TRUE, 'secure' => false]));
+		return (setcookie($key, $value, ['expires' => $expires, 'path' => '/', 'samesite' => $sameSite, 'httponly' => TRUE, 'secure' => false]));
 	}
 
 	public function unsetCookie(string $key)

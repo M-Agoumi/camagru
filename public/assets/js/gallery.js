@@ -32,13 +32,17 @@ function loadPosts() {
 				let id = Math.random().toString(36).slice(2);
 				let post = '';
 
-				post += '<div class="gallery-container" id=' + id + '>';
+				post += '<div class="gallery-container ';
+				post +=  posts[i].spoiler === 1 ? 'spoiler-post' : '';
+				post += '" id=' + id + '>';
 				post +=     '<a href="/post/' + posts[i].slug + '">';
 				post +=         '<div class="gallery-item">';
 				post +=             '<div class="image">';
 				post +=                 '<img alt="' + posts[i].title + '" src="/uploads/post/' + posts[i].picture + '"/>';
 				post +=             '</div>';
+				if (posts[i].title){
 				post +=             '<div class="text">' + posts[i].title + '</div>';
+				}
 				post +=         '</div>';
 				post +=     '</a>';
 				post += '</div>';
